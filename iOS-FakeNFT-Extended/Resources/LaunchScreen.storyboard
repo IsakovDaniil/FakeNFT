@@ -18,11 +18,11 @@
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="6ld-4b-U55">
                                 <rect key="frame" x="159" y="387" width="75" height="78"/>
-                                <color key="tintColor" name="AppWhite"/>
+                                <color key="tintColor" name="AppBlack"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" name="AppBlack"/>
+                        <color key="backgroundColor" name="AppWhite"/>
                         <constraints>
                             <constraint firstItem="6ld-4b-U55" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Y2b-EZ-r3m"/>
                             <constraint firstItem="6ld-4b-U55" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="nYE-6J-Thr"/>
