@@ -9,18 +9,31 @@ import SwiftUI
 
 struct ProfileView: View {
     
+    // MARK: - Properties
+    
     // MARK: - Body
     
     var body: some View {
         ZStack {
             Color.appWhite
                 .ignoresSafeArea()
-            HStack {
+            VStack {
+                avatarNameSection
             }
         }
     }
     
     // MARK: - View Components
+    private var avatarNameSection: some View {
+        HStack(spacing: 16) {
+            ProfileAvatar(image: Image(.placeholderAvatar))
+            
+            Text("Joaquin Phoenix")
+                .font(Font.bold22)
+                .foregroundStyle(.appBlack)
+            
+        }
+    }
 }
 
 #Preview {
