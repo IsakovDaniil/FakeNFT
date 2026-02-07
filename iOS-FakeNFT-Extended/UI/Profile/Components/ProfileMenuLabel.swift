@@ -20,10 +20,20 @@ struct ProfileMenuLabel: View {
             Text("(\(count))")
                 .font(Font.bold17)
                 .foregroundStyle(.appBlack)
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(.appBlack)
+            
         }
+        .frame(height: 54)
     }
 }
 
 #Preview {
+    ProfileMenuLabel(title: "Мои NFT", count: 112)
+    
     ProfileMenuLabel(title: "Мои NFT", count: 112)
 }

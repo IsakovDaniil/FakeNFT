@@ -14,6 +14,8 @@ struct ProfileView: View {
     var userName: String
     var bio: String
     var website: String
+    var myNFTCount: Int
+    var favoriteNFTCount: Int
     
     // MARK: - Body
     
@@ -26,6 +28,11 @@ struct ProfileView: View {
                     avatarNameSection
                     
                     bioSection
+                    
+                    menuSection
+                        .padding(.top, 20)
+                    
+                    Spacer()
                 }
             }
             .padding()
@@ -43,6 +50,7 @@ struct ProfileView: View {
     }
     
     // MARK: - View Components
+    
     private var avatarNameSection: some View {
         HStack(spacing: 16) {
             ProfileAvatar(image: Image(.placeholderAvatar))
@@ -66,8 +74,24 @@ struct ProfileView: View {
             }
         }
     }
+    
+    private var menuSection: some View {
+        VStack(spacing: 0) {
+            NavigationLink {
+                MyNFTView()
+            } label: {
+                ProfileMenuLabel(title: "Мои NFT", count: myNFTCount)
+            }
+            
+            NavigationLink {
+                FavoriteNFTView()
+            } label: {
+                ProfileMenuLabel(title: "Избранные NFT", count: favoriteNFTCount)
+            }
+        }
+    }
 }
 
 #Preview {
-    ProfileView(userName: "Joaquin Phoenix", bio: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", website: "JoaquinPhoenix.com")
+    ProfileView(userName: "Joaquin Phoenix", bio: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", website: "JoaquinPhoenix.com", myNFTCount: 112, favoriteNFTCount: 11)
 }
