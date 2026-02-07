@@ -37,8 +37,8 @@ struct ProfileView: View {
             .padding()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        print("Edit tapped")
+                    NavigationLink {
+                        EditProfileView()
                     } label: {
                         Image(.edit)
                             .foregroundStyle(.appBlack)
