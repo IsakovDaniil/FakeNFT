@@ -12,8 +12,18 @@ struct EditProfileView: View {
     // MARK: - Properties
     
     @State private var name: String = "Joaquin Phoenix"
-    @State private var description: String = "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям."
-    @State private var website: String = "Joaquin Phoenix.com"
+    @State private var description: String = "bio"
+    @State private var website: String = "app.ru"
+    
+    private let originalName: String = "Joaquin Phoenix"
+    private let originalDescription: String = "bio"
+    private let originalWebsite: String = "app.ru"
+    
+    private var hasChanges: Bool {
+        name != originalName ||
+        description != originalDescription ||
+        website != originalWebsite
+    }
     
     // MARK: - Body
     
@@ -53,6 +63,8 @@ private extension EditProfileView {
         EditProfileButton(name: "Сохранить") {
             print("tap button")
         }
+        .disabled(!hasChanges)
+        .opacity(hasChanges ? 1.0 : 0)
     }
 }
 
