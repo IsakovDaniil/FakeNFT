@@ -10,6 +10,7 @@ import SwiftUI
 struct ProfileView: View {
     
     // MARK: - Properties
+    
     var userName: String
     var bio: String
     var website: String
@@ -17,16 +18,28 @@ struct ProfileView: View {
     // MARK: - Body
     
     var body: some View {
-        ZStack {
-            Color.appWhite
-                .ignoresSafeArea()
-            VStack(alignment: .leading, spacing: 20) {
-                avatarNameSection
-                
-                bioSection
+        NavigationStack {
+            ZStack {
+                Color.appWhite
+                    .ignoresSafeArea()
+                VStack(alignment: .leading, spacing: 20) {
+                    avatarNameSection
+                    
+                    bioSection
+                }
+            }
+            .padding()
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        print("Edit tapped")
+                    } label: {
+                        Image(.edit)
+                            .foregroundStyle(.appBlack)
+                    }
+                }
             }
         }
-        .padding()
     }
     
     // MARK: - View Components
@@ -44,6 +57,7 @@ struct ProfileView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(bio)
                 .font(Font.regular13)
+                .foregroundStyle(.appBlack)
             
             if let url = URL(string: "https://\(website)") {
                 Link(website, destination: url)
@@ -55,5 +69,5 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(userName: "Joaquin Phoenix", bio: "Дизайнер из Казани, люблю цифровое искусство  и бейглы. В моей коллекции уже 100+ NFT,  и еще больше — на моём сайте. Открыт к коллаборациям.", website: "JoaquinPhoenix.com")
+    ProfileView(userName: "Joaquin Phoenix", bio: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", website: "JoaquinPhoenix.com")
 }
