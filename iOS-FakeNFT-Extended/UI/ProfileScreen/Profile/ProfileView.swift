@@ -52,7 +52,7 @@ struct ProfileView: View {
     
     private var avatarNameSection: some View {
         HStack(spacing: 16) {
-            ProfileAvatar(image: Image(.placeholderAvatar))
+            ProfileAvatar(image: Image(.placeholderAvatar), editMode: false)
             
             Text(userName)
                 .font(Font.bold22)
