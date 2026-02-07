@@ -11,11 +11,11 @@ struct ProfileView: View {
     
     // MARK: - Properties
     
-    var userName: String
-    var bio: String
-    var website: String
-    var myNFTCount: Int
-    var favoriteNFTCount: Int
+    let userName: String
+    let bio: String
+    let website: String
+    let myNFTCount: Int
+    let favoriteNFTCount: Int
     
     // MARK: - Body
     
@@ -30,7 +30,6 @@ struct ProfileView: View {
                     bioSection
                     
                     menuSection
-                        .padding(.top, 20)
                     
                     Spacer()
                 }
@@ -89,9 +88,16 @@ struct ProfileView: View {
                 ProfileMenuLabel(title: "Избранные NFT", count: favoriteNFTCount)
             }
         }
+        .padding(.top, 20)
     }
 }
 
 #Preview {
-    ProfileView(userName: "Joaquin Phoenix", bio: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.", website: "JoaquinPhoenix.com", myNFTCount: 112, favoriteNFTCount: 11)
+    ProfileView(
+        userName: "Joaquin Phoenix",
+        bio: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
+        website: "JoaquinPhoenix.com",
+        myNFTCount: 112,
+        favoriteNFTCount: 11
+    )
 }
