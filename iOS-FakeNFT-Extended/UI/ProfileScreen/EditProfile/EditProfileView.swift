@@ -28,16 +28,22 @@ struct EditProfileView: View {
     // MARK: - Body
     
     var body: some View {
-        VStack(spacing: 20) {
-            avatarSection
+        ZStack {
+            Color.appWhite
+                .ignoresSafeArea()
             
-            fieldsSection
-            
-            Spacer()
-            
-            buttonSection
+            ScrollView {
+                VStack(spacing: 20) {
+                    avatarSection
+                    fieldsSection
+                }
+                .padding()
+            }
+            .safeAreaInset(edge: .bottom) {
+                buttonSection
+                    .padding()
+            }
         }
-        .padding()
     }
 }
 
