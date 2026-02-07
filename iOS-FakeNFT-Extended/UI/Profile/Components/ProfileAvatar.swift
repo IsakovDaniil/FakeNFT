@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct ProfileAvatar: View {
+    let image: Image
+    
     var body: some View {
-        Image(.placeholderAvatar)
+        image
+            .resizable()
+            .scaledToFit()
+            .frame(width: 70, height: 70)
+            .clipShape(Circle())
     }
 }
 
 #Preview {
-    ProfileAvatar()
+    ProfileAvatar(image: Image(.placeholderAvatar))
 }

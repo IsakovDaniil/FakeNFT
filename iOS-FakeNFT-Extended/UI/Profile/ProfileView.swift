@@ -16,7 +16,6 @@ struct ProfileView: View {
             Color.appWhite
                 .ignoresSafeArea()
             HStack {
-                avatar
             }
         }
     }
