@@ -37,8 +37,8 @@ struct ProfileView: View {
             .padding()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        print("Edit tapped")
+                    NavigationLink {
+                        EditProfileView()
                     } label: {
                         Image(.edit)
                             .foregroundStyle(.appBlack)
@@ -52,7 +52,7 @@ struct ProfileView: View {
     
     private var avatarNameSection: some View {
         HStack(spacing: 16) {
-            ProfileAvatar(image: Image(.placeholderAvatar))
+            ProfileAvatar(image: Image(.placeholderAvatar), editMode: false)
             
             Text(userName)
                 .font(Font.bold22)
