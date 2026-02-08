@@ -11,6 +11,7 @@ import Kingfisher
 
 struct CartCell: View {
     let nft: Nft
+    @Binding var nftToDelete: Nft?
 
     var body: some View {
         HStack(spacing: 20) {
@@ -37,7 +38,7 @@ struct CartCell: View {
             Spacer()
             
             Button {
-                print("Pressed")
+                nftToDelete = nft
             } label: {
                 Image(.cartDelete)
                     .foregroundStyle(.appBlack)
@@ -68,6 +69,6 @@ struct CartCell: View {
 }
 
 #Preview {
-    CartCell(nft: .mockNFT)
+    CartCell(nft: .mockNFT, nftToDelete: .constant(.mockNFT))
         .padding(.horizontal, 16)
 }

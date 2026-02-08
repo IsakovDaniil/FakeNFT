@@ -9,19 +9,31 @@ import SwiftUI
 
 struct CartListView: View {
     let nfts: [Nft]
+    @State private var nftToDelete: Nft? = nil
     
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                LazyVStack {
-                    ForEach(nfts, id: \.id) {
-                        CartCell(nft: $0)
-                            .padding(16)
+        ZStack {
+            VStack {
+                ScrollView {
+                    LazyVStack {
+                        ForEach(nfts, id: \.id) {
+                            CartCell(nft: $0, nftToDelete: $nftToDelete)
+                                .padding(16)
+                                .contentShape(Rectangle())
+                        }
                     }
+                    .padding(.top, 20)
                 }
+                
+                bottomBar
             }
             
-            bottomBar
+            if nftToDelete != nil {
+                BlurView(style: .systemUltraThinMaterial)
+                    .ignoresSafeArea()
+                
+                CartDeleteView(nft: $nftToDelete)
+            }
         }
     }
     
