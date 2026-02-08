@@ -11,9 +11,21 @@ struct EditProfileView: View {
     
     // MARK: - Properties
     
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var name: String = "Joaquin Phoenix"
     @State private var description: String = "bio"
     @State private var website: String = "app.ru"
+    
+    // MARK: - Alert States
+    
+    @State private var showActionSheet = false
+    @State private var showURLAlert = false
+    @State private var showExitAlert = false
+    @State private var urlInput = ""
+    @State private var hasUnsavedURLChanges = false
+    
+    // MARK: - Original Values
     
     private let originalName: String = "Joaquin Phoenix"
     private let originalDescription: String = "bio"
@@ -44,6 +56,59 @@ struct EditProfileView: View {
                     .padding()
             }
         }
+        .navigationBarBackButtonHidden(hasChanges)
+        .toolbar {
+            if hasChanges {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        showExitAlert = true
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.appBlack)
+                    }
+                }
+            }
+        }
+        .confirmationDialog("Фото профиля", isPresented: $showActionSheet, titleVisibility: .visible) {
+            Button("Изменить фото") {
+                showURLAlert = true
+            }
+            
+            Button("Удалить фото", role: .destructive) {
+                print("Удалить фото")
+            }
+            
+            Button("Отмена", role: .cancel) {}
+        }
+        .alert("Ссылка на фото", isPresented: $showURLAlert) {
+            TextField("https://example.com/", text: $urlInput)
+                .textInputAutocapitalization(.never)
+                .keyboardType(.URL)
+                .onChange(of: urlInput) { _, _ in
+                    hasUnsavedURLChanges = true
+                }
+            
+            Button("Отмена", role: .cancel) {
+                if hasUnsavedURLChanges {
+                    showURLAlert = false
+                    showExitAlert = true
+                } else {
+                    urlInput = ""
+                }
+            }
+            
+            Button("Сохранить") {
+                urlInput = ""
+                hasUnsavedURLChanges = false
+            }
+            .disabled(urlInput.isEmpty)
+        }
+        .alert("Уверены, что хотите выйти?", isPresented: $showExitAlert) {
+            Button("Остаться", role: .cancel) {}
+            Button("Выйти", role: .destructive) {
+                dismiss()
+            }
+        }
     }
 }
 
@@ -53,7 +118,7 @@ private extension EditProfileView {
     
     var avatarSection: some View {
         ProfileAvatar(image: Image(.placeholderAvatar), editMode: true) {
-            print("tap")
+            showActionSheet = true
         }
     }
     
