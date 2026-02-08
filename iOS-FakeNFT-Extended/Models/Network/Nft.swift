@@ -1,6 +1,6 @@
 import Foundation
 
-struct Nft: Decodable {
+struct Nft: Decodable, Equatable {
     let id: String
     let name: String
     let images: [URL]
@@ -34,9 +34,9 @@ extension Nft {
             id: "a06d0075-d1a7-40dc-b710-db6808c28cca",
             name: "Cosmic Dreams",
             images: [
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/1.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/2.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/3.png")!,
             ],
             rating: 5,
             description: "A breathtaking journey through the stars",
@@ -62,7 +62,7 @@ extension Nft {
             id: "c28f2297-f3c9-62fe-d932-fg8020e40eec",
             name: "Neon City",
             images: [
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
             ],
@@ -90,7 +90,7 @@ extension Nft {
             id: "e40h4419-h5e1-84hg-f154-hi0242g62gge",
             name: "Abstract Minds",
             images: [
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
             ],
@@ -118,7 +118,7 @@ extension Nft {
             id: "g62j6631-j7g3-06ji-h376-jk2464i84iig",
             name: "Forest Whispers",
             images: [
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
             ],
@@ -146,7 +146,7 @@ extension Nft {
             id: "i84l8853-l9i5-28lk-j598-lm4686k06kkj",
             name: "Space Station",
             images: [
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
             ],
