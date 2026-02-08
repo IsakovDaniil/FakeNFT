@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct CartListView: View {
+    let viewModel: CartViewModel
     let nfts: [Nft]
-    @State private var nftToDelete: Nft? = nil
     
     var body: some View {
         ZStack {
             VStack {
                 ScrollView {
                     LazyVStack {
-                        ForEach(nfts, id: \.id) {
-                            CartCell(nft: $0, nftToDelete: $nftToDelete)
+                        ForEach(nfts, id: \.id) { nft in
+                            CartCell(viewModel: viewModel, nft: nft)
                                 .padding(16)
                                 .contentShape(Rectangle())
                         }
@@ -28,11 +28,11 @@ struct CartListView: View {
                 bottomBar
             }
             
-            if nftToDelete != nil {
+            if viewModel.nftToDelete != nil {
                 BlurView(style: .systemUltraThinMaterial)
                     .ignoresSafeArea()
                 
-                CartDeleteView(nft: $nftToDelete)
+                CartDeleteView(viewModel: viewModel)
             }
         }
     }
@@ -56,12 +56,21 @@ struct CartListView: View {
     }
     
     private var totalPriceText: String {
-        let total = nfts.reduce(0.0) { $0 + $1.price }
+        let total = nfts.reduce(0.0) { $0 + Double($1.price) }
         return String(format: "%.2f", total)
             .replacingOccurrences(of: ".", with: ",")
     }
 }
 
 #Preview {
-    CartListView(nfts: Nft.mockNFTs)
+    let services = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        orderStorage: OrderStorageImpl()
+    )
+    let vm = CartViewModel(
+        nftService: services.nftService,
+        orderService: services.orderService
+    )
+    return CartListView(viewModel: vm, nfts: Nft.mockNFTs)
 }

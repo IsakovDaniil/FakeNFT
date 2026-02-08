@@ -17,12 +17,12 @@ import SwiftUI
 import Kingfisher
 
 struct CartDeleteView: View {
-    @Binding var nft: Nft?
+    let viewModel: CartViewModel
     
     var body: some View {
         VStack(spacing: 20) {
-            if let nft {
-                KFImage(nft.images.first!)
+            if let nft = viewModel.nftToDelete, let imageUrl = nft.images.first {
+                KFImage(imageUrl)
                     .frame(width: 108, height: 108)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
@@ -33,7 +33,10 @@ struct CartDeleteView: View {
             
             HStack(spacing: 8) {
                 Button {
-                    nft = nil
+                    viewModel.closeDeleteView()
+                    Task { @MainActor in 
+                        await viewModel.removeNFT()
+                    }
                 } label: {
                     Text("Удалить")
                         .font(.system(size: 17))
@@ -45,7 +48,7 @@ struct CartDeleteView: View {
                 }
                 
                 Button {
-                    nft = nil
+                    viewModel.closeDeleteView()
                 } label: {
                     Text("Вернуться")
                         .font(.system(size: 17))
@@ -62,5 +65,15 @@ struct CartDeleteView: View {
 }
 
 #Preview {
-    CartDeleteView(nft: .constant(.mockNFT))
+    let services = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        orderStorage: OrderStorageImpl()
+    )
+    let vm = CartViewModel(
+        nftService: services.nftService,
+        orderService: services.orderService
+    )
+    
+    CartDeleteView(viewModel: vm)
 }

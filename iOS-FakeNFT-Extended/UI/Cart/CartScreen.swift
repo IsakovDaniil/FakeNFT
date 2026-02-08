@@ -6,22 +6,41 @@
 //
 
 import SwiftUI
+import ProgressHUD
 
 struct CartScreen: View {
-    @State private var nfts: [Nft] = Nft.mockNFTs
+    @Environment(ServicesAssembly.self) var servicesAssembly
+    @State private var viewModel: CartViewModel?
 
     var body: some View {
         Group {
-            if nfts.isEmpty {
-                CartEmptyView()
+            if let vm = viewModel, vm.nfts.isEmpty == false {
+                CartListView(viewModel: vm, nfts: vm.nfts)
             } else {
-                CartListView(nfts: nfts)
+                CartEmptyView()
             }
         }
         .background(.appWhite)
+        .task {
+            if viewModel == nil {
+                let vm = CartViewModel(
+                    nftService: servicesAssembly.nftService,
+                    orderService: servicesAssembly.orderService
+                )
+                viewModel = vm
+                await vm.loadOrder()
+            }
+        }
     }
 }
 
 #Preview {
     CartScreen()
+        .environment(
+            ServicesAssembly(
+                networkClient: DefaultNetworkClient(),
+                nftStorage: NftStorageImpl(),
+                orderStorage: OrderStorageImpl()
+            )
+        )
 }
