@@ -93,9 +93,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		865BD38E2F33BD1500A3440F /* Docs */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Docs; sourceTree = "<group>"; };
-		868604692F365A750083B878 /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
-		86C3CA942F374A8B00DD87DF /* App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = App; sourceTree = "<group>"; };
+		2F8D96692F3788DC0079B7EF /* WebView */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = WebView; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				F7FD712E2F378F1300862010 /* Catalog */,
+				2F8D96692F3788DC0079B7EF /* WebView */,
 				ABC5E16D2C31F5AF002B4068 /* ContentView.swift */,
 				ABC5E1B42C31FC57002B4068 /* TabBarView.swift */,
 				ABC5E1B82C31FD51002B4068 /* TestCatalogView.swift */,
@@ -319,9 +318,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				865BD38E2F33BD1500A3440F /* Docs */,
-				868604692F365A750083B878 /* Resources */,
-				86C3CA942F374A8B00DD87DF /* App */,
+				2F8D96692F3788DC0079B7EF /* WebView */,
 			);
 			name = "iOS-FakeNFT-Extended";
 			packageProductDependencies = (
