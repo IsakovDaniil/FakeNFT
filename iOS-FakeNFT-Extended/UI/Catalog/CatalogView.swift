@@ -13,7 +13,7 @@ struct CatalogView: View {
 
     @State private var isLoading = false
     @State private var showError = false
-    @State private var selectedCollection: String?
+    @State private var selectedCollection: CollectionItem?
 
     // MARK: - Body
 
@@ -21,6 +21,7 @@ struct CatalogView: View {
         NavigationStack {
             ZStack {
                 if self.isLoading {
+                    // TODO: заменить на общий экран загрузки (компонент из develop)
                     ProgressView()
                 } else {
                     self.collectionList
@@ -32,9 +33,9 @@ struct CatalogView: View {
                     self.sortButton
                 }
             }
-            .navigationDestination(item: self.$selectedCollection) { collection in
+            .navigationDestination(item: self.$selectedCollection) { item in
                 // TODO: Экран коллекции NFT (Модуль 2)
-                Text(collection)
+                Text(item.name)
             }
             .alert(
                 Constants.errorMessage,
@@ -51,13 +52,11 @@ struct CatalogView: View {
     // MARK: - Subviews
 
     private var collectionList: some View {
-        List(Array(MockData.collections.enumerated()), id: \.element) { index, collection in
+        List(Array(MockData.collections.enumerated()), id: \.element.id) { index, item in
             Button {
-                self.selectedCollection = collection
+                self.selectedCollection = item
             } label: {
-                // TODO: Заменить на CollectionRow (#29)
-                Text(collection)
-                    .font(.bold17)
+                CollectionRow(item: item)
             }
             .buttonStyle(.plain)
             .listRowInsets(EdgeInsets(
@@ -109,12 +108,44 @@ private enum Constants {
     )
 }
 
-// MARK: - Mock Data
+// MARK: - Mock Data (из Assets для просмотра дизайна)
 
 private enum MockData {
-    static let collections = [
-        "Peach (11)",
-        "Blue (6)",
-        "Brown (8)",
+    static let collections: [CollectionItem] = [
+        CollectionItem(
+            id: "1",
+            name: "Peach",
+            imageURLs: [],
+            nftCount: 11,
+            localCoverImageName: "CataloguePeach"
+        ),
+        CollectionItem(
+            id: "2",
+            name: "Blue",
+            imageURLs: [],
+            nftCount: 6,
+            localCoverImageName: "CatalogueBlue"
+        ),
+        CollectionItem(
+            id: "3",
+            name: "Brown",
+            imageURLs: [],
+            nftCount: 8,
+            localCoverImageName: "CatalogueBrown"
+        ),
+        CollectionItem(
+            id: "4",
+            name: "Green",
+            imageURLs: [],
+            nftCount: 5,
+            localCoverImageName: "CatalogueGreen"
+        ),
+        CollectionItem(
+            id: "5",
+            name: "Mix",
+            imageURLs: [],
+            nftCount: 12,
+            localCoverImageName: "CataloguePeach"
+        )
     ]
 }
