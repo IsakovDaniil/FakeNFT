@@ -11,6 +11,8 @@ struct EditProfileView: View {
     
     // MARK: - Properties
     
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var name: String = "Joaquin Phoenix"
     @State private var description: String = "bio"
     @State private var website: String = "app.ru"
@@ -54,6 +56,19 @@ struct EditProfileView: View {
                     .padding()
             }
         }
+        .navigationBarBackButtonHidden(hasChanges)
+        .toolbar {
+            if hasChanges {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        showExitAlert = true
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.appBlack)
+                    }
+                }
+            }
+        }
         .confirmationDialog("Фото профиля", isPresented: $showActionSheet, titleVisibility: .visible) {
             Button("Изменить фото") {
                 showURLAlert = true
@@ -87,6 +102,12 @@ struct EditProfileView: View {
                 hasUnsavedURLChanges = false
             }
             .disabled(urlInput.isEmpty)
+        }
+        .alert("Уверены, что хотите выйти?", isPresented: $showExitAlert) {
+            Button("Остаться", role: .cancel) {}
+            Button("Выйти", role: .destructive) {
+                dismiss()
+            }
         }
     }
 }
