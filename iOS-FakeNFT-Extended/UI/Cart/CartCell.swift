@@ -37,7 +37,7 @@ struct CartCell: View {
             Spacer()
             
             Button {
-                
+                print("Pressed")
             } label: {
                 Image(.cartDelete)
                     .foregroundStyle(.appBlack)
