@@ -3,7 +3,7 @@ import SwiftUI
 struct TabBarView: View {
     var body: some View {
         TabView {
-            TestCatalogView()
+            CartScreen()
                 .tabItem {
                     Label(
                         NSLocalizedString("Tab.catalog", comment: ""),
@@ -13,4 +13,8 @@ struct TabBarView: View {
                 .backgroundStyle(.background)
         }
     }
+}
+
+#Preview {
+    TabBarView()
 }
