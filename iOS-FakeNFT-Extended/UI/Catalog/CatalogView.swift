@@ -14,6 +14,8 @@ struct CatalogView: View {
     @State private var isLoading = false
     @State private var showError = false
     @State private var selectedCollection: CollectionItem?
+    @State private var showSortOptions = false
+    @AppStorage("catalogSortOrder") private var sortOrder: String = CatalogSortOrder.byNftCount.rawValue
 
     // MARK: - Body
 
@@ -46,13 +48,33 @@ struct CatalogView: View {
                     // TODO: Retry — будет подключено к ViewModel (#32)
                 }
             }
+            .confirmationDialog(Constants.sortTitle, isPresented: self.$showSortOptions) {
+                Button(Constants.sortByName) {
+                    self.sortOrder = CatalogSortOrder.byName.rawValue
+                }
+                Button(Constants.sortByNftCount) {
+                    self.sortOrder = CatalogSortOrder.byNftCount.rawValue
+                }
+                Button(Constants.sortClose, role: .cancel) { }
+            }
         }
     }
 
     // MARK: - Subviews
 
+    private var sortedCollections: [CollectionItem] {
+        let list = MockData.collections
+        guard let order = CatalogSortOrder(rawValue: sortOrder) else { return list }
+        switch order {
+        case .byName:
+            return list.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+        case .byNftCount:
+            return list.sorted { $0.nftCount > $1.nftCount }
+        }
+    }
+
     private var collectionList: some View {
-        List(Array(MockData.collections.enumerated()), id: \.element.id) { index, item in
+        List(Array(self.sortedCollections.enumerated()), id: \.element.id) { index, item in
             Button {
                 self.selectedCollection = item
             } label: {
@@ -73,10 +95,13 @@ struct CatalogView: View {
     /// Кнопка сортировки в navigation bar
     private var sortButton: some View {
         Button {
-            // TODO: Action Sheet сортировки (#30)
+            self.showSortOptions = true
         } label: {
             Image("Sort")
+                .renderingMode(.template)
+                .foregroundStyle(.primary)
         }
+        .tint(.primary)
     }
 }
 
@@ -94,6 +119,13 @@ struct CatalogView: View {
     }
 }
 
+// MARK: - Sort Order
+
+private enum CatalogSortOrder: String {
+    case byName
+    case byNftCount
+}
+
 // MARK: - Constants
 
 private enum Constants {
@@ -105,6 +137,18 @@ private enum Constants {
     )
     static let retryTitle = NSLocalizedString(
         "Error.repeat", comment: ""
+    )
+    static let sortTitle = NSLocalizedString(
+        "Catalog.sort.title", comment: ""
+    )
+    static let sortByName = NSLocalizedString(
+        "Catalog.sort.byName", comment: ""
+    )
+    static let sortByNftCount = NSLocalizedString(
+        "Catalog.sort.byNftCount", comment: ""
+    )
+    static let sortClose = NSLocalizedString(
+        "Catalog.sort.close", comment: ""
     )
 }
 
