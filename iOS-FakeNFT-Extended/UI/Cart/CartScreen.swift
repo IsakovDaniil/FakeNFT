@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUI
 
 struct CartScreen: View {
     @State private var nfts: [Nft] = Nft.mockNFTs
