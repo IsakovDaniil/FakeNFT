@@ -65,6 +65,29 @@ struct EditProfileView: View {
             
             Button("Отмена", role: .cancel) {}
         }
+        .alert("Ссылка на фото", isPresented: $showURLAlert) {
+            TextField("https://example.com/", text: $urlInput)
+                .textInputAutocapitalization(.never)
+                .keyboardType(.URL)
+                .onChange(of: urlInput) { _, _ in
+                    hasUnsavedURLChanges = true
+                }
+            
+            Button("Отмена", role: .cancel) {
+                if hasUnsavedURLChanges {
+                    showURLAlert = false
+                    showExitAlert = true
+                } else {
+                    urlInput = ""
+                }
+            }
+            
+            Button("Сохранить") {
+                urlInput = ""
+                hasUnsavedURLChanges = false
+            }
+            .disabled(urlInput.isEmpty)
+        }
     }
 }
 
