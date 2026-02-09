@@ -10,6 +10,12 @@ import ProgressHUD
 
 struct CartScreen: View {
     @Environment(CartViewModel.self) var viewModel
+    
+    init() {
+        ProgressHUD.colorHUD = .appLightGrayUniversal
+        ProgressHUD.colorAnimation = .appBlackUniversal
+        ProgressHUD.colorStatus = .appBlackUniversal
+    }
 
     var body: some View {
         Group {

@@ -17,10 +17,20 @@ struct CartListView: View {
             VStack {
                 ScrollView {
                     LazyVStack {
-                        ForEach(nfts, id: \.id) { nft in
+                        ForEach(Array(nfts.enumerated()), id: \.offset) { index, nft in
                             CartCell(viewModel: viewModel, nft: nft)
                                 .padding(16)
                                 .contentShape(Rectangle())
+                                .onAppear {
+                                    if index == nfts.count - 1 {
+                                        Task { await viewModel.loadOrderNextPage() }
+                                    }
+                                }
+                        }
+                        
+                        if viewModel.isLoadingPage {
+                            ProgressView()
+                                .padding(.vertical, 16)
                         }
                     }
                     .padding(.top, 20)
@@ -37,7 +47,7 @@ struct CartListView: View {
             }
         }
         .refreshable {
-            await viewModel.loadNfts()
+            await viewModel.loadOrder()
         }
         
     }
