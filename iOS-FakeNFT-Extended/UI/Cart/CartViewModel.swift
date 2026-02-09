@@ -100,7 +100,7 @@ final class CartViewModel {
     }
 
     func removeNFT() async {
-        guard let nft = nftToDelete, !nfts.contains(where: { $0.id == nft.id }) else {
+        guard let nft = nftToDelete, nfts.contains(where: { $0.id == nft.id }) else {
             return
         }
         
@@ -117,5 +117,7 @@ final class CartViewModel {
         } catch {
             state = .error(error.localizedDescription)
         }
+        
+        closeDeleteView()
     }
 }

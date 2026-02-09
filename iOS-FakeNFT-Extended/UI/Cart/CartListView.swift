@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ProgressHUD
 
 struct CartListView: View {
     let viewModel: CartViewModel
@@ -35,6 +36,10 @@ struct CartListView: View {
                 CartDeleteView(viewModel: viewModel)
             }
         }
+        .refreshable {
+            await viewModel.loadNfts()
+        }
+        
     }
     
     private var bottomBar: some View {
@@ -72,5 +77,6 @@ struct CartListView: View {
         nftService: services.nftService,
         orderService: services.orderService
     )
-    return CartListView(viewModel: vm, nfts: Nft.mockNFTs)
+    
+    CartListView(viewModel: vm, nfts: Nft.mockNFTs)
 }

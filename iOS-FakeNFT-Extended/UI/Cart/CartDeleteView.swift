@@ -5,14 +5,6 @@
 //  Created by Султан Ахметбек on 08.02.2026.
 //
 
-
-//
-//  DeleteConfirmationView.swift
-//  iOS-FakeNFT-Extended
-//
-//  Created by Султан Ахметбек on 07.02.2026.
-//
-
 import SwiftUI
 import Kingfisher
 
@@ -32,34 +24,35 @@ struct CartDeleteView: View {
                 .multilineTextAlignment(.center)
             
             HStack(spacing: 8) {
-                Button {
-                    viewModel.closeDeleteView()
-                    Task { @MainActor in 
+                CartDeleteButton(title: "Удалить", color: .red) {
+                    Task {
                         await viewModel.removeNFT()
                     }
-                } label: {
-                    Text("Удалить")
-                        .font(.system(size: 17))
-                        .foregroundStyle(.red)
-                        .frame(minWidth: 127)
-                        .frame(height: 44)
-                        .background(.appBlack)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 
-                Button {
+                CartDeleteButton(title: "Вернуться", color: .appWhite) {
                     viewModel.closeDeleteView()
-                } label: {
-                    Text("Вернуться")
-                        .font(.system(size: 17))
-                        .foregroundStyle(.appWhite)
-                        .frame(minWidth: 127)
-                        .frame(height: 44)
-                        .background(.appBlack)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
             }
             .padding(.horizontal, 16)
+        }
+    }
+}
+
+struct CartDeleteButton: View {
+    let title: String
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 17))
+                .foregroundStyle(color)
+                .frame(minWidth: 127)
+                .frame(height: 44)
+                .background(.appBlack)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
         }
     }
 }
