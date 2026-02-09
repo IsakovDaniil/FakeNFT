@@ -16,7 +16,6 @@ final class ProfileViewModel {
     enum ViewState {
         case idle, loading
         case loaded(UserProfile)
-        case error(String)
     }
     
     var state: ViewState = .idle
@@ -24,6 +23,7 @@ final class ProfileViewModel {
     // MARK: - Alert State
     
     var showErrorAlert = false
+    var errorMessage: String?
     
     // MARK: - Navigation State
     
@@ -46,11 +46,6 @@ final class ProfileViewModel {
         return false
     }
     
-    var errorMessage: String? {
-        if case .error(let message) = state { return message }
-        return nil
-    }
-    
     // MARK: - Methods
     
     func loadProfile() async {
@@ -61,7 +56,7 @@ final class ProfileViewModel {
             let profile = try await fetchProfile()
             state = .loaded(profile)
         } catch {
-            state = .error("Не удалось загрузить профиль")
+            errorMessage = "Не удалось загрузить профиль"
             showErrorAlert = true
             state = .idle
         }
