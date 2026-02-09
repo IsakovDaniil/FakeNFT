@@ -8,10 +8,11 @@
 import SwiftUI
 import UIKit
 import Kingfisher
+import Combine
 
 struct CartCell: View {
+    let viewModel: CartViewModel
     let nft: Nft
-    @Binding var nftToDelete: Nft?
 
     var body: some View {
         HStack(spacing: 20) {
@@ -38,12 +39,11 @@ struct CartCell: View {
             Spacer()
             
             Button {
-                nftToDelete = nft
+                viewModel.setNftToDelete(nft)
             } label: {
                 Image(.cartDelete)
                     .foregroundStyle(.appBlack)
             }
-            
         }
     }
 
@@ -69,6 +69,15 @@ struct CartCell: View {
 }
 
 #Preview {
-    CartCell(nft: .mockNFT, nftToDelete: .constant(.mockNFT))
+    let services = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        orderStorage: OrderStorageImpl()
+    )
+    let vm = CartViewModel(
+        nftService: services.nftService,
+        orderService: services.orderService
+    )
+    return CartCell(viewModel: vm, nft: .mockNFT)
         .padding(.horizontal, 16)
 }

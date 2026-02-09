@@ -25,6 +25,7 @@ struct CartEmptyView: View {
             
             Spacer()
         }
+        .frame(maxWidth: .infinity)
     }
 }
 

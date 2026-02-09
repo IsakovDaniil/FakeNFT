@@ -5,24 +5,16 @@
 //  Created by Султан Ахметбек on 08.02.2026.
 //
 
-
-//
-//  DeleteConfirmationView.swift
-//  iOS-FakeNFT-Extended
-//
-//  Created by Султан Ахметбек on 07.02.2026.
-//
-
 import SwiftUI
 import Kingfisher
 
 struct CartDeleteView: View {
-    @Binding var nft: Nft?
+    let viewModel: CartViewModel
     
     var body: some View {
         VStack(spacing: 20) {
-            if let nft {
-                KFImage(nft.images.first!)
+            if let nft = viewModel.nftToDelete, let imageUrl = nft.images.first {
+                KFImage(imageUrl)
                     .frame(width: 108, height: 108)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
@@ -32,28 +24,14 @@ struct CartDeleteView: View {
                 .multilineTextAlignment(.center)
             
             HStack(spacing: 8) {
-                Button {
-                    nft = nil
-                } label: {
-                    Text("Удалить")
-                        .font(.system(size: 17))
-                        .foregroundStyle(.red)
-                        .frame(minWidth: 127)
-                        .frame(height: 44)
-                        .background(.appBlack)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                CartDeleteButton(title: "Удалить", color: .red) {
+                    Task {
+                        await viewModel.removeNFT()
+                    }
                 }
                 
-                Button {
-                    nft = nil
-                } label: {
-                    Text("Вернуться")
-                        .font(.system(size: 17))
-                        .foregroundStyle(.appWhite)
-                        .frame(minWidth: 127)
-                        .frame(height: 44)
-                        .background(.appBlack)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                CartDeleteButton(title: "Вернуться", color: .appWhite) {
+                    viewModel.closeDeleteView()
                 }
             }
             .padding(.horizontal, 16)
@@ -61,6 +39,34 @@ struct CartDeleteView: View {
     }
 }
 
+struct CartDeleteButton: View {
+    let title: String
+    let color: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 17))
+                .foregroundStyle(color)
+                .frame(minWidth: 127)
+                .frame(height: 44)
+                .background(.appBlack)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+}
+
 #Preview {
-    CartDeleteView(nft: .constant(.mockNFT))
+    let services = ServicesAssembly(
+        networkClient: DefaultNetworkClient(),
+        nftStorage: NftStorageImpl(),
+        orderStorage: OrderStorageImpl()
+    )
+    let vm = CartViewModel(
+        nftService: services.nftService,
+        orderService: services.orderService
+    )
+    
+    CartDeleteView(viewModel: vm)
 }
