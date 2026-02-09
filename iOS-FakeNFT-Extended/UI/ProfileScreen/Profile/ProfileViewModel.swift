@@ -9,7 +9,7 @@ import Observation
 
 @Observable
 @MainActor
-final class ProfileViewModel: ObservableObject {
+final class ProfileViewModel {
     
     // MARK: - State
     
@@ -45,5 +45,51 @@ final class ProfileViewModel: ObservableObject {
     var errorMessage: String? {
         if case .error(let message) = state { return message }
         return nil
+    }
+    
+    // MARK: - Methods
+    
+    func loadProfile() async {
+        state = .loading
+        // TODO
+    }
+    
+    func retry() async {
+        await loadProfile()
+    }
+    
+    // MARK: - Navigation Actions
+    
+    func openEditProfile() {
+        showEditProfile = true
+    }
+    
+    func openWebsite() {
+        guard profile?.website != nil else { return }
+        
+        showWebView = true
+    }
+    
+    func openMyNFT() {
+        showMyNFT = true
+    }
+    
+    func openFavoriteNFT() {
+        showFavoriteNFT = true
+    }
+    
+    // MARK: - Private Methods
+    
+    private func fetchProfile() async throws -> UserProfile {
+        // MOCK DATA
+        UserProfile(
+            name: "Joaquin Phoenix",
+            avatar: "https://example.com/avatar.jpg",
+            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы.",
+            website: "JoaquinPhoenix.com",
+            myNfts: Array(repeating: "nft-id", count: 112),
+            favoriteNfts: Array(repeating: "fav-id", count: 11),
+            id: "user-1"
+        )
     }
 }

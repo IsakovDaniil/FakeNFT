@@ -11,6 +11,7 @@ struct UserProfile: Decodable {
     let name: String
     let avatar: String
     let description: String
+    let website: String
     let myNfts: [String]
     let favoriteNfts: [String]
     let id: String
@@ -24,7 +25,7 @@ struct UserProfile: Decodable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case name, avatar, description, id
+        case name, avatar, description, website, id
         case myNfts = "nfts"
         case favoriteNfts = "likes"
     }
