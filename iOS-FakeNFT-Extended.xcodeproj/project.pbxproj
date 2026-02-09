@@ -42,6 +42,8 @@
 		ABC5E1E42C32055B002B4068 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E32C32055B002B4068 /* ErrorView.swift */; };
 		ABC5E1E62C320585002B4068 /* LinePageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E52C320585002B4068 /* LinePageControl.swift */; };
 		ABC5E1E82C320610002B4068 /* NftDetailBridgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */; };
+		F7BBA3442F38F9DD005605DF /* CatalogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BBA3432F38F9DC005605DF /* CatalogViewModel.swift */; };
+		F7BBA3482F38FA3B005605DF /* CollectionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BBA3472F38FA3B005605DF /* CollectionItem.swift */; };
 		F7E3D1012F386B0F000F6FC2 /* CollectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E3D1002F386B0F000F6FC2 /* CollectionRow.swift */; };
 		F7FD71302F378F6000862010 /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FD712F2F378F6000862010 /* CatalogView.swift */; };
 /* End PBXBuildFile section */
@@ -100,10 +102,10 @@
 		ABC5E1E32C32055B002B4068 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		ABC5E1E52C320585002B4068 /* LinePageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinePageControl.swift; sourceTree = "<group>"; };
 		ABC5E1E72C320610002B4068 /* NftDetailBridgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftDetailBridgeView.swift; sourceTree = "<group>"; };
+		F7BBA3432F38F9DC005605DF /* CatalogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewModel.swift; sourceTree = "<group>"; };
+		F7BBA3472F38FA3B005605DF /* CollectionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionItem.swift; sourceTree = "<group>"; };
 		F7E3D1002F386B0F000F6FC2 /* CollectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionRow.swift; sourceTree = "<group>"; };
 		F7FD712F2F378F6000862010 /* CatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogView.swift; sourceTree = "<group>"; };
-		F7FD7D892F38792B00C59D42 /* FakeNFT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FakeNFT.swift; path = App/FakeNFT.swift; sourceTree = "<group>"; };
-		F7FD7D8B2F387A0000C59D42 /* Resources/Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -246,6 +248,7 @@
 			isa = PBXGroup;
 			children = (
 				ABC5E19F2C31F6CB002B4068 /* Network */,
+				F7BBA3472F38FA3B005605DF /* CollectionItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 			children = (
 				F7FD712F2F378F6000862010 /* CatalogView.swift */,
 				F7E3D1002F386B0F000F6FC2 /* CollectionRow.swift */,
+				F7BBA3432F38F9DC005605DF /* CatalogViewModel.swift */,
 			);
 			path = Catalog;
 			sourceTree = "<group>";
@@ -520,6 +524,7 @@
 				ABC5E1DD2C3204DC002B4068 /* CellsReusingUtils.swift in Sources */,
 				861475382F388E7C00463967 /* FakeNFT.swift in Sources */,
 				ABC5E1B52C31FC57002B4068 /* TabBarView.swift in Sources */,
+				F7BBA3482F38FA3B005605DF /* CollectionItem.swift in Sources */,
 				ABC5E1E42C32055B002B4068 /* ErrorView.swift in Sources */,
 				ABC5E1A62C31F815002B4068 /* NetworkRequest.swift in Sources */,
 				ABC5E1D52C320446002B4068 /* NftDetailInput.swift in Sources */,
@@ -529,6 +534,7 @@
 				ABC5E1A42C31F800002B4068 /* NetworkClient.swift in Sources */,
 				ABC5E1D32C320438002B4068 /* NftDetailAssembly.swift in Sources */,
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,
+				F7BBA3442F38F9DD005605DF /* CatalogViewModel.swift in Sources */,
 				ABC5E1AE2C31FB7F002B4068 /* NftByIdRequest.swift in Sources */,
 				ABC5E1DB2C3204CE002B4068 /* UIView+Constraints.swift in Sources */,
 				ABC5E1CB2C3203FC002B4068 /* NftDetailCellModel.swift in Sources */,

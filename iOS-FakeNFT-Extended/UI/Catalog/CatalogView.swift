@@ -11,19 +11,17 @@ struct CatalogView: View {
 
     // MARK: - State
 
-    @State private var isLoading = false
-    @State private var showError = false
+    @State private var viewModel = CatalogViewModel()
     @State private var selectedCollection: CollectionItem?
     @State private var showSortOptions = false
-    @AppStorage("catalogSortOrder") private var sortOrder: String = CatalogSortOrder.byNftCount.rawValue
+    @State private var showErrorAlert = false
 
     // MARK: - Body
 
     var body: some View {
         NavigationStack {
             ZStack {
-                if self.isLoading {
-                    // TODO: заменить на общий экран загрузки (компонент из develop)
+                if viewModel.isLoading {
                     ProgressView()
                 } else {
                     self.collectionList
@@ -41,40 +39,37 @@ struct CatalogView: View {
             }
             .alert(
                 Constants.errorMessage,
-                isPresented: self.$showError
+                isPresented: self.$showErrorAlert
             ) {
                 Button(Constants.cancelTitle, role: .cancel) { }
                 Button(Constants.retryTitle) {
-                    // TODO: Retry — будет подключено к ViewModel (#32)
+                    viewModel.retry()
                 }
+            }
+            .onChange(of: viewModel.showError) { _, new in
+                self.showErrorAlert = new
             }
             .confirmationDialog(Constants.sortTitle, isPresented: self.$showSortOptions) {
                 Button(Constants.sortByName) {
-                    self.sortOrder = CatalogSortOrder.byName.rawValue
+                    viewModel.setSortOrder(.byName)
                 }
                 Button(Constants.sortByNftCount) {
-                    self.sortOrder = CatalogSortOrder.byNftCount.rawValue
+                    viewModel.setSortOrder(.byNftCount)
                 }
                 Button(Constants.sortClose, role: .cancel) { }
+            }
+            .onAppear {
+                Task {
+                    await viewModel.loadCollections()
+                }
             }
         }
     }
 
     // MARK: - Subviews
 
-    private var sortedCollections: [CollectionItem] {
-        let list = MockData.collections
-        guard let order = CatalogSortOrder(rawValue: sortOrder) else { return list }
-        switch order {
-        case .byName:
-            return list.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
-        case .byNftCount:
-            return list.sorted { $0.nftCount > $1.nftCount }
-        }
-    }
-
     private var collectionList: some View {
-        List(Array(self.sortedCollections.enumerated()), id: \.element.id) { index, item in
+        List(Array(viewModel.sortedCollections.enumerated()), id: \.element.id) { index, item in
             Button {
                 self.selectedCollection = item
             } label: {
@@ -119,13 +114,6 @@ struct CatalogView: View {
     }
 }
 
-// MARK: - Sort Order
-
-private enum CatalogSortOrder: String {
-    case byName
-    case byNftCount
-}
-
 // MARK: - Constants
 
 private enum Constants {
@@ -150,46 +138,4 @@ private enum Constants {
     static let sortClose = NSLocalizedString(
         "Catalog.sort.close", comment: ""
     )
-}
-
-// MARK: - Mock Data (из Assets для просмотра дизайна)
-
-private enum MockData {
-    static let collections: [CollectionItem] = [
-        CollectionItem(
-            id: "1",
-            name: "Peach",
-            imageURLs: [],
-            nftCount: 11,
-            localCoverImageName: "CataloguePeach"
-        ),
-        CollectionItem(
-            id: "2",
-            name: "Blue",
-            imageURLs: [],
-            nftCount: 6,
-            localCoverImageName: "CatalogueBlue"
-        ),
-        CollectionItem(
-            id: "3",
-            name: "Brown",
-            imageURLs: [],
-            nftCount: 8,
-            localCoverImageName: "CatalogueBrown"
-        ),
-        CollectionItem(
-            id: "4",
-            name: "Green",
-            imageURLs: [],
-            nftCount: 5,
-            localCoverImageName: "CatalogueGreen"
-        ),
-        CollectionItem(
-            id: "5",
-            name: "Mix",
-            imageURLs: [],
-            nftCount: 12,
-            localCoverImageName: "CataloguePeach"
-        )
-    ]
 }

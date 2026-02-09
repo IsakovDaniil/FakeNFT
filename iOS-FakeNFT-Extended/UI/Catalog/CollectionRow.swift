@@ -8,17 +8,6 @@
 import Kingfisher
 import SwiftUI
 
-// MARK: - Model
-
-struct CollectionItem: Identifiable, Hashable {
-    let id: String
-    let name: String
-    let imageURLs: [URL]
-    let nftCount: Int
-    /// Для превью и моков: одна картинка из Assets — уже полоска из трёх совмещённых изображений на всю строку.
-    var localCoverImageName: String?
-}
-
 // MARK: - View
 
 struct CollectionRow: View {
