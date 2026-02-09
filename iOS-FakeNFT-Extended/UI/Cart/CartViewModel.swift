@@ -31,10 +31,16 @@ final class CartViewModel {
     }
 
     var itemsCount: Int? {
-        order?.nfts.count
+        nfts.count
+    }
+    
+    var totalPriceText: String {
+        let total = nfts.reduce(0.0) { $0 + Double($1.price) }
+        return String(format: "%.2f", total)
+            .replacingOccurrences(of: ".", with: ",")
     }
 
-    func chooseDelete(_ nft: Nft) {
+    func setNftToDelete(_ nft: Nft) {
         nftToDelete = nft
     }
     
@@ -121,3 +127,4 @@ final class CartViewModel {
         closeDeleteView()
     }
 }
+

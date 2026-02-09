@@ -39,7 +39,7 @@ struct CartCell: View {
             Spacer()
             
             Button {
-                viewModel.chooseDelete(nft)
+                viewModel.setNftToDelete(nft)
             } label: {
                 Image(.cartDelete)
                     .foregroundStyle(.appBlack)

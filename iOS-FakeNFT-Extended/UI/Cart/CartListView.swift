@@ -48,7 +48,7 @@ struct CartListView: View {
                 Text("\(nfts.count) NFT")
                     .font(.regular15)
                 
-                Text("\(totalPriceText) ETH")
+                Text("\(viewModel.totalPriceText) ETH")
                     .font(.bold17)
                     .foregroundStyle(.appGreen)
             }
@@ -58,12 +58,6 @@ struct CartListView: View {
         .padding(16)
         .background(Color(.appLightGray).opacity(0.3))
         .clipShape(UnevenRoundedRectangle(topLeadingRadius: 12, topTrailingRadius: 12))
-    }
-    
-    private var totalPriceText: String {
-        let total = nfts.reduce(0.0) { $0 + Double($1.price) }
-        return String(format: "%.2f", total)
-            .replacingOccurrences(of: ".", with: ",")
     }
 }
 
