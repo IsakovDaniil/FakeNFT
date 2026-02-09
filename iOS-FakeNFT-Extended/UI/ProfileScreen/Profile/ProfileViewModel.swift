@@ -21,6 +21,10 @@ final class ProfileViewModel {
     
     var state: ViewState = .idle
     
+    // MARK: - Alert State
+    
+    var showErrorAlert = false
+    
     // MARK: - Navigation State
     
     var showEditProfile = false
@@ -51,7 +55,16 @@ final class ProfileViewModel {
     
     func loadProfile() async {
         state = .loading
-        // TODO
+        
+        do {
+            try await Task.sleep(nanoseconds: 1_000_000_000)
+            let profile = try await fetchProfile()
+            state = .loaded(profile)
+        } catch {
+            state = .error("Не удалось загрузить профиль")
+            showErrorAlert = true
+            state = .idle
+        }
     }
     
     func retry() async {
