@@ -21,9 +21,6 @@ final class CartViewModel {
     private(set) var order: Order?
     private(set) var nfts: [Nft] = []
     private(set) var nftToDelete: Nft?
-    private(set) var isLoadingPage = false
-    
-    private var currentPage: Int = 0
     
     private let nftService: NftService
     private let orderService: OrderService
@@ -56,33 +53,12 @@ final class CartViewModel {
     func loadOrder() async {
         state = .loading
         do {
-            currentPage = 0
-            
-            let loadedOrder = try await orderService.load(page: currentPage)
+            let loadedOrder = try await orderService.load()
             order = loadedOrder
             
             nfts.removeAll()
             await loadNfts()
             state = .data
-        } catch {
-            state = .error(error.localizedDescription)
-        }
-    }
-    
-    func loadOrderNextPage() async {
-        if isLoadingPage { return }
-        isLoadingPage = true
-        defer {
-            isLoadingPage = false
-        }
-        
-        do {
-            try await Task.sleep(nanoseconds: 1_000_000_000)
-            currentPage += 1
-            let loadedOrder = try await orderService.load(page: currentPage)
-            order = loadedOrder
-
-            await loadNfts()
         } catch {
             state = .error(error.localizedDescription)
         }
