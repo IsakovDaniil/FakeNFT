@@ -1,10 +1,8 @@
 import Foundation
 
 struct OrderRequest: NetworkRequest {
-    let page: Int
-    
     var endpoint: URL? {
-        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1?page=\(page)&size=10")
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
 
     var httpMethod: HttpMethod { .get }
