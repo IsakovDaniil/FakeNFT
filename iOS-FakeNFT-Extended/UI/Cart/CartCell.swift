@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 import Kingfisher
 import Combine
 
@@ -48,7 +47,7 @@ struct CartCell: View {
     }
 
     private var nftImage: some View {
-        KFImage(nft.images.first)
+        KFImage(nft.imagesUrls.first)
             .frame(width: 108, height: 108)
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }

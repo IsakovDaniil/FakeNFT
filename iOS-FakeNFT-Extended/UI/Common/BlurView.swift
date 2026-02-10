@@ -7,7 +7,6 @@
 
 
 import SwiftUI
-import UIKit
 
 struct BlurView: UIViewRepresentable {
     let style: UIBlurEffect.Style

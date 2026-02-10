@@ -17,7 +17,7 @@ struct CartListView: View {
             VStack {
                 ScrollView {
                     LazyVStack {
-                        ForEach(Array(nfts.enumerated()), id: \.offset) { index, nft in
+                        ForEach(Array(nfts.enumerated()), id: \.offset) { _, nft in
                             CartCell(viewModel: viewModel, nft: nft)
                                 .padding(16)
                                 .contentShape(Rectangle())
