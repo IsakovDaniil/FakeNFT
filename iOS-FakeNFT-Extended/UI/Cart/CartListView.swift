@@ -30,7 +30,6 @@ struct CartListView: View {
         .refreshable {
             await viewModel.loadOrder()
         }
-        
     }
     
     private var bottomBar: some View {
