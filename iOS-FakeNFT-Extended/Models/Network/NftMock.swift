@@ -26,7 +26,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Yellow/Helga/3.png")!
             ],
             rating: 5,
             description: "tritani appareat constituam deterruisset justo",
@@ -41,7 +41,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/April/3.png")!
             ],
             rating: 3,
             description: "fringilla eam vim sonet faucibus impetus",
@@ -56,7 +56,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Kaydan/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Kaydan/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Kaydan/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Gray/Kaydan/3.png")!
             ],
             rating: 2,
             description: "tacimates docendi efficitur tempus non quod cras pellentesque commune",
@@ -71,7 +71,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Lumpy/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Lumpy/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Lumpy/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Lumpy/3.png")!
             ],
             rating: 4,
             description: "suspendisse atomorum sumo erroribus instructior etiam",
@@ -86,7 +86,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Biscuit/3.png")!
             ],
             rating: 1,
             description: "affert moderatius eloquentiam magna tellus scripserit",
@@ -101,7 +101,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Paddy/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Paddy/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Paddy/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/White/Paddy/3.png")!
             ],
             rating: 2,
             description: "fusce sit in quis definitionem sem noster sollicitudin",
@@ -116,7 +116,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Ellsa/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Ellsa/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Ellsa/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Beige/Ellsa/3.png")!
             ],
             rating: 3,
             description: "eloquentiam deterruisset tractatos repudiandae nunc a electram",
@@ -131,7 +131,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Cashew/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Cashew/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Cashew/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Pink/Cashew/3.png")!
             ],
             rating: 2,
             description: "proin error in eirmod laoreet quidam",
@@ -146,7 +146,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Blue/Loki/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Blue/Loki/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Blue/Loki/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Blue/Loki/3.png")!
             ],
             rating: 1,
             description: "tacimates prompta suspendisse scelerisque qui iisque",
@@ -161,7 +161,7 @@ enum NftMock {
             imagesUrls: [
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Nacho/1.png")!,
                 URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Nacho/2.png")!,
-                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Nacho/3.png")!,
+                URL(string: "https://code.s3.yandex.net/Mobile/iOS/NFT/Peach/Nacho/3.png")!
             ],
             rating: 1,
             description: "animal solet pharetra perpetua usu alienum",

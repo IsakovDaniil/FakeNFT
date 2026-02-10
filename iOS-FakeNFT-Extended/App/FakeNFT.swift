@@ -8,14 +8,14 @@ struct FakeNFT: App {
             nftStorage: NftStorageImpl(),
             orderStorage: OrderStorageImpl()
         )
-        let vm = CartViewModel(
+        let viewModel = CartViewModel(
             nftService: servicesAssembly.nftService,
             orderService: servicesAssembly.orderService
         )
         
         WindowGroup {
             ContentView()
-                .environment(vm)
+                .environment(viewModel)
         }
     }
 }

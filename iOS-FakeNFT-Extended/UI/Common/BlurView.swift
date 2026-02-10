@@ -5,7 +5,6 @@
 //  Created by Султан Ахметбек on 08.02.2026.
 //
 
-
 import SwiftUI
 
 struct BlurView: UIViewRepresentable {

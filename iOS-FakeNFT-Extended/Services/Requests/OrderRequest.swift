@@ -17,7 +17,7 @@ struct OrderSaveRequest: NetworkRequest {
 
     var httpMethod: HttpMethod { .put }
 
-    var headers: [String : String]? {
+    var headers: [String: String]? {
         ["Content-Type": "application/x-www-form-urlencoded; charset=utf-8"]
     }
 

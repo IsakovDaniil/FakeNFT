@@ -73,10 +73,11 @@ struct CartCell: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: services.nftService,
         orderService: services.orderService
     )
-    return CartCell(viewModel: vm, nft: .mockNFT)
+    
+    CartCell(viewModel: viewModel, nft: NftMock.mockNFT)
         .padding(.horizontal, 16)
 }

@@ -13,28 +13,19 @@ struct CartListView: View {
     let nfts: [Nft]
     
     var body: some View {
-        ZStack {
-            VStack {
-                ScrollView {
-                    LazyVStack {
-                        ForEach(Array(nfts.enumerated()), id: \.offset) { _, nft in
-                            CartCell(viewModel: viewModel, nft: nft)
-                                .padding(16)
-                                .contentShape(Rectangle())
-                        }
+        VStack {
+            ScrollView {
+                LazyVStack {
+                    ForEach(Array(nfts.enumerated()), id: \.offset) { _, nft in
+                        CartCell(viewModel: viewModel, nft: nft)
+                            .padding(16)
+                            .contentShape(Rectangle())
                     }
-                    .padding(.top, 20)
                 }
-                
-                bottomBar
+                .padding(.top, 20)
             }
             
-            if viewModel.nftToDelete != nil {
-                BlurView(style: .systemUltraThinMaterial)
-                    .ignoresSafeArea()
-                
-                CartDeleteView(viewModel: viewModel)
-            }
+            bottomBar
         }
         .refreshable {
             await viewModel.loadOrder()
@@ -67,10 +58,10 @@ struct CartListView: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: services.nftService,
         orderService: services.orderService
     )
     
-    CartListView(viewModel: vm, nfts: Nft.mockNFTs)
+    CartListView(viewModel: viewModel, nfts: NftMock.mockNFTs)
 }

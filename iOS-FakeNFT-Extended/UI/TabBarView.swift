@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct TabBarView: View {
+    @Environment(CartViewModel.self) private var viewModel
+    
     var body: some View {
         TabView {
             CartScreen()
@@ -13,6 +15,14 @@ struct TabBarView: View {
                 }
                 .backgroundStyle(.background)
         }
+        .overlay {
+            if viewModel.nftToDelete != nil {
+                BlurView(style: .systemUltraThinMaterial)
+                    .ignoresSafeArea()
+                
+                CartDeleteView(viewModel: viewModel)
+            }
+        }
     }
 }
 
@@ -22,11 +32,11 @@ struct TabBarView: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: servicesAssembly.nftService,
         orderService: servicesAssembly.orderService
     )
     
     TabBarView()
-        .environment(vm)
+        .environment(viewModel)
 }

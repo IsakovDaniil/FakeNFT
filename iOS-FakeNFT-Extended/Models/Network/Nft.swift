@@ -10,4 +10,3 @@ struct Nft: Decodable, Equatable {
     let author: String
     let website: String
 }
-

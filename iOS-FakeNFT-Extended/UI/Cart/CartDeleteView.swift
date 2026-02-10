@@ -63,10 +63,10 @@ private struct CartDeleteButton: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: services.nftService,
         orderService: services.orderService
     )
     
-    CartDeleteView(viewModel: vm)
+    CartDeleteView(viewModel: viewModel)
 }

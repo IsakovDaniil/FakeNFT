@@ -50,11 +50,11 @@ struct CartScreen: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: services.nftService,
         orderService: services.orderService
     )
     
     CartScreen()
-        .environment(vm)
+        .environment(viewModel)
 }
