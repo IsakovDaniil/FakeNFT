@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 import Kingfisher
 import Combine
 
@@ -48,7 +47,7 @@ struct CartCell: View {
     }
 
     private var nftImage: some View {
-        KFImage(nft.images.first)
+        KFImage(nft.imagesUrls.first)
             .frame(width: 108, height: 108)
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
@@ -74,10 +73,11 @@ struct CartCell: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: services.nftService,
         orderService: services.orderService
     )
-    return CartCell(viewModel: vm, nft: .mockNFT)
+    
+    CartCell(viewModel: viewModel, nft: NftMock.mockNFT)
         .padding(.horizontal, 16)
 }

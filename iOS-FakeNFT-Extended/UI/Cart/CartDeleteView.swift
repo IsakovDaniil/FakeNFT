@@ -13,7 +13,7 @@ struct CartDeleteView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            if let nft = viewModel.nftToDelete, let imageUrl = nft.images.first {
+            if let nft = viewModel.nftToDelete, let imageUrl = nft.imagesUrls.first {
                 KFImage(imageUrl)
                     .frame(width: 108, height: 108)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -39,7 +39,7 @@ struct CartDeleteView: View {
     }
 }
 
-struct CartDeleteButton: View {
+private struct CartDeleteButton: View {
     let title: String
     let color: Color
     let action: () -> Void
@@ -63,10 +63,10 @@ struct CartDeleteButton: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: services.nftService,
         orderService: services.orderService
     )
     
-    CartDeleteView(viewModel: vm)
+    CartDeleteView(viewModel: viewModel)
 }

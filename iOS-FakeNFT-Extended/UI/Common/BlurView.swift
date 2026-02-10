@@ -5,9 +5,7 @@
 //  Created by Султан Ахметбек on 08.02.2026.
 //
 
-
 import SwiftUI
-import UIKit
 
 struct BlurView: UIViewRepresentable {
     let style: UIBlurEffect.Style

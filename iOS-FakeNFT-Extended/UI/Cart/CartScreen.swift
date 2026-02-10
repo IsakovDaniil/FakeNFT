@@ -9,7 +9,7 @@ import SwiftUI
 import ProgressHUD
 
 struct CartScreen: View {
-    @Environment(CartViewModel.self) var viewModel
+    @Environment(CartViewModel.self) private var viewModel
     
     init() {
         ProgressHUD.colorHUD = .appLightGrayUniversal
@@ -19,7 +19,7 @@ struct CartScreen: View {
 
     var body: some View {
         Group {
-            if viewModel.nfts.isEmpty == false {
+            if !viewModel.nfts.isEmpty {
                 CartListView(viewModel: viewModel, nfts: viewModel.nfts)
             } else {
                 CartEmptyView()
@@ -50,11 +50,11 @@ struct CartScreen: View {
         nftStorage: NftStorageImpl(),
         orderStorage: OrderStorageImpl()
     )
-    let vm = CartViewModel(
+    let viewModel = CartViewModel(
         nftService: services.nftService,
         orderService: services.orderService
     )
     
     CartScreen()
-        .environment(vm)
+        .environment(viewModel)
 }

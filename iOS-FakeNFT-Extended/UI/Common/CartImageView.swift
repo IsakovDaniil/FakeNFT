@@ -33,5 +33,5 @@ struct CartImageView: View {
 }
 
 #Preview {
-    CartImageView(imageUrl: Nft.mockNFT.images.first!)
+    CartImageView(imageUrl: NftMock.mockNFT.imagesUrls.first!)
 }
