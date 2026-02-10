@@ -9,7 +9,7 @@ import SwiftUI
 import Observation
 
 final class EditProfileViewModel{
-   
+    
     // MARK: - State
     
     enum ViewState {
@@ -46,5 +46,52 @@ final class EditProfileViewModel{
     var urlInput = ""
     var hasUnsavedURLChanges = false
     
+    // MARK: - Computer Properties
+    
+    var hasChanges: Bool {
+        name != originalName ||
+        description != originalDescription ||
+        website != originalWebsite ||
+        avatarURL != originalAvatarURL
+    }
+    
+    var isLoading: Bool {
+        state == .loading || state == .saving
+    }
+    
+    var canSave: Bool {
+        hasChanges && !name.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+    
+    
+    // MARK: - Methods
+    
+    func loadProfile(from profile: UserProfile) {
+        name = profile.name
+        description = profile.description
+        website = profile.website
+        avatarURL = profile.avatar
+        
+        originalName = profile.name
+        originalDescription = profile.description
+        originalWebsite = profile.website
+        originalAvatarURL = profile.avatar
+    }
+    
+    func saveProfile() {
+        guard canSave else { return }
+        
+        // TODO: Здесь будет сетевой запрос
+        print("Saving profile:")
+        print("Name: \(name)")
+        print("Description: \(description)")
+        print("Website: \(website)")
+        print("Avatar: \(avatarURL)")
+        
+        originalName = name
+        originalDescription = description
+        originalWebsite = website
+        originalAvatarURL = avatarURL
+    }
 }
 
