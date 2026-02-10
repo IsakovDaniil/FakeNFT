@@ -109,9 +109,44 @@ private extension EditProfileView {
     
     var fieldsSection: some View {
         VStack(spacing: 20) {
-            EditProfileField(title: "Имя", text: $viewModel.name, isMultiline: false)
-            EditProfileField(title: "Описание", text: $viewModel.description, isMultiline: true)
-            EditProfileField(title: "Сайт", text: $viewModel.website, isMultiline: false)
+            VStack(alignment: .leading, spacing: 4) {
+                EditProfileField(title: "Имя", text: $viewModel.name, isMultiline: false)
+                    .onChange(of: viewModel.name) { _, _ in
+                        viewModel.validateName()
+                    }
+                
+                if let error = viewModel.nameError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                EditProfileField(title: "Описание", text: $viewModel.description, isMultiline: true)
+                    .onChange(of: viewModel.description) { _, _ in
+                        viewModel.validateDescription()
+                    }
+                
+                if let error = viewModel.descriptionError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                EditProfileField(title: "Сайт", text: $viewModel.website, isMultiline: false)
+                    .onChange(of: viewModel.website) { _, _ in
+                        viewModel.validateWebsite()
+                    }
+                
+                if let error = viewModel.websiteError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
         }
     }
     
