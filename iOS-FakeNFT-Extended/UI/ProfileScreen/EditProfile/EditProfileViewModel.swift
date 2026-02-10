@@ -93,5 +93,49 @@ final class EditProfileViewModel{
         originalWebsite = website
         originalAvatarURL = avatarURL
     }
+    
+    // MARK: - Avatar Actions
+    
+    func openAvatarActionSheet() {
+        showActionSheet = true
+    }
+    
+    func changeAvatar() {
+        showURLAlert = true
+    }
+    
+    func deleteAvatar() {
+        avatarURL = ""
+    }
+    
+    func saveAvatarURL() {
+        guard !urlInput.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        
+        if isValidURL(urlInput) {
+            avatarURL = urlInput
+            urlInput = ""
+            hasUnsavedURLChanges = false
+        } else {
+            errorMessage = "Неверный формат URL"
+            showErrorAlert = true
+        }
+    }
+    
+    func cancelURLInput() {
+        if hasUnsavedURLChanges {
+            showURLAlert = false
+            showExitAlert = true
+        } else {
+            urlInput = ""
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func isValidURL(_ string: String) -> Bool {
+        guard let url = URL(string: string) else { return false }
+        
+        return url.scheme == "http" || url.scheme == "https"
+    }
 }
 
