@@ -50,7 +50,7 @@
 
 - **Модель данных:**  
   `UserProfile` с полями: id, name, bio, website, avatarURL, nftCount, favouritesCount  
-  (est: 0,5 часа; fact: x часов)
+  (est: 0,5 часа; fact: 20 минут)
 
 - **Валидация полей:**  
   Правила для имени, описания, URL сайта и аватара  
