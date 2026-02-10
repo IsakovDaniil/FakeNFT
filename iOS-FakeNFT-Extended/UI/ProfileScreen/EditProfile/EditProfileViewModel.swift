@@ -37,6 +37,13 @@ final class EditProfileViewModel{
     private var originalWebsite: String = ""
     private var originalAvatarURL: String = ""
     
+    // MARK: - Validation States
+    
+    var nameError: String?
+    var descriptionError: String?
+    var websiteError: String?
+    var avatarURLError: String?
+    
     // MARK: - Alert States
     
     var showActionSheet = false
@@ -62,9 +69,16 @@ final class EditProfileViewModel{
     }
     
     var canSave: Bool {
-        hasChanges && !name.trimmingCharacters(in: .whitespaces).isEmpty
+        guard hasChanges else { return false }
+        
+        let validationResult = ProfileValidator.validateAllFields(
+            name: name,
+            description: description,
+            website: website,
+            avatarURL: avatarURL)
+        
+        return validationResult.isValid
     }
-    
     
     // MARK: - Methods
     
@@ -81,7 +95,20 @@ final class EditProfileViewModel{
     }
     
     func saveProfile() {
-        guard canSave else { return }
+        clearErrors()
+        
+        let validationResult = ProfileValidator.validateAllFields(
+            name: name,
+            description: description,
+            website: website,
+            avatarURL: avatarURL
+        )
+        
+        guard validationResult.isValid else {
+            errorMessage = validationResult.errorMessage
+            showErrorAlert = true
+            return
+        }
         
         // TODO: Здесь будет сетевой запрос
         print("Saving profile:")
@@ -96,6 +123,35 @@ final class EditProfileViewModel{
         originalAvatarURL = avatarURL
     }
     
+    // MARK: - Validation Methods
+    
+    func validateName() {
+        let result = ProfileValidator.validateName(name)
+        nameError = result.errorMessage
+    }
+    
+    func validateDescription() {
+        let result = ProfileValidator.validateDescription(description)
+        descriptionError = result.errorMessage
+    }
+    
+    func validateWebsite() {
+        let result = ProfileValidator.validateWebsite(website)
+        websiteError = result.errorMessage
+    }
+    
+    func validateAvatarURL() {
+        let result = ProfileValidator.validateAvatarURL(avatarURL)
+        avatarURLError = result.errorMessage
+    }
+    
+    private func clearErrors() {
+        nameError = nil
+        descriptionError = nil
+        websiteError = nil
+        avatarURLError = nil
+    }
+    
     // MARK: - Avatar Actions
     
     func openAvatarActionSheet() {
@@ -108,17 +164,22 @@ final class EditProfileViewModel{
     
     func deleteAvatar() {
         avatarURL = ""
+        avatarURLError = nil
     }
     
     func saveAvatarURL() {
-        guard !urlInput.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        let trimmed = urlInput.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
         
-        if isValidURL(urlInput) {
-            avatarURL = urlInput
+        let result = ProfileValidator.validateAvatarURL(trimmed)
+        
+        if result.isValid {
+            avatarURL = trimmed
             urlInput = ""
             hasUnsavedURLChanges = false
+            avatarURLError = nil
         } else {
-            errorMessage = "Неверный формат URL"
+            errorMessage = result.errorMessage
             showErrorAlert = true
         }
     }
@@ -140,4 +201,3 @@ final class EditProfileViewModel{
         return url.scheme == "http" || url.scheme == "https"
     }
 }
-
