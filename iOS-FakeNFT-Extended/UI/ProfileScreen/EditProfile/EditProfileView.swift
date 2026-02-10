@@ -12,37 +12,15 @@ struct EditProfileView: View {
     // MARK: - Properties
     
     @Environment(\.dismiss) private var dismiss
+    @State private var viewModel = EditProfileViewModel()
     
-    @State private var name: String = "Joaquin Phoenix"
-    @State private var description: String = "bio"
-    @State private var website: String = "app.ru"
-    
-    // MARK: - Alert States
-    
-    @State private var showActionSheet = false
-    @State private var showURLAlert = false
-    @State private var showExitAlert = false
-    @State private var urlInput = ""
-    @State private var hasUnsavedURLChanges = false
-    
-    // MARK: - Original Values
-    
-    private let originalName: String = "Joaquin Phoenix"
-    private let originalDescription: String = "bio"
-    private let originalWebsite: String = "app.ru"
-    
-    private var hasChanges: Bool {
-        name != originalName ||
-        description != originalDescription ||
-        website != originalWebsite
-    }
+    let profile: UserProfile
     
     // MARK: - Body
     
     var body: some View {
         ZStack {
-            Color.appWhite
-                .ignoresSafeArea()
+            Color.appWhite.ignoresSafeArea()
             
             ScrollView {
                 VStack(spacing: 20) {
@@ -56,12 +34,15 @@ struct EditProfileView: View {
                     .padding()
             }
         }
-        .navigationBarBackButtonHidden(hasChanges)
+        .onAppear {
+            viewModel.loadProfile(from: profile)
+        }
+        .navigationBarBackButtonHidden(viewModel.hasChanges)
         .toolbar {
-            if hasChanges {
+            if viewModel.hasChanges {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        showExitAlert = true
+                        viewModel.showExitAlert = true
                     } label: {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.appBlack)
@@ -69,44 +50,45 @@ struct EditProfileView: View {
                 }
             }
         }
-        .confirmationDialog("Фото профиля", isPresented: $showActionSheet, titleVisibility: .visible) {
+        .confirmationDialog("Фото профиля", isPresented: $viewModel.showActionSheet, titleVisibility: .visible) {
             Button("Изменить фото") {
-                showURLAlert = true
+                viewModel.changeAvatar()
             }
             
             Button("Удалить фото", role: .destructive) {
-                print("Удалить фото")
+                viewModel.deleteAvatar()
             }
             
             Button("Отмена", role: .cancel) {}
         }
-        .alert("Ссылка на фото", isPresented: $showURLAlert) {
-            TextField("https://example.com/", text: $urlInput)
+        .alert("Ссылка на фото", isPresented: $viewModel.showURLAlert) {
+            TextField("https://example.com/", text: $viewModel.urlInput)
                 .textInputAutocapitalization(.never)
                 .keyboardType(.URL)
-                .onChange(of: urlInput) { _, _ in
-                    hasUnsavedURLChanges = true
+                .onChange(of: viewModel.urlInput) { _, _ in
+                    viewModel.hasUnsavedURLChanges = true
                 }
             
             Button("Отмена", role: .cancel) {
-                if hasUnsavedURLChanges {
-                    showURLAlert = false
-                    showExitAlert = true
-                } else {
-                    urlInput = ""
-                }
+                viewModel.cancelURLInput()
             }
             
             Button("Сохранить") {
-                urlInput = ""
-                hasUnsavedURLChanges = false
+                viewModel.saveAvatarURL()
             }
-            .disabled(urlInput.isEmpty)
+            .disabled(viewModel.urlInput.isEmpty)
         }
-        .alert("Уверены, что хотите выйти?", isPresented: $showExitAlert) {
+        .alert("Уверены, что хотите выйти?", isPresented: $viewModel.showExitAlert) {
             Button("Остаться", role: .cancel) {}
             Button("Выйти", role: .destructive) {
                 dismiss()
+            }
+        }
+        .alert("Ошибка", isPresented: $viewModel.showErrorAlert) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            if let message = viewModel.errorMessage {
+                Text(message)
             }
         }
     }
@@ -117,28 +99,42 @@ struct EditProfileView: View {
 private extension EditProfileView {
     
     var avatarSection: some View {
-        ProfileAvatar(image: Image(.placeholderAvatar), editMode: true) {
-            showActionSheet = true
+        ProfileAvatar(
+            image: Image(.placeholderAvatar),
+            editMode: true
+        ) {
+            viewModel.openAvatarActionSheet()
         }
     }
     
     var fieldsSection: some View {
         VStack(spacing: 20) {
-            EditProfileField(title: "Имя", text: $name, isMultiline: false)
-            EditProfileField(title: "Описание", text: $description, isMultiline: true)
-            EditProfileField(title: "Сайт", text: $website, isMultiline: false)
+            EditProfileField(title: "Имя", text: $viewModel.name, isMultiline: false)
+            EditProfileField(title: "Описание", text: $viewModel.description, isMultiline: true)
+            EditProfileField(title: "Сайт", text: $viewModel.website, isMultiline: false)
         }
     }
     
     var buttonSection: some View {
         EditProfileButton(name: "Сохранить") {
-            print("tap button")
+            viewModel.saveProfile()
+            dismiss()
         }
-        .disabled(!hasChanges)
-        .opacity(hasChanges ? 1.0 : 0)
+        .disabled(!viewModel.hasChanges)
+        .opacity(viewModel.hasChanges ? 1.0 : 0)
     }
 }
 
 #Preview {
-    EditProfileView()
+    EditProfileView(
+        profile: UserProfile(
+            name: "Joaquin Phoenix",
+            avatar: "https://example.com/avatar.jpg",
+            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы.",
+            website: "JoaquinPhoenix.com",
+            myNfts: [],
+            favoriteNfts: [],
+            id: "user-1"
+        )
+    )
 }

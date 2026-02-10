@@ -8,6 +8,8 @@
 import SwiftUI
 import Observation
 
+@Observable
+@MainActor
 final class EditProfileViewModel{
     
     // MARK: - State
