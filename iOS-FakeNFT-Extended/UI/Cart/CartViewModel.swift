@@ -21,6 +21,13 @@ final class CartViewModel {
     private(set) var order: Order?
     private(set) var nfts: [Nft] = []
     private(set) var nftToDelete: Nft?
+    private(set) var sortType: CartSortType? {
+        didSet {
+            Task {
+                await loadOrder()
+            }
+        }
+    }
     
     private let nftService: NftService
     private let orderService: OrderService
@@ -53,7 +60,7 @@ final class CartViewModel {
     func loadOrder() async {
         state = .loading
         do {
-            let loadedOrder = try await orderService.load()
+            let loadedOrder = try await orderService.load(sort: sortType?.rawValue)
             order = loadedOrder
             
             nfts.removeAll()
@@ -65,27 +72,30 @@ final class CartViewModel {
     }
     
     func loadNfts() async {
-        var newNFTs: [Nft] = []
-        
         guard let ids = order?.nfts else {
             return
         }
-        
-        await withTaskGroup(of: Nft?.self) { group in
-            for id in ids {
+
+        var buffer = Array<Nft?>(repeating: nil, count: ids.count)
+        nfts = []
+
+        await withTaskGroup(of: (Int, Nft?).self) { group in
+            for (index, id) in ids.enumerated() {
                 group.addTask { [self] in
-                    try? await self.nftService.loadNft(id: id)
+                    let nft = try? await self.nftService.loadNft(id: id)
+                    return (index, nft)
                 }
             }
             
-            for await nft in group {
+            for await (index, nft) in group {
                 if let nft {
-                    newNFTs.append(nft)
+                    buffer[index] = nft
+                } else {
+                    buffer[index] = nil
                 }
+                nfts = buffer.compactMap { $0 }
             }
         }
-        
-        nfts.append(contentsOf: newNFTs)
     }
 
     func addNFT(_ nft: Nft) async {
@@ -127,5 +137,12 @@ final class CartViewModel {
         }
         
         closeDeleteView()
+    }
+    
+    // MARK: - Sorting
+    
+    func setSort(_ type: CartSortType?) {
+        if sortType == type { return }
+        sortType = type
     }
 }

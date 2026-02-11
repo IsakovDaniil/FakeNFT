@@ -9,7 +9,14 @@ import SwiftUI
 
 struct CartButton: View {
     let title: String
+    let height: CGFloat?
     let action: () -> Void
+    
+    init(title: String, height: CGFloat? = 60, action: @escaping () -> Void) {
+        self.title = title
+        self.height = height
+        self.action = action
+    }
     
     var body: some View {
         Button(action: action) {
@@ -17,7 +24,7 @@ struct CartButton: View {
                 .font(.bold17)
                 .foregroundStyle(.appWhite)
                 .frame(maxWidth: .infinity)
-                .frame(height: 44)
+                .frame(height: height)
                 .background(Color(.appBlack))
                 .clipShape(RoundedRectangle(cornerRadius: 16))
         }
@@ -25,7 +32,7 @@ struct CartButton: View {
 }
 
 #Preview {
-    CartButton(title: "") {
+    CartButton(title: "", height: 60) {
         
     }
 }
