@@ -11,7 +11,11 @@ struct CatalogView: View {
 
     // MARK: - State
 
-    @State private var viewModel = CatalogViewModel()
+    @State private var viewModel: CatalogViewModel
+
+    init(assembly: ServicesAssembly) {
+        _viewModel = State(initialValue: CatalogViewModel(collectionService: assembly.collectionService))
+    }
     @State private var selectedCollection: CollectionItem?
     @State private var showSortOptions = false
     @State private var showErrorAlert = false
@@ -69,22 +73,21 @@ struct CatalogView: View {
     // MARK: - Subviews
 
     private var collectionList: some View {
-        List(Array(viewModel.sortedCollections.enumerated()), id: \.element.id) { index, item in
-            Button {
-                self.selectedCollection = item
-            } label: {
-                CollectionRow(item: item)
+        ScrollView {
+            LazyVStack(spacing: 8) {
+                ForEach(viewModel.sortedCollections) { item in
+                    Button {
+                        self.selectedCollection = item
+                    } label: {
+                        CollectionRow(item: item)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            .buttonStyle(.plain)
-            .listRowInsets(EdgeInsets(
-                top: index == 0 ? 20 : 4,
-                leading: 16,
-                bottom: 4,
-                trailing: 16
-            ))
-            .listRowSeparator(.hidden)
+            .padding(.horizontal, 16)
+            .padding(.top, 20)
+            .padding(.bottom, 8)
         }
-        .listStyle(.plain)
     }
 
     /// Кнопка сортировки в navigation bar
@@ -104,13 +107,16 @@ struct CatalogView: View {
 
 #Preview {
     TabView {
-        CatalogView()
-            .tabItem {
-                Label(
-                    NSLocalizedString("Tab.catalog", comment: ""),
-                    systemImage: "square.stack.3d.up.fill"
-                )
-            }
+        CatalogView(assembly: ServicesAssembly(
+            networkClient: DefaultNetworkClient(),
+            nftStorage: NftStorageImpl()
+        ))
+        .tabItem {
+            Label(
+                NSLocalizedString("Tab.catalog", comment: ""),
+                systemImage: "square.stack.3d.up.fill"
+            )
+        }
     }
 }
 

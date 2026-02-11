@@ -67,20 +67,40 @@ final class CatalogViewModel {
 
     private static let sortOrderKey = "catalogSortOrder"
 
-    init() {
+    private let collectionService: CollectionService?
+
+    init(collectionService: CollectionService? = nil) {
         let raw = UserDefaults.standard.string(forKey: Self.sortOrderKey)
         self.sortOrder = CatalogSortOrder(rawValue: raw ?? "") ?? .byNftCount
+        self.collectionService = collectionService
     }
 
-    /// Загрузка коллекций. Пока использует моки; в #34 подставить вызов CollectionService.
+    /// Загрузка коллекций из API или мок (если сервис не передан, например для Preview).
     func loadCollections() async {
         state = .loading
         do {
-            let items = try await Self.fetchCollectionsMock()
+            let items: [CollectionItem]
+            if let service = collectionService {
+                let apiCollections = try await service.fetchCollections()
+                items = apiCollections.map { Self.mapToCollectionItem($0) }
+            } else {
+                items = try await Self.fetchCollectionsMock()
+            }
             state = .loaded(items)
         } catch {
             state = .error
         }
+    }
+
+    private static func mapToCollectionItem(_ collection: NFTCollection) -> CollectionItem {
+        let coverURL = URL(string: collection.cover)
+        return CollectionItem(
+            id: collection.id,
+            name: collection.name,
+            imageURLs: coverURL.map { [$0] } ?? [],
+            nftCount: collection.nfts.count,
+            localCoverImageName: nil
+        )
     }
 
     /// Повтор загрузки при ошибке.
@@ -94,7 +114,7 @@ final class CatalogViewModel {
         sortOrder = order
     }
 
-    // MARK: - Mock (до появления CollectionService в #34)
+    // MARK: - Mock (для Preview и тестов)
 
     private static func fetchCollectionsMock() async throws -> [CollectionItem] {
         try await Task.sleep(nanoseconds: 300_000_000)

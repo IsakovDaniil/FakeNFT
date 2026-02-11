@@ -16,64 +16,46 @@ struct CollectionRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            imageBlock
-            textBlock
+            coverImage
+                .frame(height: 140)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            
+            titleBlock
+                .frame(height: 22)
+            
+            Spacer(minLength: 0)
         }
-        .frame(height: 179, alignment: .top)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .frame(height: 179)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 
-    private var imageBlock: some View {
-        coverView
-            .frame(height: 140)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
-    private var coverView: some View {
+    private var coverImage: some View {
         Group {
-            if let name = item.localCoverImageName {
-                localCover(name: name)
+            if let localName = item.localCoverImageName {
+                Image(localName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+            } else if let url = item.imageURLs.first {
+                KFImage(url)
+                    .placeholder {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.2))
+                    }
+                    .onFailure { _ in
+                        // Placeholder уже отображён
+                    }
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
             } else {
-                let urls = imageURLsForDisplay
-                if urls.count >= 3 {
-                    remoteCover(urls: urls)
-                }
+                Rectangle()
+                    .fill(Color.gray.opacity(0.2))
             }
         }
+        .frame(maxWidth: .infinity)
+        .clipped()
     }
 
-    private func localCover(name: String) -> some View {
-        Image(name)
-            .resizable()
-            .scaledToFill()
-            .frame(maxWidth: .infinity, maxHeight: 140)
-            .clipped()
-    }
-
-    private func remoteCover(urls: [URL]) -> some View {
-        HStack(spacing: 0) {
-            urlImageCell(url: urls[0])
-            urlImageCell(url: urls[1])
-            urlImageCell(url: urls[2])
-        }
-    }
-
-    private func urlImageCell(url: URL) -> some View {
-        KFImage(url)
-            .placeholder {
-                Color.gray.opacity(0.2)
-            }
-            .onFailure { _ in
-                // Fallback при ошибке загрузки — placeholder уже показан
-            }
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(maxWidth: .infinity, maxHeight: 140)
-            .clipped()
-    }
-
-    private var textBlock: some View {
+    private var titleBlock: some View {
         HStack(spacing: 4) {
             Text(item.name)
                 .font(.bold17)
@@ -81,18 +63,7 @@ struct CollectionRow: View {
                 .font(.bold17)
         }
         .foregroundStyle(.primary)
-        .frame(height: 22)
         .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    /// Ровно 3 URL для отображения (повторяем последний при нехватке).
-    private var imageURLsForDisplay: [URL] {
-        let urls = item.imageURLs
-        guard !urls.isEmpty else { return [] }
-        if urls.count >= 3 {
-            return Array(urls.prefix(3))
-        }
-        return urls + Array(repeating: urls.last!, count: 3 - urls.count)
     }
 }
 
