@@ -18,12 +18,18 @@ struct OrderRequest: NetworkRequest {
 
 struct OrderSaveRequest: NetworkRequest {
     let nfts: [String]
+    let method: HttpMethod
+    
+    init(nfts: [String], method: HttpMethod = .put) {
+        self.nfts = nfts
+        self.method = method
+    }
 
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
 
-    var httpMethod: HttpMethod { .put }
+    var httpMethod: HttpMethod { method }
 
     var headers: [String: String]? {
         ["Content-Type": "application/x-www-form-urlencoded; charset=utf-8"]

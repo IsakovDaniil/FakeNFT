@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 enum CartViewState: Equatable {
     case idle
@@ -20,11 +21,26 @@ final class CartViewModel {
     private(set) var state: CartViewState = .idle
     private(set) var order: Order?
     private(set) var nfts: [Nft] = []
+    private(set) var currencies: [Currency] = []
     private(set) var nftToDelete: Nft?
+    private(set) var currencyToPay: Currency?
+    
+    @ObservationIgnored
+    @AppStorage("cart.sortType") private var sortTypeRawValue: String?
+    
     private(set) var sortType: CartSortType? {
-        didSet {
-            Task {
-                await loadOrder()
+        get {
+            guard let raw = sortTypeRawValue else { return nil }
+            return CartSortType(rawValue: raw)
+        }
+        set {
+            let old = sortTypeRawValue
+            sortTypeRawValue = newValue?.rawValue
+
+            if old != sortTypeRawValue {
+                Task { [weak self] in
+                    await self?.loadOrder()
+                }
             }
         }
     }
@@ -35,8 +51,11 @@ final class CartViewModel {
     init(nftService: NftService, orderService: OrderService) {
         self.nftService = nftService
         self.orderService = orderService
+        
+        _ = sortType
     }
 
+    // MARK: - Computed properties
     var itemsCount: Int? {
         nfts.count
     }
@@ -55,7 +74,7 @@ final class CartViewModel {
         nftToDelete = nil
     }
     
-    // MARK: - Public API
+    // MARK: - Order
     
     func loadOrder() async {
         state = .loading
@@ -65,11 +84,30 @@ final class CartViewModel {
             
             nfts.removeAll()
             await loadNfts()
+            
             state = .data
         } catch {
             state = .error(error.localizedDescription)
         }
     }
+    
+    func clearOrder() async {
+        state = .loading
+        
+        do {
+            let loadedOrder = try await orderService.orderAndClear()
+            order = loadedOrder
+            
+            nfts.removeAll()
+            await loadNfts()
+            
+            state = .data
+        } catch {
+            state = .error(error.localizedDescription)
+        }
+    }
+    
+    // MARK: - NFTs
     
     func loadNfts() async {
         guard let ids = order?.nfts else {
@@ -144,5 +182,41 @@ final class CartViewModel {
     func setSort(_ type: CartSortType?) {
         if sortType == type { return }
         sortType = type
+    }
+    
+    // MARK: - Currencies
+    
+    func loadCurrencies() async {
+        state = .loading
+        
+        do {
+            let items = try await orderService.loadCurrencies()
+            currencies = items
+            
+            state = .data
+        } catch {
+            state = .error(error.localizedDescription)
+        }
+    }
+    
+    func setCurrency(_ currency: Currency) {
+        if self.currencyToPay?.id == currency.id { return }
+        self.currencyToPay = currency
+    }
+    
+    func makePayment() async {
+        guard let currencyToPay else { return }
+        state = .loading
+        
+        do {
+            let result = try await orderService.payment(withCurrencyId: currencyToPay.id)
+            if result.success {
+                await loadOrder()
+            } else {
+                state = .error("payment.error.text")
+            }
+        } catch {
+            state = .error(error.localizedDescription)
+        }
     }
 }

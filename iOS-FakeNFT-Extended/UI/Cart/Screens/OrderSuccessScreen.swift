@@ -15,13 +15,13 @@ struct OrderSuccessScreen: View {
             Image(.catPayment)
                 .padding(.bottom, 20)
             
-            Text("Успех! Оплата прошла, поздравляем с покупкой!")
+            Text("payment.success.title")
                 .font(.bold22)
                 .multilineTextAlignment(.center)
             
             Spacer()
             
-            CartButton(title: "Вернуться в корзину") {
+            CartButton(title: "payment.back.button") {
                 
             }
         }

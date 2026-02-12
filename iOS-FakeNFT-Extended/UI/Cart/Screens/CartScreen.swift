@@ -44,27 +44,31 @@ struct CartScreen: View {
                 }
             }
             .toolbar {
-                ToolbarItem {
-                    Button {
-                        isShowingSortSheet = true
-                    } label: {
-                        Image(.sort)
-                            .foregroundStyle(.appBlack)
+                if !viewModel.nfts.isEmpty {
+                    ToolbarItem {
+                        Button {
+                            isShowingSortSheet = true
+                        } label: {
+                            Image(.sort)
+                                .foregroundStyle(.appBlack)
+                        }
                     }
                 }
             }
             .confirmationDialog(
-                "Сортировка",
+                "cart.sort.title",
                 isPresented: $isShowingSortSheet,
                 titleVisibility: .visible
             ) {
                 ForEach(CartSortType.allCases, id: \.self) { type in
-                    Button(type.title) {
+                    Button {
                         viewModel.setSort(type)
                         isShowingSortSheet = false
+                    } label: {
+                        Text(LocalizedStringKey(type.title))
                     }
                 }
-                Button("Закрыть", role: .cancel) {
+                Button(LocalizedStringKey("cart.sort.cancel"), role: .cancel) {
                     isShowingSortSheet = false
                 }
             }
