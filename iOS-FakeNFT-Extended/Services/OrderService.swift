@@ -1,7 +1,7 @@
 import Foundation
 
 protocol OrderService {
-    func load(sort: String?) async throws -> Order
+    func load() async throws -> Order
     func save(_ nfts: [String]) async throws -> Order
     func orderAndClear() async throws -> Order
     func loadCurrencies() async throws -> [Currency]
@@ -18,8 +18,8 @@ final class OrderServiceImpl: OrderService {
         self.networkClient = networkClient
     }
 
-    func load(sort: String?) async throws -> Order {
-        let request = OrderRequest(sort: sort)
+    func load() async throws -> Order {
+        let request = OrderRequest()
         let order: Order = try await networkClient.send(request: request)
         return order
     }

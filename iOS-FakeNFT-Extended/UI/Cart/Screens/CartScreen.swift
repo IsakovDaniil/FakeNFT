@@ -65,7 +65,7 @@ struct CartScreen: View {
                         viewModel.setSort(type)
                         isShowingSortSheet = false
                     } label: {
-                        Text(LocalizedStringKey(type.title))
+                        Text(type.title)
                     }
                 }
                 Button(CartLn.cartSortClose, role: .cancel) {
