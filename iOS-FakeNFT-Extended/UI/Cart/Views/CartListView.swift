@@ -43,7 +43,7 @@ struct CartListView: View {
                     .foregroundStyle(.appGreen)
             }
             
-            CartButton(title: "cart.price", height: 44) {}
+            CartButton(title: CartLn.cartPrice, height: 44) {}
         }
         .padding(16)
         .background(Color(.appLightGray).opacity(0.3))

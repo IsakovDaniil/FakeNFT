@@ -56,7 +56,7 @@ struct CartScreen: View {
                 }
             }
             .confirmationDialog(
-                "cart.sort.title",
+                CartLn.cartSortTitle,
                 isPresented: $isShowingSortSheet,
                 titleVisibility: .visible
             ) {
@@ -68,7 +68,7 @@ struct CartScreen: View {
                         Text(LocalizedStringKey(type.title))
                     }
                 }
-                Button(LocalizedStringKey("cart.sort.cancel"), role: .cancel) {
+                Button(CartLn.cartSortClose, role: .cancel) {
                     isShowingSortSheet = false
                 }
             }

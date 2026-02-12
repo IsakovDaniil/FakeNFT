@@ -20,7 +20,7 @@ struct CartButton: View {
     
     var body: some View {
         Button(action: action) {
-            Text(LocalizedStringKey(title))
+            Text(title)
                 .font(.bold17)
                 .foregroundStyle(.appWhite)
                 .frame(maxWidth: .infinity)
