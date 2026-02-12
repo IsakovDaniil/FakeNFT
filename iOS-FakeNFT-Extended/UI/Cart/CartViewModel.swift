@@ -38,9 +38,7 @@ final class CartViewModel {
             sortTypeRawValue = newValue?.rawValue
 
             if old != sortTypeRawValue {
-                Task { [weak self] in
-                    await self?.loadOrder()
-                }
+                sortNfts()
             }
         }
     }
@@ -79,11 +77,13 @@ final class CartViewModel {
     func loadOrder() async {
         state = .loading
         do {
-            let loadedOrder = try await orderService.load(sort: sortType?.rawValue)
+            let loadedOrder = try await orderService.load()
             order = loadedOrder
             
             nfts.removeAll()
             await loadNfts()
+            
+            if sortType != nil { sortNfts() }
             
             state = .data
         } catch {
@@ -114,24 +114,17 @@ final class CartViewModel {
             return
         }
 
-        var buffer = [Nft?](repeating: nil, count: ids.count)
-        nfts = []
-
-        await withTaskGroup(of: (Int, Nft?).self) { group in
-            for (index, id) in ids.enumerated() {
+        await withTaskGroup(of: Nft?.self) { group in
+            for id in ids {
                 group.addTask { [self] in
-                    let nft = try? await self.nftService.loadNft(id: id)
-                    return (index, nft)
+                    try? await self.nftService.loadNft(id: id)
                 }
             }
-            
-            for await (index, nft) in group {
+
+            for await nft in group {
                 if let nft {
-                    buffer[index] = nft
-                } else {
-                    buffer[index] = nil
+                    nfts.append(nft)
                 }
-                nfts = buffer.compactMap { $0 }
             }
         }
     }
@@ -184,6 +177,21 @@ final class CartViewModel {
         sortType = type
     }
     
+    func sortNfts() {
+        switch sortType {
+        case .name:
+            nfts = nfts.sorted {
+                $0.name.localizedCompare($1.name) == .orderedAscending
+            }
+        case .rating:
+            nfts = nfts.sorted { $0.rating > $1.rating }
+        case .price:
+            nfts = nfts.sorted { $0.price < $1.price }
+        case .none:
+            break
+        }
+    }
+
     // MARK: - Currencies
     
     func loadCurrencies() async {

@@ -1,16 +1,8 @@
 import Foundation
 
 struct OrderRequest: NetworkRequest {
-    let sort: String?
-
     var endpoint: URL? {
-        var components = URLComponents(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
-        if let sort, !sort.isEmpty {
-            var queryItems = components?.queryItems ?? []
-            queryItems.append(URLQueryItem(name: "sortBy", value: sort))
-            components?.queryItems = queryItems
-        }
-        return components?.url
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
 
     var httpMethod: HttpMethod { .get }

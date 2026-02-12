@@ -46,7 +46,7 @@ private struct CartDeleteButton: View {
     
     var body: some View {
         Button(action: action) {
-            Text(LocalizedStringKey(title))
+            Text(title)
                 .font(.system(size: 17))
                 .foregroundStyle(color)
                 .frame(minWidth: 127)
