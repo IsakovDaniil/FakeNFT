@@ -114,7 +114,7 @@ final class CartViewModel {
             return
         }
 
-        var buffer = Array<Nft?>(repeating: nil, count: ids.count)
+        var buffer = [Nft?](repeating: nil, count: ids.count)
         nfts = []
 
         await withTaskGroup(of: (Int, Nft?).self) { group in
@@ -213,7 +213,7 @@ final class CartViewModel {
             if result.success {
                 await loadOrder()
             } else {
-                state = .error("payment.error.text")
+                state = .error(CartLn.paymentErrorText)
             }
         } catch {
             state = .error(error.localizedDescription)
