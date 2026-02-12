@@ -34,7 +34,7 @@ final class CatalogViewModel {
     /// Текущий тип сортировки; сохраняется в UserDefaults.
     var sortOrder: CatalogSortOrder {
         didSet {
-            UserDefaults.standard.set(sortOrder.rawValue, forKey: Self.sortOrderKey)
+            userDefaults.set(sortOrder.rawValue, forKey: Self.sortOrderKey)
         }
     }
 
@@ -65,15 +65,20 @@ final class CatalogViewModel {
         return false
     }
 
+    // MARK: - Private Properties
+
     private static let sortOrderKey = "catalogSortOrder"
-
     private let collectionService: CollectionService?
+    private let userDefaults: UserDefaults
 
-    init(collectionService: CollectionService? = nil) {
-        let raw = UserDefaults.standard.string(forKey: Self.sortOrderKey)
+    init(collectionService: CollectionService? = nil, userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
+        let raw = userDefaults.string(forKey: Self.sortOrderKey)
         self.sortOrder = CatalogSortOrder(rawValue: raw ?? "") ?? .byNftCount
         self.collectionService = collectionService
     }
+
+    // MARK: - Public Methods
 
     /// Загрузка коллекций из API или мок (если сервис не передан, например для Preview).
     func loadCollections() async {
@@ -92,17 +97,6 @@ final class CatalogViewModel {
         }
     }
 
-    private static func mapToCollectionItem(_ collection: NFTCollection) -> CollectionItem {
-        let coverURL = URL(string: collection.cover)
-        return CollectionItem(
-            id: collection.id,
-            name: collection.name,
-            imageURLs: coverURL.map { [$0] } ?? [],
-            nftCount: collection.nfts.count,
-            localCoverImageName: nil
-        )
-    }
-
     /// Повтор загрузки при ошибке.
     func retry() {
         Task {
@@ -112,6 +106,19 @@ final class CatalogViewModel {
 
     func setSortOrder(_ order: CatalogSortOrder) {
         sortOrder = order
+    }
+
+    // MARK: - Private Methods
+
+    private static func mapToCollectionItem(_ collection: NFTCollection) -> CollectionItem {
+        let coverURL = URL(string: collection.cover)
+        return CollectionItem(
+            id: collection.id,
+            name: collection.name,
+            imageURLs: coverURL.map { [$0] } ?? [],
+            nftCount: collection.nfts.count,
+            localCoverImageName: nil
+        )
     }
 
     // MARK: - Mock (для Preview и тестов)

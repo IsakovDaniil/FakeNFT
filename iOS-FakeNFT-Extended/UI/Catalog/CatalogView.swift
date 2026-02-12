@@ -12,13 +12,13 @@ struct CatalogView: View {
     // MARK: - State
 
     @State private var viewModel: CatalogViewModel
+    @State private var selectedCollection: CollectionItem?
+    @State private var showSortOptions = false
+    @State private var showErrorAlert = false
 
     init(assembly: ServicesAssembly) {
         _viewModel = State(initialValue: CatalogViewModel(collectionService: assembly.collectionService))
     }
-    @State private var selectedCollection: CollectionItem?
-    @State private var showSortOptions = false
-    @State private var showErrorAlert = false
 
     // MARK: - Body
 
@@ -62,10 +62,8 @@ struct CatalogView: View {
                 }
                 Button(Constants.sortClose, role: .cancel) { }
             }
-            .onAppear {
-                Task {
-                    await viewModel.loadCollections()
-                }
+            .task {
+                await viewModel.loadCollections()
             }
         }
     }
@@ -95,7 +93,7 @@ struct CatalogView: View {
         Button {
             self.showSortOptions = true
         } label: {
-            Image("Sort")
+            Image(.sort)
                 .renderingMode(.template)
                 .foregroundStyle(.primary)
         }
