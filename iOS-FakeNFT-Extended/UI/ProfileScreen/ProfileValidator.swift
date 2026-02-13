@@ -98,7 +98,7 @@ struct ProfileValidator {
             return .invalid("URL должен начинаться с http:// или https://")
         }
         
-        var validExtensions = ["jpg", "png", "jpeg", "webp"]
+        let validExtensions = ["jpg", "png", "jpeg", "webp"]
         let pathExtension = url.pathExtension.lowercased()
         
         if !pathExtension.isEmpty && !validExtensions.contains(pathExtension) {
