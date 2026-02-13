@@ -18,4 +18,29 @@ protocol ProfileServiceProtocol {
 final class ProfileService: ProfileServiceProtocol {
     
     private let networkClient: NetworkClient
+    private let storage: ProfileStorageProtocol
+    
+    init(
+        networkClient: NetworkClient,
+        storage: ProfileStorageProtocol
+    ) {
+        self.networkClient = networkClient
+        self.storage = storage
+    }
+    
+    func loadProfile() async throws -> UserProfile {
+        if let cachedProfile = await storage.getProfile() {
+            Task {
+                do {
+                    let freshProfile = try await fetchProf
+                }
+            }
+        }
+    }
+    
+    // MARK: - Private Methods
+    
+    private func fetchProfileFromNetwork() async throws -> UserProfile {
+        
+    }
 }

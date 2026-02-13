@@ -15,15 +15,23 @@ protocol ProfileStorageProtocol: AnyObject {
     func clearProfile() async
 }
 
+// MARK: - Profile Storage Actor
+
 actor ProfileStorage: ProfileStorageProtocol {
+    
+    // MARK: - Nested Types
     
     private enum Keys {
         static let profile = "cached_user_profile"
     }
     
+    // MARK: - Properties
+    
     private let userDefaults: UserDefaults
     private let encoder: JSONEncoder
     private let decoder: JSONDecoder
+    
+    // MARK: - Initializer
     
     init(
         userDefaults: UserDefaults,
@@ -34,6 +42,8 @@ actor ProfileStorage: ProfileStorageProtocol {
         self.encoder = encoder
         self.decoder = decoder
     }
+    
+    // MARK: - Public Methods
     
     func saveProfile(_ profile: UserProfile) async {
         guard let data = try? encoder.encode(profile) else { return }
