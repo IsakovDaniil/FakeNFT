@@ -104,7 +104,6 @@ struct ProfileView: View {
     private func avatarNameSection(_ profile: UserProfile) -> some View {
         HStack(spacing: 16) {
             ProfileAvatar(urlString: profile.avatar, editMode: false)
-            Text("Avatar url: \(profile.avatar ?? "nil")")
                 .font(.caption)
                 .foregroundStyle(.red)
             Text(profile.name)

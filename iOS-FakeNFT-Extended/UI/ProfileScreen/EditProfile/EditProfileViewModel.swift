@@ -10,7 +10,12 @@ import Observation
 
 @Observable
 @MainActor
-final class EditProfileViewModel{
+final class EditProfileViewModel {
+    
+    // MARK: - Dependencies
+    
+    private let profileService: ProfileServiceProtocol
+    private var originalProfile: UserProfile?
     
     // MARK: - State
     
@@ -19,6 +24,7 @@ final class EditProfileViewModel{
         case loading
         case saving
         case saved
+        case error(Error)
     }
     
     var state: ViewState = .idle
@@ -55,6 +61,10 @@ final class EditProfileViewModel{
     var urlInput = ""
     var hasUnsavedURLChanges = false
     
+    // MARK: - Callbacks
+    
+    var onProfileSaved: (() -> Void)?
+    
     // MARK: - Computer Properties
     
     var hasChanges: Bool {
@@ -65,7 +75,14 @@ final class EditProfileViewModel{
     }
     
     var isLoading: Bool {
-        state == .loading || state == .saving
+        if case .loading = state { return true }
+        if case .saving = state { return true }
+        return false
+    }
+    
+    var isSaving: Bool {
+        if case .saving = state { return true }
+        return false
     }
     
     var canSave: Bool {
@@ -80,9 +97,17 @@ final class EditProfileViewModel{
         return validationResult.isValid
     }
     
+    // MARK: - Init
+    
+    init(profileService: ProfileServiceProtocol) {
+        self.profileService = profileService
+    }
+    
     // MARK: - Methods
     
     func loadProfile(from profile: UserProfile) {
+        originalProfile = profile
+        
         name = profile.name
         description = profile.description
         website = profile.website
@@ -94,7 +119,7 @@ final class EditProfileViewModel{
         originalAvatarURL = profile.avatar
     }
     
-    func saveProfile() {
+    func saveProfile() async {
         clearErrors()
         
         let validationResult = ProfileValidator.validateAllFields(
@@ -110,17 +135,39 @@ final class EditProfileViewModel{
             return
         }
         
-        // TODO: Здесь будет сетевой запрос
-        print("Saving profile:")
-        print("Name: \(name)")
-        print("Description: \(description)")
-        print("Website: \(website)")
-        print("Avatar: \(avatarURL)")
+        guard let originalProfile = originalProfile else {
+            errorMessage = "Не удалось найти исходный профиль"
+            showErrorAlert = true
+            return
+        }
         
-        originalName = name
-        originalDescription = description
-        originalWebsite = website
-        originalAvatarURL = avatarURL
+        state = .saving
+        
+        do {
+            let updatedProfile = UserProfile(
+                name: name,
+                avatar: avatarURL,
+                description: description,
+                website: website,
+                myNfts: originalProfile.myNfts,
+                favoriteNfts: originalProfile.favoriteNfts,
+                id: originalProfile.id
+            )
+            
+            let savedProfile = try await profileService.updateProfile(updatedProfile)
+            
+            originalName = savedProfile.name
+            originalDescription = savedProfile.description
+            originalWebsite = savedProfile.website
+            originalAvatarURL = savedProfile.avatar
+            
+            state = .saved
+            
+            onProfileSaved?()
+            
+        } catch {
+            handleError(error)
+        }
     }
     
     // MARK: - Validation Methods
@@ -193,11 +240,36 @@ final class EditProfileViewModel{
         }
     }
     
-    // MARK: - Private Methods
+    // MARK: - Error Handling
     
-    private func isValidURL(_ string: String) -> Bool {
-        guard let url = URL(string: string) else { return false }
+    private func handleError(_ error: Error) {
+        state = .error(error)
         
-        return url.scheme == "http" || url.scheme == "https"
+        if let networkError = error as? NetworkClientError {
+            switch networkError {
+            case .httpStatusCode(let code):
+                errorMessage = "Ошибка сервера: \(code)"
+            case .urlSessionError:
+                errorMessage = "Ошибка подключения"
+            case .parsingError:
+                errorMessage = "Ошибка обработки данных"
+            case .incorrectRequest(let message):
+                errorMessage = "Некорректный запрос: \(message)"
+            case .urlRequestError:
+                errorMessage = "Ошибка сети"
+            }
+        } else {
+            errorMessage = "Не удалось сохранить профиль"
+        }
+        
+        showErrorAlert = true
     }
+}
+
+// MARK: - Private Methods
+
+private func isValidURL(_ string: String) -> Bool {
+    guard let url = URL(string: string) else { return false }
+    
+    return url.scheme == "http" || url.scheme == "https"
 }
