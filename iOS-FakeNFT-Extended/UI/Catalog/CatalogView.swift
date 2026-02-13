@@ -37,9 +37,8 @@ struct CatalogView: View {
                     self.sortButton
                 }
             }
-            .navigationDestination(item: self.$selectedCollection) { item in
-                // TODO: Экран коллекции NFT (Модуль 2)
-                Text(item.name)
+            .navigationDestination(item: self.$selectedCollection) { collection in
+                CollectionDetailView(item: collection)
             }
             .alert(
                 Constants.errorMessage,
