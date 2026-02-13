@@ -34,9 +34,9 @@ actor ProfileStorage: ProfileStorageProtocol {
     // MARK: - Initializer
     
     init(
-        userDefaults: UserDefaults,
-        encoder: JSONEncoder,
-        decoder: JSONDecoder
+        userDefaults: UserDefaults = .standard,
+        encoder: JSONEncoder = JSONEncoder(),
+        decoder: JSONDecoder = JSONDecoder()
     ) {
         self.userDefaults = userDefaults
         self.encoder = encoder

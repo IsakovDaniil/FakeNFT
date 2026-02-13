@@ -100,7 +100,7 @@ private extension EditProfileView {
     
     var avatarSection: some View {
         ProfileAvatar(
-            image: Image(.placeholderAvatar),
+            urlString: profile.avatar,
             editMode: true
         ) {
             viewModel.openAvatarActionSheet()

@@ -12,7 +12,13 @@ struct ProfileView: View {
     
     // MARK: - Properties
     
-    @State private var viewModel = ProfileViewModel()
+    @State private var viewModel: ProfileViewModel
+    
+    // MARK: - Init
+    
+    init(viewModel: ProfileViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     // MARK: - Body
     
@@ -78,6 +84,7 @@ struct ProfileView: View {
             .navigationDestination(isPresented: $viewModel.showFavoriteNFT) {
                 FavoriteNFTView()
             }
+            
         }
     }
     
@@ -96,12 +103,15 @@ struct ProfileView: View {
     
     private func avatarNameSection(_ profile: UserProfile) -> some View {
         HStack(spacing: 16) {
-            ProfileAvatar(image: Image(.placeholderAvatar), editMode: false)
-            
+            ProfileAvatar(urlString: profile.avatar, editMode: false)
+            Text("Avatar url: \(profile.avatar ?? "nil")")
+                .font(.caption)
+                .foregroundStyle(.red)
             Text(profile.name)
                 .font(Font.bold22)
                 .foregroundStyle(.appBlack)
         }
+
     }
     
     private func bioSection(_ profile: UserProfile) -> some View {
@@ -139,5 +149,12 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(
+        viewModel: ProfileViewModel(
+            profileService: ProfileService(
+                networkClient: DefaultNetworkClient(),
+                storage: ProfileStorage()
+            )
+        )
+    )
 }

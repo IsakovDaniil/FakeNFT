@@ -71,7 +71,7 @@ struct ProfileValidator {
             return .valid
         }
         
-        let urlPattern = #"^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$"#
+        let urlPattern = #"^(https?:\/\/)?([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$"#
         let urlPredicate = NSPredicate(format: "SELF MATCHES %@", urlPattern)
         
         guard urlPredicate.evaluate(with: trimmed) else {
