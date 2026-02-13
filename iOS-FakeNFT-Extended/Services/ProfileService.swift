@@ -9,7 +9,13 @@ import Foundation
 
 // MARK: - Profile Service Protocol
 
-protocol ProfileService {
+protocol ProfileServiceProtocol {
     func loadProfile() async throws -> UserProfile
     func updateProfile(_ profile: UserProfile) async throws -> UserProfile
+}
+
+@MainActor
+final class ProfileService: ProfileServiceProtocol {
+    
+    private let networkClient: NetworkClient
 }
