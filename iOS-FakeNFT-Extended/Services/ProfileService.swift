@@ -28,19 +28,45 @@ final class ProfileService: ProfileServiceProtocol {
         self.storage = storage
     }
     
+    // MARK: - Update Profile
+    
     func loadProfile() async throws -> UserProfile {
         if let cachedProfile = await storage.getProfile() {
             Task {
                 do {
-                    let freshProfile = try await fetchProf
+                    let freshProfile = try await fetchProfileFromNetwork()
+                    await storage.saveProfile(freshProfile)
+                } catch {
+                    print("⚠️ Background update failed: \(error)")
                 }
             }
+            
+            return cachedProfile
         }
+        
+        let profile = try await fetchProfileFromNetwork()
+        await storage.saveProfile(profile)
+        return profile
+    }
+    
+    // MARK: - Update Profile
+    
+    func updateProfile(_ profile: UserProfile) async throws -> UserProfile {
+        await storage.saveProfile(profile)
+        
+        let request = UpdateProfileRequest(profile: profile)
+        let updatedProfile: UserProfile = try await networkClient.send(request: request)
+        
+        await storage.saveProfile(updatedProfile)
+        
+        return updatedProfile
     }
     
     // MARK: - Private Methods
     
     private func fetchProfileFromNetwork() async throws -> UserProfile {
-        
+        let request = GetProfileRequest()
+        let profile: UserProfile = try await networkClient.send(request: request)
+        return profile
     }
 }
