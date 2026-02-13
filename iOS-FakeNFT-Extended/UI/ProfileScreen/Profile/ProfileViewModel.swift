@@ -11,11 +11,16 @@ import Observation
 @MainActor
 final class ProfileViewModel {
     
+    // MARK: - Dependencies
+    
+    private let profileService: ProfileServiceProtocol
+    
     // MARK: - State
     
     enum ViewState {
         case idle, loading
         case loaded(UserProfile)
+        case error(Error)
     }
     
     var state: ViewState = .idle
@@ -46,24 +51,35 @@ final class ProfileViewModel {
         return false
     }
     
+    // MARK: - Init
+    
+    init(profileService: ProfileServiceProtocol) {
+        self.profileService = profileService
+    }
+    
     // MARK: - Methods
     
     func loadProfile() async {
         state = .loading
         
         do {
-            try await Task.sleep(nanoseconds: 1_000_000_000)
-            let profile = try await fetchProfile()
+            let profile = try await profileService.loadProfile()
             state = .loaded(profile)
         } catch {
-            errorMessage = "Не удалось загрузить профиль"
-            showErrorAlert = true
-            state = .idle
+            handleError(error)
         }
     }
     
     func retry() async {
         await loadProfile()
+    }
+    
+    func refreshProfile() async {
+        do {
+            let profile = try await profileService.loadProfile()
+        } catch {
+            print("⚠️ Silent refresh failed: \(error)")
+        }
     }
     
     // MARK: - Navigation Actions
@@ -88,16 +104,26 @@ final class ProfileViewModel {
     
     // MARK: - Private Methods
     
-    private func fetchProfile() async throws -> UserProfile {
-        // MOCK DATA
-        UserProfile(
-            name: "Joaquin Phoenix",
-            avatar: "https://example.com/avatar.jpg",
-            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы.",
-            website: "JoaquinPhoenix.com",
-            myNfts: Array(repeating: "nft-id", count: 112),
-            favoriteNfts: Array(repeating: "fav-id", count: 11),
-            id: "user-1"
-        )
+    private func handleError(_ error: Error) {
+        state = .error(error)
+        
+        if let networkError = error as? NetworkClientError {
+            switch networkError {
+            case .httpStatusCode(let code):
+                errorMessage = "Ошибка сервера: \(code)"
+            case .urlSessionError:
+                errorMessage = "Ошибка подключения"
+            case .parsingError:
+                errorMessage = "Ошибка обработки данных"
+            case .incorrectRequest(let message):
+                errorMessage = "Некорректрый запрос: \(message)"
+            case .urlRequestError:
+                errorMessage = "Ошибка сети"
+            }
+        } else {
+            errorMessage = "Не удалось загрузить профиль"
+        }
+        
+        showErrorAlert = true
     }
 }
