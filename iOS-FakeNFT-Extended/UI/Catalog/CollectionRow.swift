@@ -80,6 +80,7 @@ struct CollectionRow: View {
                 name: "Peach",
                 imageURLs: [],
                 nftCount: 11,
+                nftIds: [],
                 localCoverImageName: "CataloguePeach",
                 author: "John Doe",
                 description: "",

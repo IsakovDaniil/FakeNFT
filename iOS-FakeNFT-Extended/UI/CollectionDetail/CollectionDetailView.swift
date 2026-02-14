@@ -29,6 +29,8 @@ struct CollectionDetailView: View {
                     .ignoresSafeArea(edges: .top)
 
                 collectionInfoBlock
+
+                nftGridSection
             }
         }
         .ignoresSafeArea(edges: .top)
@@ -114,6 +116,28 @@ struct CollectionDetailView: View {
         .padding(.bottom, 24)
     }
 
+    // MARK: - Сетка NFT (задача 37)
+
+    /// Сетка NFT коллекции: 3 колонки, отступы по макету (top 24pt, horizontal 16pt, spacing 9×8).
+    /// Используем индекс как id, чтобы при дубликатах в nftIds отображалось по одной ячейке на каждый элемент.
+    private var nftGridSection: some View {
+        LazyVGrid(columns: nftGridColumns, spacing: CollectionDetailConstants.nftGridVerticalSpacing) {
+            ForEach(Array(item.nftIds.enumerated()), id: \.offset) { _, nftId in
+                NftCollectionCell(nftId: nftId)
+            }
+        }
+        .padding(.top, CollectionDetailConstants.nftGridTopPadding)
+        .padding(.horizontal, CollectionDetailConstants.nftGridHorizontalPadding)
+    }
+
+    private var nftGridColumns: [GridItem] {
+        [
+            GridItem(.flexible(), spacing: CollectionDetailConstants.nftGridHorizontalSpacing),
+            GridItem(.flexible(), spacing: CollectionDetailConstants.nftGridHorizontalSpacing),
+            GridItem(.flexible(), spacing: CollectionDetailConstants.nftGridHorizontalSpacing)
+        ]
+    }
+
     private var authorRow: some View {
         HStack(alignment: .firstTextBaseline, spacing: 0) {
             Text("Collection.author")
@@ -139,6 +163,15 @@ struct CollectionDetailView: View {
     }
 }
 
+// MARK: - Constants
+
+private enum CollectionDetailConstants {
+    static let nftGridTopPadding: CGFloat = 24
+    static let nftGridHorizontalPadding: CGFloat = 16
+    static let nftGridHorizontalSpacing: CGFloat = 9
+    static let nftGridVerticalSpacing: CGFloat = 8
+}
+
 // MARK: - Preview
 
 #Preview {
@@ -148,6 +181,7 @@ struct CollectionDetailView: View {
             name: "Peach",
             imageURLs: [],
             nftCount: 11,
+            nftIds: ["7773e33c-ec15-4230-a102-92426a3a6d5a", "id2"],
             localCoverImageName: "CataloguePeach",
             author: "John Doe",
             description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
