@@ -82,7 +82,7 @@ struct ProfileView: View {
                     )
                 }
             }
-            .sheet(isPresented: $viewModel.showWebView) {
+            .sheet(isPresented: $viewModel.showWebView) { // sheet показался для ux лучше.
                 if let website = viewModel.profile?.website {
                     let url = website.hasPrefix("http") ? website : "https://\(website)"
                     WebViewScreen(urlString: url)
