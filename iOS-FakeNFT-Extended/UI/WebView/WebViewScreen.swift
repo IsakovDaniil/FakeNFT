@@ -52,7 +52,7 @@ struct WebViewScreen: View {
                 WebView(url: url)
             } else {
                 Text("Неверный URL")
-                    .foregroundColor(.red)
+                    .foregroundStyle(.red)
             }
         }
     }

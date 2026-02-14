@@ -43,7 +43,7 @@ struct CollectionDetailView: View {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
-                        .foregroundStyle(Color("AppBlack"))
+                        .foregroundStyle(Color(uiColor: .appBlack))
                 }
             }
         }
@@ -51,8 +51,6 @@ struct CollectionDetailView: View {
 
     // MARK: - Subviews
 
-    /// Обложка коллекции. Высота по пропорции макета 375×310.
-    /// Чтобы вернуть фиксированную высоту — заменить aspectRatio на .frame(height: 310).
     private var coverView: some View {
         coverImageContent
             .frame(maxWidth: .infinity)
@@ -89,8 +87,6 @@ struct CollectionDetailView: View {
         .clipped()
     }
 
-    // MARK: - Блок информации о коллекции (задача 36)
-
     private var collectionInfoBlock: some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(item.name)
@@ -116,26 +112,13 @@ struct CollectionDetailView: View {
         .padding(.bottom, 24)
     }
 
-    // MARK: - Сетка NFT (задача 37)
-
-    /// Сетка NFT коллекции: 3 колонки, отступы по макету (top 24pt, horizontal 16pt, spacing 9×8).
-    /// Используем индекс как id, чтобы при дубликатах в nftIds отображалось по одной ячейке на каждый элемент.
     private var nftGridSection: some View {
-        LazyVGrid(columns: nftGridColumns, spacing: CollectionDetailConstants.nftGridVerticalSpacing) {
+        LazyVGrid(columns: nftGridColumns, spacing: 8) {
             ForEach(Array(item.nftIds.enumerated()), id: \.offset) { _, nftId in
                 NftCollectionCell(nftId: nftId)
             }
         }
-        .padding(.top, CollectionDetailConstants.nftGridTopPadding)
-        .padding(.horizontal, CollectionDetailConstants.nftGridHorizontalPadding)
-    }
-
-    private var nftGridColumns: [GridItem] {
-        [
-            GridItem(.flexible(), spacing: CollectionDetailConstants.nftGridHorizontalSpacing),
-            GridItem(.flexible(), spacing: CollectionDetailConstants.nftGridHorizontalSpacing),
-            GridItem(.flexible(), spacing: CollectionDetailConstants.nftGridHorizontalSpacing)
-        ]
+        .padding(.horizontal, 16)
     }
 
     private var authorRow: some View {
@@ -153,23 +136,24 @@ struct CollectionDetailView: View {
             NavigationLink(destination: WebViewScreen(urlString: item.website)) {
                 Text(item.author)
                     .font(.regular15)
-                    .foregroundStyle(Color("AppBlue"))
+                    .foregroundStyle(Color(uiColor: .appBlue))
             }
         } else {
             Text(item.author)
                 .font(.regular15)
-                .foregroundStyle(Color("AppBlue"))
+                .foregroundStyle(Color(uiColor: .appBlue))
         }
     }
-}
 
-// MARK: - Constants
+    // MARK: - Helpers
 
-private enum CollectionDetailConstants {
-    static let nftGridTopPadding: CGFloat = 24
-    static let nftGridHorizontalPadding: CGFloat = 16
-    static let nftGridHorizontalSpacing: CGFloat = 9
-    static let nftGridVerticalSpacing: CGFloat = 8
+    private var nftGridColumns: [GridItem] {
+        [
+            GridItem(.flexible(), spacing: 9),
+            GridItem(.flexible(), spacing: 9),
+            GridItem(.flexible(), spacing: 9)
+        ]
+    }
 }
 
 // MARK: - Preview
