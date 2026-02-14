@@ -110,7 +110,7 @@ struct EditProfileView: View {
             }
         }
         .alert(EditProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
-            Button(EditProfileConstants.ok, role: .cancel) {}
+            Button(EditProfileConstants.okey, role: .cancel) {}
         } message: {
             if let message = viewModel.errorMessage {
                 Text(message)

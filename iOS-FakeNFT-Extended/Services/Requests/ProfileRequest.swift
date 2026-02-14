@@ -37,7 +37,7 @@ struct UpdateProfileRequest: NetworkRequest {
             URLQueryItem(name: "name", value: profile.name),
             URLQueryItem(name: "description", value: profile.description),
             URLQueryItem(name: "website", value: profile.website),
-            URLQueryItem(name: "avatar", value: profile.avatar),
+            URLQueryItem(name: "avatar", value: profile.avatar)
         ]
         
         profile.favoriteNfts.forEach { nftId in
