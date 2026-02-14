@@ -33,9 +33,7 @@ struct EditProfileView: View {
     // MARK: - Body
     
     var body: some View {
-        ZStack {
-            Color.appWhite.ignoresSafeArea()
-            
+        VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: 20) {
                     avatarSection
@@ -43,15 +41,27 @@ struct EditProfileView: View {
                 }
                 .padding()
             }
-            .safeAreaInset(edge: .bottom) {
+            .background(Color.appWhite)
+            .simultaneousGesture(
+                TapGesture()
+                    .onEnded { _ in
+                        hideKeyboard()
+                    }
+            )
+            
+            if viewModel.hasChanges && !viewModel.isSaving {
                 buttonSection
                     .padding()
+                    .background(Color.appWhite)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
+        .background(Color.appWhite.ignoresSafeArea())
         .onAppear {
             viewModel.loadProfile(from: profile)
             setupCallbacks()
         }
+        .animation(.easeInOut(duration: 0.3), value: viewModel.hasChanges)
         .onChange(of: viewModel.isSaving) { _, isSaving in
             if isSaving {
                 ProgressHUD.animate()
@@ -130,6 +140,10 @@ struct EditProfileView: View {
             }
         }
     }
+    
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }
 
 // MARK: - Subviews
@@ -191,11 +205,11 @@ private extension EditProfileView {
     
     var buttonSection: some View {
         EditProfileButton(name: EditProfileConstants.save) {
+            hideKeyboard()
             Task {
                 await viewModel.saveProfile()
             }
         }
         .disabled(!viewModel.canSave || viewModel.isSaving)
-        .opacity(viewModel.hasChanges && !viewModel.isSaving ? 1.0 : 0)
     }
 }
