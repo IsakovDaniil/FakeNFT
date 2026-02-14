@@ -63,7 +63,7 @@ final class ProfileViewModel {
         state = .loading
         
         do {
-            let profile = try await profileService.loadProfile(forceRefresh: false)
+            let profile = try await profileService.loadProfile(forceRefresh: true)
             state = .loaded(profile)
         } catch {
             handleError(error)
