@@ -12,7 +12,13 @@ struct ProfileView: View {
     
     // MARK: - Properties
     
-    @State private var viewModel = ProfileViewModel()
+    @State private var viewModel: ProfileViewModel
+    
+    // MARK: - Init
+    
+    init(viewModel: ProfileViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     // MARK: - Body
     
@@ -39,13 +45,13 @@ struct ProfileView: View {
                     ProgressHUD.dismiss()
                 }
             }
-            .alert("Ошибка", isPresented: $viewModel.showErrorAlert) {
-                Button("Повторить") {
+            .alert(ProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
+                Button(ProfileConstants.retryButton) {
                     Task {
                         await viewModel.retry()
                     }
                 }
-                Button("Отмена", role: .cancel) {}
+                Button(ProfileConstants.cancelButton, role: .cancel) {}
             } message: {
                 if let message = viewModel.errorMessage {
                     Text(message)
@@ -63,13 +69,23 @@ struct ProfileView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showEditProfile) {
-                if let profile = viewModel.profile {
-                        EditProfileView(profile: profile)
-                    }
+                if let profile = viewModel.profile,
+                   let editViewModel = viewModel.createEditViewModel() {
+                    EditProfileView(
+                        profile: profile,
+                        viewModel: editViewModel,
+                        onProfileUpdated: {
+                            Task {
+                                await viewModel.refreshProfile()
+                            }
+                        }
+                    )
+                }
             }
             .sheet(isPresented: $viewModel.showWebView) {
                 if let website = viewModel.profile?.website {
-                    WebViewScreen(urlString: "https://\(website)")
+                    let url = website.hasPrefix("http") ? website : "https://\(website)"
+                    WebViewScreen(urlString: url)
                 }
             }
             .navigationDestination(isPresented: $viewModel.showMyNFT) {
@@ -78,6 +94,7 @@ struct ProfileView: View {
             .navigationDestination(isPresented: $viewModel.showFavoriteNFT) {
                 FavoriteNFTView()
             }
+            
         }
     }
     
@@ -96,12 +113,14 @@ struct ProfileView: View {
     
     private func avatarNameSection(_ profile: UserProfile) -> some View {
         HStack(spacing: 16) {
-            ProfileAvatar(image: Image(.placeholderAvatar), editMode: false)
-            
+            ProfileAvatar(urlString: profile.avatar, editMode: false)
+                .font(.caption)
+                .foregroundStyle(.red)
             Text(profile.name)
                 .font(Font.bold22)
                 .foregroundStyle(.appBlack)
         }
+        
     }
     
     private func bioSection(_ profile: UserProfile) -> some View {
@@ -113,9 +132,11 @@ struct ProfileView: View {
             Button {
                 viewModel.openWebsite()
             } label: {
-                Text(profile.website)
-                    .font(Font.regular15)
-                    .foregroundStyle(.appBlue)
+                Text(profile.website
+                    .replacingOccurrences(of: "https://", with: "")
+                    .replacingOccurrences(of: "http://", with: ""))
+                .font(Font.regular15)
+                .foregroundStyle(.appBlue)
             }
         }
     }
@@ -125,13 +146,13 @@ struct ProfileView: View {
             Button {
                 viewModel.openMyNFT()
             } label: {
-                ProfileMenuLabel(title: "Мои NFT", count: profile.myNftCount)
+                ProfileMenuLabel(title: ProfileConstants.Menu.myNFTTitle, count: profile.myNftCount)
             }
             
             Button {
                 viewModel.openFavoriteNFT()
             } label: {
-                ProfileMenuLabel(title: "Избранные NFT", count: profile.favoriteNftCount)
+                ProfileMenuLabel(title: ProfileConstants.Menu.favoriteNFTTitle, count: profile.favoriteNftCount)
             }
         }
         .padding(.top, 20)
@@ -139,5 +160,12 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(
+        viewModel: ProfileViewModel(
+            profileService: ProfileService(
+                networkClient: DefaultNetworkClient(),
+                storage: ProfileStorage()
+            )
+        )
+    )
 }

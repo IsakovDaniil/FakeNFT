@@ -71,7 +71,7 @@ struct ProfileValidator {
             return .valid
         }
         
-        let urlPattern = #"^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$"#
+        let urlPattern = #"^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-\.\/\?\=\&]*)?$"#
         let urlPredicate = NSPredicate(format: "SELF MATCHES %@", urlPattern)
         
         guard urlPredicate.evaluate(with: trimmed) else {
@@ -98,7 +98,7 @@ struct ProfileValidator {
             return .invalid("URL должен начинаться с http:// или https://")
         }
         
-        var validExtensions = ["jpg", "png", "jpeg", "webp"]
+        let validExtensions = ["jpg", "png", "jpeg", "webp"]
         let pathExtension = url.pathExtension.lowercased()
         
         if !pathExtension.isEmpty && !validExtensions.contains(pathExtension) {
