@@ -45,13 +45,13 @@ struct ProfileView: View {
                     ProgressHUD.dismiss()
                 }
             }
-            .alert("Ошибка", isPresented: $viewModel.showErrorAlert) {
-                Button("Повторить") {
+            .alert(ProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
+                Button(ProfileConstants.retryButton) {
                     Task {
                         await viewModel.retry()
                     }
                 }
-                Button("Отмена", role: .cancel) {}
+                Button(ProfileConstants.cancelButton, role: .cancel) {}
             } message: {
                 if let message = viewModel.errorMessage {
                     Text(message)
@@ -146,13 +146,13 @@ struct ProfileView: View {
             Button {
                 viewModel.openMyNFT()
             } label: {
-                ProfileMenuLabel(title: "Мои NFT", count: profile.myNftCount)
+                ProfileMenuLabel(title: ProfileConstants.Menu.myNFTTitle, count: profile.myNftCount)
             }
             
             Button {
                 viewModel.openFavoriteNFT()
             } label: {
-                ProfileMenuLabel(title: "Избранные NFT", count: profile.favoriteNftCount)
+                ProfileMenuLabel(title: ProfileConstants.Menu.favoriteNFTTitle, count: profile.favoriteNftCount)
             }
         }
         .padding(.top, 20)

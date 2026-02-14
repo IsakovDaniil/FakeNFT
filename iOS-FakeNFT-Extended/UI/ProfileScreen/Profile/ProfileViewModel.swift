@@ -75,11 +75,9 @@ final class ProfileViewModel {
     }
     
     func refreshProfile() async {
-        print("🔄 Refreshing profile from server...")
         do {
             let profile = try await profileService.loadProfile(forceRefresh: true)
             state = .loaded(profile)
-            print("✅ Profile refreshed and UI updated")
         } catch {
             print("⚠️ Silent refresh failed: \(error)")
         }
@@ -117,18 +115,18 @@ final class ProfileViewModel {
         if let networkError = error as? NetworkClientError {
             switch networkError {
             case .httpStatusCode(let code):
-                errorMessage = "Ошибка сервера: \(code)"
+                errorMessage = ProfileConstants.ErrorMessages.serverErrorPrefix + "\(code)"
             case .urlSessionError:
-                errorMessage = "Ошибка подключения"
+                errorMessage = ProfileConstants.ErrorMessages.connectionError
             case .parsingError:
-                errorMessage = "Ошибка обработки данных"
+                errorMessage = ProfileConstants.ErrorMessages.parsingError
             case .incorrectRequest(let message):
-                errorMessage = "Некорректрый запрос: \(message)"
+                errorMessage = ProfileConstants.ErrorMessages.invalidRequestPrefix + message
             case .urlRequestError:
-                errorMessage = "Ошибка сети"
+                errorMessage = ProfileConstants.ErrorMessages.networkError
             }
         } else {
-            errorMessage = "Не удалось загрузить профиль"
+            errorMessage = ProfileConstants.defaultErrorMessage
         }
         
         showErrorAlert = true
