@@ -136,7 +136,7 @@ final class EditProfileViewModel {
         }
         
         guard let originalProfile = originalProfile else {
-            errorMessage = "Не удалось найти исходный профиль"
+            errorMessage = EditProfileConstants.profileNotFoundError
             showErrorAlert = true
             return
         }
@@ -248,18 +248,18 @@ final class EditProfileViewModel {
         if let networkError = error as? NetworkClientError {
             switch networkError {
             case .httpStatusCode(let code):
-                errorMessage = "Ошибка сервера: \(code)"
+                errorMessage = "\(EditProfileConstants.ErrorMessages.serverErrorPrefix)\(code)"
             case .urlSessionError:
-                errorMessage = "Ошибка подключения"
+                errorMessage = EditProfileConstants.ErrorMessages.connectionError
             case .parsingError:
-                errorMessage = "Ошибка обработки данных"
+                errorMessage = EditProfileConstants.ErrorMessages.parsingError
             case .incorrectRequest(let message):
-                errorMessage = "Некорректный запрос: \(message)"
+                errorMessage = "\(EditProfileConstants.ErrorMessages.invalidRequestPrefix)\(message)"
             case .urlRequestError:
-                errorMessage = "Ошибка сети"
+                errorMessage = EditProfileConstants.ErrorMessages.networkError
             }
         } else {
-            errorMessage = "Не удалось сохранить профиль"
+            errorMessage = EditProfileConstants.defaultErrorMessage
         }
         
         showErrorAlert = true
