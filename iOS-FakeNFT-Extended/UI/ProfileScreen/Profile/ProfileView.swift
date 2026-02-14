@@ -84,7 +84,8 @@ struct ProfileView: View {
             }
             .sheet(isPresented: $viewModel.showWebView) {
                 if let website = viewModel.profile?.website {
-                    WebViewScreen(urlString: "https://\(website)")
+                    let url = website.hasPrefix("http") ? website : "https://\(website)"
+                    WebViewScreen(urlString: url)
                 }
             }
             .navigationDestination(isPresented: $viewModel.showMyNFT) {
@@ -119,7 +120,7 @@ struct ProfileView: View {
                 .font(Font.bold22)
                 .foregroundStyle(.appBlack)
         }
-
+        
     }
     
     private func bioSection(_ profile: UserProfile) -> some View {
@@ -131,9 +132,11 @@ struct ProfileView: View {
             Button {
                 viewModel.openWebsite()
             } label: {
-                Text(profile.website)
-                    .font(Font.regular15)
-                    .foregroundStyle(.appBlue)
+                Text(profile.website
+                    .replacingOccurrences(of: "https://", with: "")
+                    .replacingOccurrences(of: "http://", with: ""))
+                .font(Font.regular15)
+                .foregroundStyle(.appBlue)
             }
         }
     }
