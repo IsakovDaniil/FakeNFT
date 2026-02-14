@@ -54,7 +54,7 @@ struct EditProfileView: View {
         }
         .onChange(of: viewModel.isSaving) { _, isSaving in
             if isSaving {
-                ProgressHUD.animate("Сохранение...")
+                ProgressHUD.animate()
             } else {
                 ProgressHUD.dismiss()
             }
@@ -193,6 +193,6 @@ private extension EditProfileView {
             }
         }
         .disabled(!viewModel.canSave || viewModel.isSaving)
-        .opacity(viewModel.hasChanges && !viewModel.isSaving ? 1.0 : 0.5)
+        .opacity(viewModel.hasChanges && !viewModel.isSaving ? 1.0 : 0)
     }
 }
