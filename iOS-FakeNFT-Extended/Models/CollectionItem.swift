@@ -14,4 +14,7 @@ struct CollectionItem: Identifiable, Hashable {
     let nftCount: Int
     /// Для превью и моков: одна картинка из Assets — уже полоска из трёх совмещённых изображений на всю строку.
     var localCoverImageName: String?
+    let author: String
+    let description: String
+    let website: String
 }

@@ -24,9 +24,11 @@ struct CollectionDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
                 coverView
                     .ignoresSafeArea(edges: .top)
+
+                collectionInfoBlock
             }
         }
         .ignoresSafeArea(edges: .top)
@@ -57,7 +59,7 @@ struct CollectionDetailView: View {
                 topLeadingRadius: 0,
                 bottomLeadingRadius: 12,
                 bottomTrailingRadius: 12,
-                topTrailingRadius: 0
+                topTrailingRadius: 0,
             ))
     }
 
@@ -84,6 +86,57 @@ struct CollectionDetailView: View {
         .frame(maxWidth: .infinity)
         .clipped()
     }
+
+    // MARK: - Блок информации о коллекции (задача 36)
+
+    private var collectionInfoBlock: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(item.name)
+                .font(.bold22)
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
+
+            authorRow
+                .padding(.top, 13)
+                .padding(.horizontal, 16)
+
+            Text(item.description)
+                .font(.regular13)
+                .lineSpacing(5)
+                .tracking(-0.08)
+                .multilineTextAlignment(.leading)
+                .foregroundStyle(.primary)
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.bottom, 24)
+    }
+
+    private var authorRow: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 0) {
+            Text("Collection.author")
+                .font(.regular13)
+                .foregroundStyle(.primary)
+            authorLinkOrText
+        }
+    }
+
+    @ViewBuilder
+    private var authorLinkOrText: some View {
+        if !item.website.isEmpty, URL(string: item.website) != nil {
+            NavigationLink(destination: WebViewScreen(urlString: item.website)) {
+                Text(item.author)
+                    .font(.regular15)
+                    .foregroundStyle(Color("AppBlue"))
+            }
+        } else {
+            Text(item.author)
+                .font(.regular15)
+                .foregroundStyle(Color("AppBlue"))
+        }
+    }
 }
 
 // MARK: - Preview
@@ -95,7 +148,10 @@ struct CollectionDetailView: View {
             name: "Peach",
             imageURLs: [],
             nftCount: 11,
-            localCoverImageName: "CataloguePeach"
+            localCoverImageName: "CataloguePeach",
+            author: "John Doe",
+            description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
+            website: "https://yandex.ru/legal/practicum_termsofuse",
         ))
     }
 }

@@ -28,21 +28,21 @@ struct CatalogView: View {
                 if viewModel.isLoading {
                     ProgressView()
                 } else {
-                    self.collectionList
+                    collectionList
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    self.sortButton
+                    sortButton
                 }
             }
-            .navigationDestination(item: self.$selectedCollection) { collection in
+            .navigationDestination(item: $selectedCollection) { collection in
                 CollectionDetailView(item: collection)
             }
             .alert(
                 Constants.errorMessage,
-                isPresented: self.$showErrorAlert
+                isPresented: $showErrorAlert
             ) {
                 Button(Constants.cancelTitle, role: .cancel) { }
                 Button(Constants.retryTitle) {
@@ -50,9 +50,9 @@ struct CatalogView: View {
                 }
             }
             .onChange(of: viewModel.showError) { _, new in
-                self.showErrorAlert = new
+                showErrorAlert = new
             }
-            .confirmationDialog(Constants.sortTitle, isPresented: self.$showSortOptions) {
+            .confirmationDialog(Constants.sortTitle, isPresented: $showSortOptions) {
                 Button(Constants.sortByName) {
                     viewModel.setSortOrder(.byName)
                 }
@@ -74,7 +74,7 @@ struct CatalogView: View {
             LazyVStack(spacing: 8) {
                 ForEach(viewModel.sortedCollections) { item in
                     Button {
-                        self.selectedCollection = item
+                        selectedCollection = item
                     } label: {
                         CollectionRow(item: item)
                     }
@@ -90,7 +90,7 @@ struct CatalogView: View {
     /// Кнопка сортировки в navigation bar
     private var sortButton: some View {
         Button {
-            self.showSortOptions = true
+            showSortOptions = true
         } label: {
             Image(.sort)
                 .renderingMode(.template)

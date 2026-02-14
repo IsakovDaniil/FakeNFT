@@ -117,7 +117,10 @@ final class CatalogViewModel {
             name: collection.name,
             imageURLs: coverURL.map { [$0] } ?? [],
             nftCount: collection.nfts.count,
-            localCoverImageName: nil
+            localCoverImageName: nil,
+            author: collection.author,
+            description: collection.description,
+            website: collection.website,
         )
     }
 
@@ -125,42 +128,59 @@ final class CatalogViewModel {
 
     private static func fetchCollectionsMock() async throws -> [CollectionItem] {
         try await Task.sleep(nanoseconds: 300_000_000)
-        return [
-            CollectionItem(
-                id: "1",
-                name: "Peach",
-                imageURLs: [],
-                nftCount: 11,
-                localCoverImageName: "CataloguePeach"
-            ),
-            CollectionItem(
-                id: "2",
-                name: "Blue",
-                imageURLs: [],
-                nftCount: 6,
-                localCoverImageName: "CatalogueBlue"
-            ),
-            CollectionItem(
-                id: "3",
-                name: "Brown",
-                imageURLs: [],
-                nftCount: 8,
-                localCoverImageName: "CatalogueBrown"
-            ),
-            CollectionItem(
-                id: "4",
-                name: "Green",
-                imageURLs: [],
-                nftCount: 5,
-                localCoverImageName: "CatalogueGreen"
-            ),
-            CollectionItem(
-                id: "5",
-                name: "Mix",
-                imageURLs: [],
-                nftCount: 12,
-                localCoverImageName: "CataloguePeach"
-            )
-        ]
+        return mockCollectionItems
     }
+
+    private static let mockCollectionItems: [CollectionItem] = [
+        CollectionItem(
+            id: "1",
+            name: "Peach",
+            imageURLs: [],
+            nftCount: 11,
+            localCoverImageName: "CataloguePeach",
+            author: "John Doe",
+            description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
+            website: "https://yandex.ru/legal/practicum_termsofuse",
+        ),
+        CollectionItem(
+            id: "2",
+            name: "Blue",
+            imageURLs: [],
+            nftCount: 6,
+            localCoverImageName: "CatalogueBlue",
+            author: "Jane Smith",
+            description: "Коллекция в синих тонах.",
+            website: "https://www.apple.com",
+        ),
+        CollectionItem(
+            id: "3",
+            name: "Brown",
+            imageURLs: [],
+            nftCount: 8,
+            localCoverImageName: "CatalogueBrown",
+            author: "Author",
+            description: "Описание коллекции Brown.",
+            website: "https://www.apple.com",
+        ),
+        CollectionItem(
+            id: "4",
+            name: "Green",
+            imageURLs: [],
+            nftCount: 5,
+            localCoverImageName: "CatalogueGreen",
+            author: "Author",
+            description: "Описание коллекции Green.",
+            website: "https://www.apple.com",
+        ),
+        CollectionItem(
+            id: "5",
+            name: "Mix",
+            imageURLs: [],
+            nftCount: 12,
+            localCoverImageName: "CataloguePeach",
+            author: "John Doe",
+            description: "Смешанная коллекция.",
+            website: "https://www.apple.com",
+        )
+    ]
 }

@@ -80,7 +80,10 @@ struct CollectionRow: View {
                 name: "Peach",
                 imageURLs: [],
                 nftCount: 11,
-                localCoverImageName: "CataloguePeach"
+                localCoverImageName: "CataloguePeach",
+                author: "John Doe",
+                description: "",
+                website: ""
             ))
             .background(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 12))
