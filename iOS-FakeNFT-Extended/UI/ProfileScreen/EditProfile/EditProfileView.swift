@@ -6,15 +6,29 @@
 //
 
 import SwiftUI
+import ProgressHUD
 
 struct EditProfileView: View {
     
     // MARK: - Properties
     
     @Environment(\.dismiss) private var dismiss
-    @State private var viewModel = EditProfileViewModel()
+    @State private var viewModel: EditProfileViewModel
     
     let profile: UserProfile
+    let onProfileUpdated: (() -> Void)?
+    
+    // MARK: - Init
+    
+    init(
+        profile: UserProfile,
+        viewModel: EditProfileViewModel,
+        onProfileUpdated: (() -> Void)? = nil
+    ) {
+        self.profile = profile
+        self._viewModel = State(initialValue: viewModel)
+        self.onProfileUpdated = onProfileUpdated
+    }
     
     // MARK: - Body
     
@@ -36,6 +50,14 @@ struct EditProfileView: View {
         }
         .onAppear {
             viewModel.loadProfile(from: profile)
+            setupCallbacks()
+        }
+        .onChange(of: viewModel.isSaving) { _, isSaving in
+            if isSaving {
+                ProgressHUD.animate("Сохранение...")
+            } else {
+                ProgressHUD.dismiss()
+            }
         }
         .navigationBarBackButtonHidden(viewModel.hasChanges)
         .toolbar {
@@ -92,6 +114,19 @@ struct EditProfileView: View {
             }
         }
     }
+    
+    // MARK: - Private Methods
+    
+    private func setupCallbacks() {
+        viewModel.onProfileSaved = { [onProfileUpdated, dismiss] in
+            Task { @MainActor in
+                ProgressHUD.succeed("Сохранено")
+                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 sec
+                dismiss()
+                onProfileUpdated?()
+            }
+        }
+    }
 }
 
 // MARK: - Subviews
@@ -100,11 +135,12 @@ private extension EditProfileView {
     
     var avatarSection: some View {
         ProfileAvatar(
-            urlString: profile.avatar,
-            editMode: true
-        ) {
-            viewModel.openAvatarActionSheet()
-        }
+            urlString: viewModel.avatarURL.isEmpty ? nil : viewModel.avatarURL,
+            editMode: true,
+            onTap: {
+                viewModel.openAvatarActionSheet()
+            }
+        )
     }
     
     var fieldsSection: some View {
@@ -152,24 +188,11 @@ private extension EditProfileView {
     
     var buttonSection: some View {
         EditProfileButton(name: "Сохранить") {
-            viewModel.saveProfile()
-            dismiss()
+            Task {
+                await viewModel.saveProfile()
+            }
         }
-        .disabled(!viewModel.hasChanges)
-        .opacity(viewModel.hasChanges ? 1.0 : 0)
+        .disabled(!viewModel.canSave || viewModel.isSaving)
+        .opacity(viewModel.hasChanges && !viewModel.isSaving ? 1.0 : 0.5)
     }
-}
-
-#Preview {
-    EditProfileView(
-        profile: UserProfile(
-            name: "Joaquin Phoenix",
-            avatar: "https://example.com/avatar.jpg",
-            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы.",
-            website: "JoaquinPhoenix.com",
-            myNfts: [],
-            favoriteNfts: [],
-            id: "user-1"
-        )
-    )
 }

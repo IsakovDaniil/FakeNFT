@@ -102,6 +102,10 @@ final class ProfileViewModel {
         showFavoriteNFT = true
     }
     
+    func createEditViewModel() -> EditProfileViewModel? {
+           EditProfileViewModel(profileService: profileService)
+       }
+    
     // MARK: - Private Methods
     
     private func handleError(_ error: Error) {

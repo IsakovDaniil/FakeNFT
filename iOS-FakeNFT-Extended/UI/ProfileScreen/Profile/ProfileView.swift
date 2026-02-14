@@ -69,9 +69,18 @@ struct ProfileView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showEditProfile) {
-                if let profile = viewModel.profile {
-                        EditProfileView(profile: profile)
-                    }
+                if let profile = viewModel.profile,
+                   let editViewModel = viewModel.createEditViewModel() {
+                    EditProfileView(
+                        profile: profile,
+                        viewModel: editViewModel,
+                        onProfileUpdated: {
+                            Task {
+                                await viewModel.refreshProfile()
+                            }
+                        }
+                    )
+                }
             }
             .sheet(isPresented: $viewModel.showWebView) {
                 if let website = viewModel.profile?.website {
