@@ -62,55 +62,55 @@ struct EditProfileView: View {
         .navigationBarBackButtonHidden(true)
         
         .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        if viewModel.hasChanges {
-                            viewModel.showExitAlert = true
-                        } else {
-                            dismiss()
-                        }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(.appBlack)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    if viewModel.hasChanges {
+                        viewModel.showExitAlert = true
+                    } else {
+                        dismiss()
                     }
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .foregroundStyle(.appBlack)
                 }
             }
-        .confirmationDialog("Фото профиля", isPresented: $viewModel.showActionSheet, titleVisibility: .visible) {
-            Button("Изменить фото") {
+        }
+        .confirmationDialog(EditProfileConstants.avatarActionSheetTitle, isPresented: $viewModel.showActionSheet, titleVisibility: .visible) {
+            Button(EditProfileConstants.changePhoto) {
                 viewModel.changeAvatar()
             }
             
-            Button("Удалить фото", role: .destructive) {
+            Button(EditProfileConstants.deletePhoto, role: .destructive) {
                 viewModel.deleteAvatar()
             }
             
-            Button("Отмена", role: .cancel) {}
+            Button(EditProfileConstants.cancel, role: .cancel) {}
         }
-        .alert("Ссылка на фото", isPresented: $viewModel.showURLAlert) {
-            TextField("https://example.com/", text: $viewModel.urlInput)
+        .alert(EditProfileConstants.urlAlertTitle, isPresented: $viewModel.showURLAlert) {
+            TextField(EditProfileConstants.urlPlaceholder, text: $viewModel.urlInput)
                 .textInputAutocapitalization(.never)
                 .keyboardType(.URL)
                 .onChange(of: viewModel.urlInput) { _, _ in
                     viewModel.hasUnsavedURLChanges = true
                 }
             
-            Button("Отмена", role: .cancel) {
+            Button(EditProfileConstants.cancel, role: .cancel) {
                 viewModel.cancelURLInput()
             }
             
-            Button("Сохранить") {
+            Button(EditProfileConstants.save) {
                 viewModel.saveAvatarURL()
             }
             .disabled(viewModel.urlInput.isEmpty)
         }
-        .alert("Уверены, что хотите выйти?", isPresented: $viewModel.showExitAlert) {
-            Button("Остаться", role: .cancel) {}
-            Button("Выйти", role: .destructive) {
+        .alert(EditProfileConstants.exitConfirmationTitle, isPresented: $viewModel.showExitAlert) {
+            Button(EditProfileConstants.stay, role: .cancel) {}
+            Button(EditProfileConstants.exit, role: .destructive) {
                 dismiss()
             }
         }
-        .alert("Ошибка", isPresented: $viewModel.showErrorAlert) {
-            Button("OK", role: .cancel) {}
+        .alert(EditProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
+            Button(EditProfileConstants.ok, role: .cancel) {}
         } message: {
             if let message = viewModel.errorMessage {
                 Text(message)
@@ -123,7 +123,7 @@ struct EditProfileView: View {
     private func setupCallbacks() {
         viewModel.onProfileSaved = { [onProfileUpdated, dismiss] in
             Task { @MainActor in
-                ProgressHUD.succeed("Сохранено")
+                ProgressHUD.succeed(EditProfileConstants.savedMessage)
                 try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 sec
                 dismiss()
                 onProfileUpdated?()
@@ -149,7 +149,7 @@ private extension EditProfileView {
     var fieldsSection: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 4) {
-                EditProfileField(title: "Имя", text: $viewModel.name, isMultiline: false)
+                EditProfileField(title: EditProfileConstants.FieldTitles.name, text: $viewModel.name, isMultiline: false)
                     .onChange(of: viewModel.name) { _, _ in
                         viewModel.validateName()
                     }
@@ -162,7 +162,7 @@ private extension EditProfileView {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                EditProfileField(title: "Описание", text: $viewModel.description, isMultiline: true)
+                EditProfileField(title: EditProfileConstants.FieldTitles.description, text: $viewModel.description, isMultiline: true)
                     .onChange(of: viewModel.description) { _, _ in
                         viewModel.validateDescription()
                     }
@@ -175,7 +175,7 @@ private extension EditProfileView {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                EditProfileField(title: "Сайт", text: $viewModel.website, isMultiline: false)
+                EditProfileField(title: EditProfileConstants.FieldTitles.website, text: $viewModel.website, isMultiline: false)
                     .onChange(of: viewModel.website) { _, _ in
                         viewModel.validateWebsite()
                     }
@@ -190,7 +190,7 @@ private extension EditProfileView {
     }
     
     var buttonSection: some View {
-        EditProfileButton(name: "Сохранить") {
+        EditProfileButton(name: EditProfileConstants.save) {
             Task {
                 await viewModel.saveProfile()
             }
