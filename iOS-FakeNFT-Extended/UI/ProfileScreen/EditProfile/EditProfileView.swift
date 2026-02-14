@@ -59,19 +59,22 @@ struct EditProfileView: View {
                 ProgressHUD.dismiss()
             }
         }
-        .navigationBarBackButtonHidden(viewModel.hasChanges)
+        .navigationBarBackButtonHidden(true)
+        
         .toolbar {
-            if viewModel.hasChanges {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        viewModel.showExitAlert = true
+                        if viewModel.hasChanges {
+                            viewModel.showExitAlert = true
+                        } else {
+                            dismiss()
+                        }
                     } label: {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.appBlack)
+                            .foregroundStyle(.appBlack)
                     }
                 }
             }
-        }
         .confirmationDialog("Фото профиля", isPresented: $viewModel.showActionSheet, titleVisibility: .visible) {
             Button("Изменить фото") {
                 viewModel.changeAvatar()
