@@ -70,7 +70,7 @@ struct ProfileAvatar: View {
 #Preview {
     VStack(spacing: 20) {
         ProfileAvatar(
-            urlString: "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/747.jpg",
+            urlString: "https://i.pravatar.cc/300",
             editMode: true,
             onTap: { print("Tap") }
         )

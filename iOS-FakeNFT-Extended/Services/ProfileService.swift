@@ -10,9 +10,11 @@ import Foundation
 // MARK: - Profile Service Protocol
 
 protocol ProfileServiceProtocol {
-    func loadProfile() async throws -> UserProfile
+    func loadProfile(forceRefresh: Bool) async throws -> UserProfile
     func updateProfile(_ profile: UserProfile) async throws -> UserProfile
 }
+
+// MARK: - Profile Service Implementation
 
 @MainActor
 final class ProfileService: ProfileServiceProtocol {
@@ -28,16 +30,15 @@ final class ProfileService: ProfileServiceProtocol {
         self.storage = storage
     }
     
-    // MARK: - Update Profile
+    // MARK: - Load Profile
     
-    func loadProfile() async throws -> UserProfile {
-        if let cachedProfile = await storage.getProfile() {
+    func loadProfile(forceRefresh: Bool = false) async throws -> UserProfile {
+        if !forceRefresh, let cachedProfile = await storage.getProfile() {
             Task {
                 do {
                     let freshProfile = try await fetchProfileFromNetwork()
                     await storage.saveProfile(freshProfile)
                 } catch {
-                    print("⚠️ Background update failed: \(error)")
                 }
             }
             
@@ -52,10 +53,32 @@ final class ProfileService: ProfileServiceProtocol {
     // MARK: - Update Profile
     
     func updateProfile(_ profile: UserProfile) async throws -> UserProfile {
-        await storage.saveProfile(profile)
-        
         let request = UpdateProfileRequest(profile: profile)
-        let updatedProfile: UserProfile = try await networkClient.send(request: request)
+        
+        guard let endpoint = request.endpoint else {
+            throw NetworkClientError.incorrectRequest("Empty endpoint")
+        }
+        
+        var urlRequest = URLRequest(url: endpoint)
+        urlRequest.httpMethod = "PUT"
+        urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
+        
+        let body = request.createFormBody()
+        urlRequest.httpBody = body
+        
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkClientError.urlSessionError
+        }
+        
+        guard 200 ..< 300 ~= httpResponse.statusCode else {
+            throw NetworkClientError.httpStatusCode(httpResponse.statusCode)
+        }
+        
+        let decoder = JSONDecoder()
+        let updatedProfile = try decoder.decode(UserProfile.self, from: data)
         
         await storage.saveProfile(updatedProfile)
         

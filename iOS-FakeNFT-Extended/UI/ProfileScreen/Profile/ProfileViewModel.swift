@@ -63,7 +63,7 @@ final class ProfileViewModel {
         state = .loading
         
         do {
-            let profile = try await profileService.loadProfile()
+            let profile = try await profileService.loadProfile(forceRefresh: false)
             state = .loaded(profile)
         } catch {
             handleError(error)
@@ -75,8 +75,11 @@ final class ProfileViewModel {
     }
     
     func refreshProfile() async {
+        print("🔄 Refreshing profile from server...")
         do {
-            let profile = try await profileService.loadProfile()
+            let profile = try await profileService.loadProfile(forceRefresh: true)
+            state = .loaded(profile)
+            print("✅ Profile refreshed and UI updated")
         } catch {
             print("⚠️ Silent refresh failed: \(error)")
         }
@@ -103,8 +106,8 @@ final class ProfileViewModel {
     }
     
     func createEditViewModel() -> EditProfileViewModel? {
-           EditProfileViewModel(profileService: profileService)
-       }
+        EditProfileViewModel(profileService: profileService)
+    }
     
     // MARK: - Private Methods
     
