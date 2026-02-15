@@ -52,7 +52,7 @@ struct CatalogView: View {
             .onChange(of: viewModel.showError) { _, new in
                 showErrorAlert = new
             }
-            .confirmationDialog(Constants.sortTitle, isPresented: $showSortOptions) {
+            .confirmationDialog(Constants.sortTitle, isPresented: $showSortOptions, titleVisibility: .visible) {
                 Button(Constants.sortByName) {
                     viewModel.setSortOrder(.byName)
                 }

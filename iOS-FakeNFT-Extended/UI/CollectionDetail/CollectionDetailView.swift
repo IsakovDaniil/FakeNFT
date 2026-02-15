@@ -130,10 +130,16 @@ struct CollectionDetailView: View {
         }
     }
 
+    /// Имя автора — ссылка на сайт в WKWebView. URL из API, при ошибке — fallback.
     @ViewBuilder
     private var authorLinkOrText: some View {
         if !item.website.isEmpty, URL(string: item.website) != nil {
-            NavigationLink(destination: WebViewScreen(urlString: item.website)) {
+            NavigationLink(
+                destination: AuthorWebsiteScreen(
+                    urlString: item.website,
+                    fallbackUrlString: Constants.fallbackAuthorWebsiteURL
+                )
+            ) {
                 Text(item.author)
                     .font(.regular15)
                     .foregroundStyle(Color(uiColor: .appBlue))
@@ -154,6 +160,13 @@ struct CollectionDetailView: View {
             GridItem(.flexible(), spacing: 9)
         ]
     }
+}
+
+// MARK: - Constants
+
+private enum Constants {
+    /// Fallback при ошибке загрузки сайта автора (mock-API возвращает несуществующие домены)
+    static let fallbackAuthorWebsiteURL = "https://practicum.yandex.ru/ios-developer/"
 }
 
 // MARK: - Preview
