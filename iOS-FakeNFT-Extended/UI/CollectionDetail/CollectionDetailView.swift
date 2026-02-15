@@ -16,21 +16,29 @@ struct CollectionDetailView: View {
 
     @Environment(\.dismiss) private var dismiss
 
+    // MARK: - State
+
+    @State private var viewModel: CollectionDetailViewModel
+    @State private var showErrorAlert = false
+
     // MARK: - Properties
 
-    let item: CollectionItem
+    private var item: CollectionItem { viewModel.item }
+
+    // MARK: - Init
+
+    init(item: CollectionItem, nftService: NftService? = nil) {
+        _viewModel = State(initialValue: CollectionDetailViewModel(item: item, nftService: nftService))
+    }
 
     // MARK: - Body
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                coverView
-                    .ignoresSafeArea(edges: .top)
-
-                collectionInfoBlock
-
-                nftGridSection
+        ZStack {
+            if viewModel.isLoading {
+                ProgressView()
+            } else {
+                scrollContent
             }
         }
         .ignoresSafeArea(edges: .top)
@@ -47,6 +55,32 @@ struct CollectionDetailView: View {
                 }
             }
         }
+        .alert(Constants.errorMessage, isPresented: $showErrorAlert) {
+            Button(Constants.cancelTitle, role: .cancel) { }
+            Button(Constants.retryTitle) {
+                viewModel.retry()
+            }
+        }
+        .onChange(of: viewModel.isError) { _, new in
+            showErrorAlert = new
+        }
+        .task {
+            await viewModel.loadNfts()
+        }
+    }
+
+    private var scrollContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                coverView
+                    .ignoresSafeArea(edges: .top)
+
+                collectionInfoBlock
+
+                nftGridSection
+            }
+        }
+        .ignoresSafeArea(edges: .top)
     }
 
     // MARK: - Subviews
@@ -75,7 +109,6 @@ struct CollectionDetailView: View {
                         Rectangle()
                             .fill(Color.gray.opacity(0.2))
                     }
-                    .onFailure { _ in }
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
@@ -114,8 +147,13 @@ struct CollectionDetailView: View {
 
     private var nftGridSection: some View {
         LazyVGrid(columns: nftGridColumns, spacing: 8) {
-            ForEach(Array(item.nftIds.enumerated()), id: \.offset) { _, nftId in
-                NftCollectionCell(nftId: nftId)
+            ForEach(Array(viewModel.nfts.enumerated()), id: \.offset) { _, nft in
+                NftCollectionCell(
+                    nftId: nft.id,
+                    nft: nft,
+                    isLiked: viewModel.isLiked(id: nft.id),
+                    isInCart: viewModel.isInCart(id: nft.id)
+                )
             }
         }
         .padding(.horizontal, 16)
@@ -167,6 +205,9 @@ struct CollectionDetailView: View {
 private enum Constants {
     /// Fallback при ошибке загрузки сайта автора (mock-API возвращает несуществующие домены)
     static let fallbackAuthorWebsiteURL = "https://practicum.yandex.ru/ios-developer/"
+    static let errorMessage = NSLocalizedString("Catalog.error.message", comment: "")
+    static let cancelTitle = NSLocalizedString("Catalog.alert.cancel", comment: "")
+    static let retryTitle = NSLocalizedString("Error.repeat", comment: "")
 }
 
 // MARK: - Preview

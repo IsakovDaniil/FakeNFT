@@ -14,6 +14,8 @@ struct NftCollectionCell: View {
 
     let nftId: String
     var nft: Nft?
+    var isLiked: Bool = false
+    var isInCart: Bool = false
 
     // MARK: - Body
 
@@ -40,7 +42,7 @@ struct NftCollectionCell: View {
                 .aspectRatio(1, contentMode: .fill)
                 .clipped()
 
-            Image("LikeNoActive")
+            Image(isLiked ? "LikeActive" : "LikeNoActive")
                 .frame(width: 40, height: 40)
         }
         .aspectRatio(1, contentMode: .fit)
@@ -55,7 +57,6 @@ struct NftCollectionCell: View {
                     Rectangle()
                         .fill(Color.gray.opacity(0.2))
                 }
-                .onFailure { _ in }
                 .resizable()
                 .aspectRatio(contentMode: .fill)
         } else {
@@ -87,7 +88,7 @@ struct NftCollectionCell: View {
                     .foregroundStyle(.primary)
             }
             Spacer(minLength: 0)
-            Image("CartAdd")
+            Image(isInCart ? "CartDelete" : "CartAdd")
                 .frame(width: 40, height: 40)
         }
     }
@@ -119,7 +120,12 @@ struct NftCollectionCell: View {
 
 #Preview {
     NavigationStack {
-        NftCollectionCell(nftId: "7773e33c-ec15-4230-a102-92426a3a6d5a", nft: nil)
-            .padding()
+        NftCollectionCell(
+            nftId: "7773e33c-ec15-4230-a102-92426a3a6d5a",
+            nft: nil,
+            isLiked: false,
+            isInCart: false
+        )
+        .padding()
     }
 }

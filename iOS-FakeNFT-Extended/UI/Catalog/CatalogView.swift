@@ -16,7 +16,12 @@ struct CatalogView: View {
     @State private var showSortOptions = false
     @State private var showErrorAlert = false
 
+    // MARK: - Properties
+
+    private let assembly: ServicesAssembly
+
     init(assembly: ServicesAssembly) {
+        self.assembly = assembly
         _viewModel = State(initialValue: CatalogViewModel(collectionService: assembly.collectionService))
     }
 
@@ -38,7 +43,7 @@ struct CatalogView: View {
                 }
             }
             .navigationDestination(item: $selectedCollection) { collection in
-                CollectionDetailView(item: collection)
+                CollectionDetailView(item: collection, nftService: assembly.nftService)
             }
             .alert(
                 Constants.errorMessage,

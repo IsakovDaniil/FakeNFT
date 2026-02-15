@@ -41,9 +41,6 @@ struct CollectionRow: View {
                         Rectangle()
                             .fill(Color.gray.opacity(0.2))
                     }
-                    .onFailure { _ in
-                        // Placeholder уже отображён
-                    }
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
