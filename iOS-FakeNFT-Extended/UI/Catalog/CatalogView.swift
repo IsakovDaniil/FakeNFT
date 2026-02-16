@@ -43,7 +43,12 @@ struct CatalogView: View {
                 }
             }
             .navigationDestination(item: $selectedCollection) { collection in
-                CollectionDetailView(item: collection, nftService: assembly.nftService)
+                CollectionDetailView(
+                    item: collection,
+                    nftService: assembly.nftService,
+                    profileService: assembly.profileService,
+                    orderService: assembly.orderService
+                )
             }
             .alert(
                 Constants.errorMessage,
@@ -92,7 +97,6 @@ struct CatalogView: View {
         }
     }
 
-    /// Кнопка сортировки в navigation bar
     private var sortButton: some View {
         Button {
             showSortOptions = true

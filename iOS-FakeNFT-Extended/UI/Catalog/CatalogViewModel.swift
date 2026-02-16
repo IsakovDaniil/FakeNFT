@@ -38,7 +38,6 @@ final class CatalogViewModel {
         }
     }
 
-    /// Отсортированный список коллекций для отображения.
     var sortedCollections: [CollectionItem] {
         let list: [CollectionItem]
         switch state {

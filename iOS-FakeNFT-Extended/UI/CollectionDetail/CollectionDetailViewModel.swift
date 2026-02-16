@@ -24,14 +24,12 @@ final class CollectionDetailViewModel {
 
     // MARK: - Collection Data
 
-    /// Данные коллекции (название, описание, автор, обложка) — из переданного item.
     let item: CollectionItem
 
     // MARK: - Screen State
 
     private(set) var state: CollectionDetailState = .loading
 
-    /// Список NFT коллекции (при state == .loaded).
     var nfts: [Nft] {
         if case .loaded(let list) = state { return list }
         return []
@@ -49,9 +47,7 @@ final class CollectionDetailViewModel {
 
     // MARK: - Likes & Cart
 
-    /// ID NFT в избранном.
     var likedIds: Set<String> = []
-    /// ID NFT в корзине.
     var cartIds: Set<String> = []
 
     func isLiked(id: String) -> Bool {
@@ -65,18 +61,28 @@ final class CollectionDetailViewModel {
     // MARK: - Private
 
     private let nftService: NftService?
+    private let profileService: ProfileService?
+    private let orderService: OrderService?
 
     // MARK: - Init
 
-    init(item: CollectionItem, nftService: NftService? = nil) {
+    init(
+        item: CollectionItem,
+        nftService: NftService? = nil,
+        profileService: ProfileService? = nil,
+        orderService: OrderService? = nil
+    ) {
         self.item = item
         self.nftService = nftService
+        self.profileService = profileService
+        self.orderService = orderService
     }
 
     // MARK: - Public
 
-    /// Загрузить NFT коллекции по item.nftIds (async/await, параллельно через withTaskGroup).
     func loadNfts() async {
+        await loadLikesAndCart()
+
         guard let service = nftService, !item.nftIds.isEmpty else {
             state = .loaded([])
             return
@@ -91,7 +97,24 @@ final class CollectionDetailViewModel {
         }
     }
 
-    /// Повтор загрузки при ошибке.
+    private func loadLikesAndCart() async {
+        async let profileResult: Profile? = fetchProfileIfNeeded()
+        async let orderResult: Order? = fetchOrderIfNeeded()
+        let (profile, order) = await (profileResult, orderResult)
+        likedIds = Set(profile?.likes ?? [])
+        cartIds = Set(order?.nfts ?? [])
+    }
+
+    private func fetchProfileIfNeeded() async -> Profile? {
+        guard let service = profileService else { return nil }
+        return try? await service.fetchProfile()
+    }
+
+    private func fetchOrderIfNeeded() async -> Order? {
+        guard let service = orderService else { return nil }
+        return try? await service.fetchOrder()
+    }
+
     func retry() {
         Task {
             await loadNfts()

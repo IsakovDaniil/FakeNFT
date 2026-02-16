@@ -27,8 +27,18 @@ struct CollectionDetailView: View {
 
     // MARK: - Init
 
-    init(item: CollectionItem, nftService: NftService? = nil) {
-        _viewModel = State(initialValue: CollectionDetailViewModel(item: item, nftService: nftService))
+    init(
+        item: CollectionItem,
+        nftService: NftService? = nil,
+        profileService: ProfileService? = nil,
+        orderService: OrderService? = nil
+    ) {
+        _viewModel = State(initialValue: CollectionDetailViewModel(
+            item: item,
+            nftService: nftService,
+            profileService: profileService,
+            orderService: orderService
+        ))
     }
 
     // MARK: - Body
