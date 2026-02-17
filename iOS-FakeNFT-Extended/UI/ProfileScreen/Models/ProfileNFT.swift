@@ -7,7 +7,7 @@
 
 import Foundation
 
-private struct ProfileNFT: Identifiable {
+struct ProfileNFT: Identifiable {
     let id = UUID()
     let image: String
     let name: String

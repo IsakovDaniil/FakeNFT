@@ -8,11 +8,64 @@
 import SwiftUI
 
 struct MyNFTView: View {
+    
+    // MARK: - Properties
+    
+    private let nfts: [ProfileNFT] = [
+        ProfileNFT(image: "Lilo", name: "Lilo", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
+        ProfileNFT(image: "Pixi", name: "Spring", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
+        ProfileNFT(image: "Pixi", name: "April", author: "John Doe", price: "1,78", rating: "3", isLiked: true)
+    ]
+    
+    // MARK: - Body
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Group {
+            if nfts.isEmpty {
+                emptyView
+            } else {
+                listView
+            }
+        }
+        .navigationTitle("Мои NFT")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    print("тут будет логика")
+                } label: {
+                    Image(.sort)
+                        .foregroundStyle(.appBlack)
+                }
+            }
+        }
+    }
+    private var listView: some View {
+        List(nfts) { nft in
+            ProfileMyNFTRow(
+                image: nft.image,
+                name: nft.name,
+                author: nft.author,
+                price: nft.price,
+                rating: nft.rating,
+                isLiked: nft.isLiked
+            )
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 39))
+        }
+        .listStyle(.plain)
+    }
+    
+    private var emptyView: some View {
+        Text("У Вас еще нет NFT")
+            .font(Font.bold17)
+            .foregroundStyle(.appBlack)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
 #Preview {
-    MyNFTView()
+    NavigationStack {
+        MyNFTView()
+    }
 }
