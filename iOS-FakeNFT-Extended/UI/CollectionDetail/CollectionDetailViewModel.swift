@@ -58,7 +58,7 @@ final class CollectionDetailViewModel {
         cartIds.contains(id)
     }
 
-    // MARK: - Private
+    // MARK: - Private Dependencies
 
     private let nftService: NftService?
     private let profileService: ProfileService?
@@ -97,6 +97,14 @@ final class CollectionDetailViewModel {
         }
     }
 
+    func retry() {
+        Task {
+            await loadNfts()
+        }
+    }
+
+    // MARK: - Private
+
     private func loadLikesAndCart() async {
         async let profileResult: Profile? = fetchProfileIfNeeded()
         async let orderResult: Order? = fetchOrderIfNeeded()
@@ -114,14 +122,6 @@ final class CollectionDetailViewModel {
         guard let service = orderService else { return nil }
         return try? await service.fetchOrder()
     }
-
-    func retry() {
-        Task {
-            await loadNfts()
-        }
-    }
-
-    // MARK: - Private
 
     private func loadNftsParallel(ids: [String], service: NftService) async throws -> [Nft] {
         try await withThrowingTaskGroup(of: Nft.self, returning: [Nft].self) { group in

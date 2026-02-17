@@ -29,7 +29,7 @@ private struct AuthorWebsiteWebView: UIViewRepresentable {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, WKNavigationDelegate {
+    final class Coordinator: NSObject, WKNavigationDelegate {
         let parent: AuthorWebsiteWebView
         private var hasTriedFallback = false
 

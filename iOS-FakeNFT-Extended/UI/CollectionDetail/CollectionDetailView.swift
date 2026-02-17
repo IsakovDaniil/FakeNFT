@@ -205,7 +205,7 @@ struct CollectionDetailView: View {
         [
             GridItem(.flexible(), spacing: 9),
             GridItem(.flexible(), spacing: 9),
-            GridItem(.flexible(), spacing: 9)
+            GridItem(.flexible(), spacing: 9),
         ]
     }
 }
