@@ -10,7 +10,10 @@ import SwiftUI
 struct MyNFTView: View {
     
     // MARK: - Properties
+    @Environment(\.dismiss) private var dismiss
     
+    @State var showActionSheet: Bool = true
+
     private let nfts: [ProfileNFT] = [
         ProfileNFT(image: "Lilo", name: "Lilo", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
         ProfileNFT(image: "Pixi", name: "Spring", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
@@ -39,7 +42,23 @@ struct MyNFTView: View {
                 }
             }
         }
+        .confirmationDialog("Соритровка", isPresented: $showActionSheet, titleVisibility: .visible) {
+            Button("По цене") {
+                
+            }
+            Button("По рейтингу") {
+                
+            }
+            Button("По названию") {
+                
+            }
+            Button("Закрыть", role: .destructive) {
+                dismiss()
+            }
+        }
     }
+    
+    // MARK: - Subviews
     private var listView: some View {
         List(nfts) { nft in
             ProfileMyNFTRow(
