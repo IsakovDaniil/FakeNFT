@@ -34,7 +34,8 @@ struct ProfileNFTCard: View {
     
     let image: String
     let size: NFTSize
-    @State var isLiked: Bool
+    let isLiked: Bool
+    var onLikeTap: (() -> Void)?
     
     // MARK: - Body
     
@@ -57,9 +58,14 @@ struct ProfileNFTCard: View {
     }
     
     private var likeButton: some View {
-        Image(.like)
-            .foregroundStyle(isLiked ? .appRed : .appWhiteUniversal)
-            .padding(size.likePadding)
+        Button {
+            onLikeTap?()
+        } label: {
+            Image(.like)
+                .foregroundStyle(isLiked ? .appRed : .appWhiteUniversal)
+                .padding(size.likePadding)
+        }
+        .disabled(onLikeTap == nil)
     }
 }
 
@@ -67,7 +73,18 @@ struct ProfileNFTCard: View {
 
 #Preview {
     VStack {
-        ProfileNFTCard(image: "Lilo", size: .myNFT, isLiked: false)
-        ProfileNFTCard(image: "Pixi", size: .favorites, isLiked: true)
+        ProfileNFTCard(
+            image: "Lilo",
+            size: .myNFT,
+            isLiked: false,
+            onLikeTap: { print("Liked!") }
+        )
+        
+        ProfileNFTCard(
+            image: "Pixi",
+            size: .favorites,
+            isLiked: true,
+            onLikeTap: { print("Unliked!") }
+        )
     }
 }
