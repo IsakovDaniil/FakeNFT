@@ -46,7 +46,7 @@ struct CatalogView: View {
                 CollectionDetailView(
                     item: collection,
                     nftService: assembly.nftService,
-                    profileService: assembly.profileService,
+                    catalogProfileService: assembly.catalogProfileService,
                     orderService: assembly.orderService
                 )
             }

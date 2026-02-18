@@ -30,13 +30,13 @@ struct CollectionDetailView: View {
     init(
         item: CollectionItem,
         nftService: NftService? = nil,
-        profileService: ProfileService? = nil,
+        catalogProfileService: CatalogProfileService? = nil,
         orderService: OrderService? = nil
     ) {
         _viewModel = State(initialValue: CollectionDetailViewModel(
             item: item,
             nftService: nftService,
-            profileService: profileService,
+            catalogProfileService: catalogProfileService,
             orderService: orderService
         ))
     }
@@ -205,7 +205,7 @@ struct CollectionDetailView: View {
         [
             GridItem(.flexible(), spacing: 9),
             GridItem(.flexible(), spacing: 9),
-            GridItem(.flexible(), spacing: 9),
+            GridItem(.flexible(), spacing: 9)
         ]
     }
 }

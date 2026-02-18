@@ -61,7 +61,7 @@ final class CollectionDetailViewModel {
     // MARK: - Private Dependencies
 
     private let nftService: NftService?
-    private let profileService: ProfileService?
+    private let catalogProfileService: CatalogProfileService?
     private let orderService: OrderService?
 
     // MARK: - Init
@@ -69,12 +69,12 @@ final class CollectionDetailViewModel {
     init(
         item: CollectionItem,
         nftService: NftService? = nil,
-        profileService: ProfileService? = nil,
+        catalogProfileService: CatalogProfileService? = nil,
         orderService: OrderService? = nil
     ) {
         self.item = item
         self.nftService = nftService
-        self.profileService = profileService
+        self.catalogProfileService = catalogProfileService
         self.orderService = orderService
     }
 
@@ -106,15 +106,15 @@ final class CollectionDetailViewModel {
     // MARK: - Private
 
     private func loadLikesAndCart() async {
-        async let profileResult: Profile? = fetchProfileIfNeeded()
+        async let profileResult: CatalogProfile? = fetchCatalogProfileIfNeeded()
         async let orderResult: Order? = fetchOrderIfNeeded()
         let (profile, order) = await (profileResult, orderResult)
         likedIds = Set(profile?.likes ?? [])
         cartIds = Set(order?.nfts ?? [])
     }
 
-    private func fetchProfileIfNeeded() async -> Profile? {
-        guard let service = profileService else { return nil }
+    private func fetchCatalogProfileIfNeeded() async -> CatalogProfile? {
+        guard let service = catalogProfileService else { return nil }
         return try? await service.fetchProfile()
     }
 
