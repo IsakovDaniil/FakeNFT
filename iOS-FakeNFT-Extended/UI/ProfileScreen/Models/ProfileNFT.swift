@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct NFTItem: Identifiable, Codable {
+struct ProfileNFT: Identifiable, Codable {
     let id: String
     let images: [String]
     let name: String
@@ -35,9 +35,9 @@ struct NFTItem: Identifiable, Codable {
 
 // MARK: - Mock Data
 
-extension NFTItem {
-    static let mockData: [NFTItem] = [
-        NFTItem(
+extension ProfileNFT {
+    static let mockData: [ProfileNFT] = [
+        ProfileNFT(
             id: "1",
             images: ["Lilo"],
             name: "Lilo",
@@ -46,7 +46,7 @@ extension NFTItem {
             rating: 3,
             isFavorite: true
         ),
-        NFTItem(
+        ProfileNFT(
             id: "2",
             images: ["Pixi"],
             name: "Spring",
@@ -55,7 +55,7 @@ extension NFTItem {
             rating: 5,
             isFavorite: false
         ),
-        NFTItem(
+        ProfileNFT(
             id: "3",
             images: ["April"],
             name: "April",
