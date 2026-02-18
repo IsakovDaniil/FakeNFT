@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import ProgressHUD
 
 struct MyNFTView: View {
     
     // MARK: - Properties
     @Environment(\.dismiss) private var dismiss
     
-    @State var showActionSheet: Bool = true
+    @State var showActionSheet: Bool = false
 
-    private let nfts: [ProfileNFT] = [
+    private var nfts: [ProfileNFT] = [
         ProfileNFT(image: "Lilo", name: "Lilo", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
         ProfileNFT(image: "Pixi", name: "Spring", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
         ProfileNFT(image: "Pixi", name: "April", author: "John Doe", price: "1,78", rating: "3", isLiked: true)
@@ -35,7 +36,7 @@ struct MyNFTView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    print("тут будет логика")
+                    showActionSheet = true
                 } label: {
                     Image(.sort)
                         .foregroundStyle(.appBlack)
@@ -73,6 +74,9 @@ struct MyNFTView: View {
             .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 39))
         }
         .listStyle(.plain)
+        .refreshable {
+           await refreshNFTs()
+        }
     }
     
     private var emptyView: some View {
@@ -80,6 +84,10 @@ struct MyNFTView: View {
             .font(Font.bold17)
             .foregroundStyle(.appBlack)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private func refreshNFTs() async {
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
     }
 }
 
