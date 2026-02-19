@@ -89,7 +89,11 @@ struct ProfileView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showMyNFT) {
-                MyNFTView()
+                MyNFTView(
+                    viewModel: MyNFTViewModel(
+                        service: ProfileMyNFTService()
+                    )
+                )
             }
             .navigationDestination(isPresented: $viewModel.showFavoriteNFT) {
                 FavoriteNFTView()

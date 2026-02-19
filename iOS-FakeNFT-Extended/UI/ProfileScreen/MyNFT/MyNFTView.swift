@@ -11,71 +11,97 @@ import ProgressHUD
 struct MyNFTView: View {
     
     // MARK: - Properties
-    @Environment(\.dismiss) private var dismiss
     
-    @State var showActionSheet: Bool = false
-
-    private var nfts: [ProfileNFT] = [
-        ProfileNFT(image: "Lilo", name: "Lilo", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
-        ProfileNFT(image: "Pixi", name: "Spring", author: "John Doe", price: "1,78", rating: "3", isLiked: true),
-        ProfileNFT(image: "Pixi", name: "April", author: "John Doe", price: "1,78", rating: "3", isLiked: true)
-    ]
+    @State private var viewModel: MyNFTViewModel
+    
+    // MARK: - Init
+    
+    init(viewModel: MyNFTViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     // MARK: - Body
     
     var body: some View {
-        Group {
-            if nfts.isEmpty {
-                emptyView
-            } else {
-                listView
-            }
+        ZStack {
+            contentView
         }
         .navigationTitle("Мои NFT")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    showActionSheet = true
-                } label: {
-                    Image(.sort)
-                        .foregroundStyle(.appBlack)
-                }
+                sortButton
             }
         }
-        .confirmationDialog("Соритровка", isPresented: $showActionSheet, titleVisibility: .visible) {
-            Button("По цене") {
-                
+        .confirmationDialog(
+            "Сортировка",
+            isPresented: $viewModel.showSortSheet,
+            titleVisibility: .visible
+        ) {
+            sortDialogButtons
+        }
+        .task {
+            if case .idle = viewModel.state {
+                await viewModel.loadNFTs()
             }
-            Button("По рейтингу") {
-                
+        }
+        .onChange(of: viewModel.isLoading) { _, isLoading in
+            if isLoading {
+                ProgressHUD.animate()
+            } else {
+                ProgressHUD.dismiss()
             }
-            Button("По названию") {
-                
+        }
+        .alert("Ошибка", isPresented: $viewModel.showErrorAlert) {
+            Button("Повторить") {
+                Task { await viewModel.retry() }
             }
-            Button("Закрыть", role: .destructive) {
-                dismiss()
+            Button("Отмена", role: .cancel) {}
+        } message: {
+            if let message = viewModel.errorMessage {
+                Text(message)
             }
         }
     }
     
+    // MARK: - Content View
+    
+    @ViewBuilder
+    private var contentView: some View {
+        switch viewModel.state {
+        case .idle, .loading:
+            Color.clear
+            
+        case .loaded:
+            listView
+            
+        case .empty:
+            emptyView
+            
+        case .error:
+            Color.clear
+        }
+        
+    }
+    
     // MARK: - Subviews
+    
     private var listView: some View {
-        List(nfts) { nft in
+        List(viewModel.sortedNFTs) { nft in
             ProfileMyNFTRow(
-                image: nft.image,
-                name: nft.name,
-                author: nft.author,
-                price: nft.price,
-                rating: nft.rating,
-                isLiked: nft.isLiked
+                nft: nft,
+                onLikeTap: {
+                    Task {
+                        await viewModel.toggleFavorite(nftID: nft.id)
+                    }
+                }
             )
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 39))
         }
         .listStyle(.plain)
         .refreshable {
-           await refreshNFTs()
+            await viewModel.refresh()
         }
     }
     
@@ -86,13 +112,57 @@ struct MyNFTView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    private func refreshNFTs() async {
-        try? await Task.sleep(nanoseconds: 1_000_000_000)
+    private var sortButton: some View {
+        Button {
+            viewModel.showSortSheet = true
+        } label: {
+            Image(.sort)
+                .foregroundStyle(.appBlack)
+        }
+        .disabled(viewModel.isEmpty || viewModel.isLoading)
+    }
+    
+    @ViewBuilder
+    private var sortDialogButtons: some View {
+        ForEach(ProfileNFTSortType.allCases, id: \.self) { sortType in
+            Button(sortType.title) {
+                viewModel.changeSortType(sortType)
+            }
+        }
+        
+        Button("Закрыть", role: .cancel) {}
     }
 }
 
-#Preview {
+// MARK: - Preview
+
+#Preview("Loaded") {
     NavigationStack {
-        MyNFTView()
+        MyNFTView(
+            viewModel: MyNFTViewModel(
+                service: MockProfileMyNFTService()
+            )
+        )
+    }
+}
+
+#Preview("Empty") {
+    NavigationStack {
+        MyNFTView(
+            viewModel: MyNFTViewModel(
+                service: MockProfileMyNFTService(mockNFTs: [])
+            )
+        )
+    }
+}
+
+#Preview("Error") {
+    let service = MockProfileMyNFTService()
+    service.shouldFail = true
+    
+    return NavigationStack {
+        MyNFTView(
+            viewModel: MyNFTViewModel(service: service)
+        )
     }
 }
