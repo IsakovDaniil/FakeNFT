@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProfileUpdateLikeRequest: NetworkRequest {
+struct ProfileUpdateLikesRequest: NetworkRequest {
     let profileID: String
     let likes: [String]
     
@@ -19,7 +19,7 @@ struct ProfileUpdateLikeRequest: NetworkRequest {
         .put
     }
     
-    func createFromBody() -> Data? {
+    func createFormBody() -> Data? {
         let likesString = likes.joined(separator: ",")
         let fromString = "likes=\(likesString)"
         return fromString.data(using: .utf8)
