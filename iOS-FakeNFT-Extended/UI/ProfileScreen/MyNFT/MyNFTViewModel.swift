@@ -15,6 +15,7 @@ final class MyNFTViewModel {
     // MARK: - Dependencies
     
     private let service: ProfileMyNFTServiceProtocol
+    private let profile: UserProfile
     
     // MARK: - State
     
@@ -70,8 +71,9 @@ final class MyNFTViewModel {
     
     // MARK: - Init
     
-    init(service: ProfileMyNFTServiceProtocol) {
+    init(service: ProfileMyNFTServiceProtocol, profile: UserProfile) {
         self.service = service
+        self.profile = profile
         self.sortType = ProfileNFTSortType.loadSaved()
     }
     
@@ -80,8 +82,20 @@ final class MyNFTViewModel {
     func loadNFTs() async {
         state = .loading
         
+        let nftIDs = profile.myNfts
+        
+        guard !nftIDs.isEmpty else {
+            state = .empty
+            return
+        }
+        
         do {
-            let fetchedNFTs = try await service.fetchMyNFTs()
+            var fetchedNFTs = try await service.fetchMyNFTs(nftIDs: nftIDs)
+            
+            // Проставляем isFavorite из профиля
+            for index in fetchedNFTs.indices {
+                fetchedNFTs[index].isFavorite = profile.favoriteNfts.contains(fetchedNFTs[index].id)
+            }
             
             if fetchedNFTs.isEmpty {
                 state = .empty
@@ -94,8 +108,20 @@ final class MyNFTViewModel {
     }
     
     func refresh() async {
+        let nftIDs = profile.myNfts
+        
+        guard !nftIDs.isEmpty else {
+            state = .empty
+            return
+        }
+        
         do {
-            let fetchedNFTs = try await service.fetchMyNFTs()
+            var fetchedNFTs = try await service.fetchMyNFTs(nftIDs: nftIDs)
+            
+            // Проставляем isFavorite из профиля
+            for index in fetchedNFTs.indices {
+                fetchedNFTs[index].isFavorite = profile.favoriteNfts.contains(fetchedNFTs[index].id)
+            }
             
             if fetchedNFTs.isEmpty {
                 state = .empty
@@ -122,8 +148,19 @@ final class MyNFTViewModel {
         }
         
         // Отправка на сервер в фоне
-        Task.detached { [weak self] in
-            try? await self?.service.toggleFavorite(nftID: nftID)
+        Task.detached { [weak self, profile] in
+            guard let self = self else { return }
+            
+            do {
+                let currentLikes = profile.favoriteNfts
+                _ = try await self.service.toggleFavorite(
+                    profileID: profile.id,
+                    currentLikes: currentLikes,
+                    nftID: nftID
+                )
+            } catch {
+                print("⚠️ Failed to toggle favorite: \(error)")
+            }
         }
     }
     
