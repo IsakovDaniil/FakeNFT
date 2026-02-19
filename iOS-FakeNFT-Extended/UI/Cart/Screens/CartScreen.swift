@@ -31,8 +31,8 @@ struct CartScreen: View {
             .task {
                 await viewModel.loadOrder()
             }
-            .onChange(of: viewModel.state) { _, newValue in
-                switch newValue {
+            .onChange(of: viewModel.state) { _, newState in
+                switch newState {
                 case .loading:
                     ProgressHUD.animate()
                 case .data:

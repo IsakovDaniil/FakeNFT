@@ -26,7 +26,8 @@ final class CartViewModel {
     private(set) var currencyToPay: Currency?
     
     @ObservationIgnored
-    @AppStorage("cart.sortType") private var sortTypeRawValue: String?
+    @AppStorage(Constants.cartSortType)
+    private var sortTypeRawValue: String?
     
     private(set) var sortType: CartSortType? {
         get {
@@ -173,7 +174,7 @@ final class CartViewModel {
     // MARK: - Sorting
     
     func setSort(_ type: CartSortType?) {
-        if sortType == type { return }
+        guard let type else { return }
         sortType = type
     }
     
