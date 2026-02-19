@@ -12,7 +12,6 @@ struct ProfileMyNFTRow: View {
     // MARK: - Properties
     
     let nft: ProfileNFT
-    let isAnimating: Bool
     let onLikeTap: () -> Void
     
     // MARK: - Body
@@ -25,8 +24,6 @@ struct ProfileMyNFTRow: View {
                 isLiked: nft.isFavorite,
                 onLikeTap: onLikeTap
             )
-            .scaleEffect(isAnimating ? 1.2 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
             
             infoView
             Spacer()
@@ -69,19 +66,16 @@ struct ProfileMyNFTRow: View {
     VStack(spacing: 30) {
         ProfileMyNFTRow(
             nft: ProfileNFT.mockData[0],
-            isAnimating: false,
             onLikeTap: {}
         )
         
         ProfileMyNFTRow(
             nft: ProfileNFT.mockData[1],
-            isAnimating: false,
             onLikeTap: {}
         )
         
         ProfileMyNFTRow(
             nft: ProfileNFT.mockData[2],
-            isAnimating: true,
             onLikeTap: {}
         )
     }
