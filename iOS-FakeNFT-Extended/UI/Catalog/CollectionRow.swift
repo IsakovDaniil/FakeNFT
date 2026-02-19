@@ -41,9 +41,6 @@ struct CollectionRow: View {
                         Rectangle()
                             .fill(Color.gray.opacity(0.2))
                     }
-                    .onFailure { _ in
-                        // Placeholder уже отображён
-                    }
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
@@ -80,7 +77,11 @@ struct CollectionRow: View {
                 name: "Peach",
                 imageURLs: [],
                 nftCount: 11,
-                localCoverImageName: "CataloguePeach"
+                nftIds: [],
+                localCoverImageName: "CataloguePeach",
+                author: "John Doe",
+                description: "",
+                website: ""
             ))
             .background(Color.white)
             .clipShape(RoundedRectangle(cornerRadius: 12))
