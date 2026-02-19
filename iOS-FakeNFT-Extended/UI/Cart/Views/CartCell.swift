@@ -26,7 +26,7 @@ struct CartCell: View {
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Цена")
+                    Text(CartLn.cartNftPrice)
                         .font(.regular13)
 
                     Text("\(priceText) ETH")

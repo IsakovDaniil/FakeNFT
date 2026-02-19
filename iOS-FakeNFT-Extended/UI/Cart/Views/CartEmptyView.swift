@@ -16,10 +16,10 @@ struct CartEmptyView: View {
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
             
-            Text("Корзина пуста")
+            Text(CartLn.cartEmpty)
                 .font(.bold17)
             
-            Text("Добавьте NFT в корзину")
+            Text(CartLn.cartAdd)
                 .font(.regular15)
                 .foregroundStyle(.secondary)
             

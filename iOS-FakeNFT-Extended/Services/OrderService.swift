@@ -3,7 +3,9 @@ import Foundation
 protocol OrderService {
     func load() async throws -> Order
     func save(_ nfts: [String]) async throws -> Order
-    
+    func orderAndClear() async throws -> Order
+    func loadCurrencies() async throws -> [Currency]
+    func payment(withCurrencyId id: String) async throws -> PaymentResult
 }
 
 @MainActor
@@ -17,13 +19,8 @@ final class OrderServiceImpl: OrderService {
     }
 
     func load() async throws -> Order {
-        if let order = await storage.getOrder() {
-            return order
-        }
-
         let request = OrderRequest()
         let order: Order = try await networkClient.send(request: request)
-        await storage.saveOrder(order)
         return order
     }
     
@@ -31,5 +28,23 @@ final class OrderServiceImpl: OrderService {
         let request = OrderSaveRequest(nfts: nfts)
         let order: Order = try await networkClient.send(request: request)
         return order
+    }
+    
+    func orderAndClear() async throws -> Order {
+        let request = OrderSaveRequest(nfts: [], method: .post)
+        let order: Order = try await networkClient.send(request: request)
+        return order
+    }
+    
+    func loadCurrencies() async throws -> [Currency] {
+        let request = CurrencyListRequest()
+        let items: [Currency] = try await networkClient.send(request: request)
+        return items
+    }
+    
+    func payment(withCurrencyId id: String) async throws -> PaymentResult {
+        let request = PaymentRequest(currencyId: id)
+        let result: PaymentResult = try await networkClient.send(request: request)
+        return result
     }
 }

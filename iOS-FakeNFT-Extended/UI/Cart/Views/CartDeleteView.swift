@@ -19,18 +19,18 @@ struct CartDeleteView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
             
-            Text("Вы уверены, что хотите\nудалить объект из корзины?")
+            Text(CartLn.cartConfirmDelete)
                 .font(.regular13)
                 .multilineTextAlignment(.center)
             
             HStack(spacing: 8) {
-                CartDeleteButton(title: "Удалить", color: .red) {
+                CartDeleteButton(title: CartLn.cartDeleteButton, color: .red) {
                     Task {
                         await viewModel.removeNFT()
                     }
                 }
                 
-                CartDeleteButton(title: "Вернуться", color: .appWhite) {
+                CartDeleteButton(title: CartLn.cartBackButton, color: .appWhite) {
                     viewModel.closeDeleteView()
                 }
             }
