@@ -11,22 +11,25 @@ struct ProfileMyNFTRow: View {
     
     // MARK: - Properties
     
-    let image: String
-    let name: String
-    let author: String
-    let price: String
-    let rating: String
-    @State var isLiked: Bool
+    let nft: ProfileNFT
+    let isAnimating: Bool
+    let onLikeTap: () -> Void
     
     // MARK: - Body
     
     var body: some View {
         HStack(spacing: 20) {
-            ProfileNFTCard(image: image, size: .myNFT, isLiked: isLiked)
+            ProfileNFTCard(
+                image: nft.imageURL,
+                size: .myNFT,
+                isLiked: nft.isFavorite,
+                onLikeTap: onLikeTap
+            )
+            .scaleEffect(isAnimating ? 1.2 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isAnimating)
+            
             infoView
-            
             Spacer()
-            
             priceView
         }
     }
@@ -35,11 +38,13 @@ struct ProfileMyNFTRow: View {
     
     private var infoView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(name)
+            Text(nft.name)
                 .font(Font.bold17)
                 .foregroundStyle(.appBlack)
-            ProfileRating(rating: rating)
-            Text(author)
+            
+            ProfileRating(rating: nft.ratingString)
+            
+            Text(nft.author ?? "Неизвестный автор")
                 .font(Font.regular13)
                 .foregroundStyle(.appBlack)
         }
@@ -50,19 +55,35 @@ struct ProfileMyNFTRow: View {
             Text("Цена")
                 .font(Font.regular13)
                 .foregroundStyle(.appBlack)
-            Text("\(price) ETH")
+            
+            Text("\(nft.priceFormatted) ETH")
                 .font(Font.bold17)
                 .foregroundStyle(.appBlack)
-            
         }
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     VStack(spacing: 30) {
-        ProfileMyNFTRow(image: "Lilo", name: "Lilo", author: "John Doe", price: "1,78", rating: "3", isLiked: true)
-        ProfileMyNFTRow(image: "Pixi", name: "Spring", author: "John Doe", price: "1,78", rating: "3", isLiked: false)
-        ProfileMyNFTRow(image: "April", name: "April", author: "John Doe", price: "1,78", rating: "3", isLiked: false)
+        ProfileMyNFTRow(
+            nft: ProfileNFT.mockData[0],
+            isAnimating: false,
+            onLikeTap: {}
+        )
+        
+        ProfileMyNFTRow(
+            nft: ProfileNFT.mockData[1],
+            isAnimating: false,
+            onLikeTap: {}
+        )
+        
+        ProfileMyNFTRow(
+            nft: ProfileNFT.mockData[2],
+            isAnimating: true,
+            onLikeTap: {}
+        )
     }
     .padding()
 }
