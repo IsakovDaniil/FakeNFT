@@ -14,7 +14,8 @@ struct FakeNFT: App {
             ProfileView(
                 viewModel: ProfileViewModel(
                     profileService: servicesAssembly.profileService
-                )
+                ),
+                servicesAssembly: servicesAssembly
             )
         }
     }

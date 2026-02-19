@@ -136,33 +136,44 @@ struct MyNFTView: View {
 
 // MARK: - Preview
 
-#Preview("Loaded") {
-    NavigationStack {
-        MyNFTView(
-            viewModel: MyNFTViewModel(
-                service: MockProfileMyNFTService()
-            )
-        )
-    }
-}
-
 #Preview("Empty") {
-    NavigationStack {
+    let mockProfile = UserProfile(
+        name: "Test User",
+        avatar: "https://example.com/avatar.jpg",
+        description: "Test description",
+        website: "https://example.com",
+        myNfts: [],
+        favoriteNfts: [],
+        id: "1"
+    )
+    
+    return NavigationStack {
         MyNFTView(
             viewModel: MyNFTViewModel(
-                service: MockProfileMyNFTService(mockNFTs: [])
+                service: MockProfileMyNFTService(mockNFTs: []),
+                profile: mockProfile
             )
         )
     }
 }
 
 #Preview("Error") {
+    let mockProfile = UserProfile(
+        name: "Test User",
+        avatar: "https://example.com/avatar.jpg",
+        description: "Test description",
+        website: "https://example.com",
+        myNfts: ["1", "2", "3"],
+        favoriteNfts: [],
+        id: "1"
+    )
+    
     let service = MockProfileMyNFTService()
     service.shouldFail = true
     
     return NavigationStack {
         MyNFTView(
-            viewModel: MyNFTViewModel(service: service)
+            viewModel: MyNFTViewModel(service: service, profile: mockProfile)
         )
     }
 }

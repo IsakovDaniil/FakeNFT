@@ -6,12 +6,12 @@
 //
 
 extension ProfileViewModel {
-    func createMyNFTViewModel() -> MyNFTViewModel? {
+    func createMyNFTViewModel(servicesAssembly: ServicesAssembly) -> MyNFTViewModel? {
         guard let profile = profile else { return nil }
         
-        let networkClient = DefaultNetworkClient()
-        let service = ProfileMyNFTService(networkClient: networkClient)
-        
-        return MyNFTViewModel(service: service, profile: profile)
+        return MyNFTViewModel(
+            service: servicesAssembly.profileMyNFTService,
+            profile: profile
+        )
     }
 }
