@@ -24,6 +24,7 @@ struct MyNFTView: View {
     
     var body: some View {
         ZStack {
+            Color.appWhite.ignoresSafeArea()
             contentView
         }
         .navigationTitle(MyNFTConstants.navigationTitle)
@@ -144,7 +145,7 @@ struct MyNFTView: View {
         favoriteNfts: [],
         id: "1"
     )
-
+    
     NavigationStack {
         MyNFTView(
             viewModel: MyNFTViewModel(
