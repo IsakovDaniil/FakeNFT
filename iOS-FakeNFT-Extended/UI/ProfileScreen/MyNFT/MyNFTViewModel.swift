@@ -162,7 +162,7 @@ final class MyNFTViewModel {
         } catch {
             state = .loaded(previousItems)
             profile = profile.with(favoriteNfts: previousFavoriteNfts)
-            errorMessage = "Не удалось обновить избранное"
+            errorMessage = MyNFTConstants.favoriteUpdateErrorMessage
             showErrorAlert = true
         }
     }

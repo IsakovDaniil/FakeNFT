@@ -26,7 +26,7 @@ struct MyNFTView: View {
         ZStack {
             contentView
         }
-        .navigationTitle("Мои NFT")
+        .navigationTitle(MyNFTConstants.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -34,7 +34,7 @@ struct MyNFTView: View {
             }
         }
         .confirmationDialog(
-            "Сортировка",
+            MyNFTConstants.sortDialogTitle,
             isPresented: $viewModel.showSortSheet,
             titleVisibility: .visible
         ) {
@@ -52,11 +52,11 @@ struct MyNFTView: View {
                 ProgressHUD.dismiss()
             }
         }
-        .alert("Ошибка", isPresented: $viewModel.showErrorAlert) {
-            Button("Повторить") {
+        .alert(MyNFTConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
+            Button(MyNFTConstants.retryButtonTitle) {
                 Task { await viewModel.retry() }
             }
-            Button("Отмена", role: .cancel) {}
+            Button(MyNFTConstants.cancelButtonTitle, role: .cancel) {}
         } message: {
             if let message = viewModel.errorMessage {
                 Text(message)
@@ -106,7 +106,7 @@ struct MyNFTView: View {
     }
     
     private var emptyView: some View {
-        Text("У Вас еще нет NFT")
+        Text(MyNFTConstants.emptyStateText)
             .font(Font.bold17)
             .foregroundStyle(.appBlack)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -130,7 +130,7 @@ struct MyNFTView: View {
             }
         }
         
-        Button("Закрыть", role: .cancel) {}
+        Button(MyNFTConstants.closeButtonTitle, role: .cancel) {}
     }
 }
 
