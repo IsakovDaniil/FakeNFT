@@ -52,9 +52,8 @@ actor ProfileStorage: ProfileStorageProtocol {
     }
     
     func getProfile() async -> UserProfile? {
-        guard let data = userDefaults.data(forKey: Keys.profile) else { return nil }
-        
-        guard let profile = try? decoder.decode(UserProfile.self, from: data) else { return nil }
+        guard let data = userDefaults.data(forKey: Keys.profile),
+              let profile = try? decoder.decode(UserProfile.self, from: data) else { return nil }
         
         return profile
     }
