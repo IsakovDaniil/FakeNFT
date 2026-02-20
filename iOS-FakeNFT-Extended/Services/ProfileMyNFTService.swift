@@ -102,39 +102,3 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
     }
 }
 
-// MARK: - Mock Service для Preview
-
-final class MockProfileMyNFTService: ProfileMyNFTServiceProtocol {
-    var mockNFTs: [ProfileNFT]
-    var shouldFail = false
-    
-    init(mockNFTs: [ProfileNFT] = ProfileNFT.mockData) {
-        self.mockNFTs = mockNFTs
-    }
-    
-    func fetchMyNFTs(nftIDs: [String]) async throws -> [ProfileNFT] {
-        try await Task.sleep(nanoseconds: 500_000_000)
-        
-        if shouldFail {
-            throw NSError(domain: "MockError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Mock error"])
-        }
-        
-        return mockNFTs
-    }
-    
-    func toggleFavorite(profileID: String, currentLikes: [String], nftID: String) async throws -> [String] {
-        var updatedLikes = currentLikes
-        
-        if let index = mockNFTs.firstIndex(where: { $0.id == nftID }) {
-            mockNFTs[index].isFavorite.toggle()
-        }
-        
-        if let index = updatedLikes.firstIndex(of: nftID) {
-            updatedLikes.remove(at: index)
-        } else {
-            updatedLikes.append(nftID)
-        }
-        
-        return updatedLikes
-    }
-}
