@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ProfileNFTCard: View {
     
@@ -50,7 +51,15 @@ struct ProfileNFTCard: View {
     
     @ViewBuilder
     private var cardImage: some View {
-        Image(image)
+        KFImage(URL(string: image))
+            .placeholder {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(width: size.cardSize, height: size.cardSize)
+                    .overlay {
+                        ProgressView()
+                    }
+            }
             .resizable()
             .scaledToFill()
             .clipShape(RoundedRectangle(cornerRadius: 12))

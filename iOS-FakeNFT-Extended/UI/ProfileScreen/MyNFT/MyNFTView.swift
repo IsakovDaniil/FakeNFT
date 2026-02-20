@@ -134,35 +134,23 @@ struct MyNFTView: View {
     }
 }
 
-// MARK: - Preview
-
 #Preview("Loaded") {
+    let profile = UserProfile(
+        name: "Test User",
+        avatar: "",
+        description: "",
+        website: "",
+        myNfts: ["e8c1f0b6-5caf-4f65-8e5b-12f4bcb29efb"],
+        favoriteNfts: [],
+        id: "1"
+    )
+
     NavigationStack {
         MyNFTView(
             viewModel: MyNFTViewModel(
-                service: MockProfileMyNFTService()
+                service: ProfileMyNFTService(networkClient: DefaultNetworkClient()),
+                profile: profile
             )
-        )
-    }
-}
-
-#Preview("Empty") {
-    NavigationStack {
-        MyNFTView(
-            viewModel: MyNFTViewModel(
-                service: MockProfileMyNFTService(mockNFTs: [])
-            )
-        )
-    }
-}
-
-#Preview("Error") {
-    let service = MockProfileMyNFTService()
-    service.shouldFail = true
-    
-    return NavigationStack {
-        MyNFTView(
-            viewModel: MyNFTViewModel(service: service)
         )
     }
 }
