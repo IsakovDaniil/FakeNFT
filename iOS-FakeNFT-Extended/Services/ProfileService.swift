@@ -39,6 +39,7 @@ final class ProfileService: ProfileServiceProtocol {
                     let freshProfile = try await fetchProfileFromNetwork()
                     await storage.saveProfile(freshProfile)
                 } catch {
+                    print("⚠️ Background refresh failed: \(error)")
                 }
             }
             
