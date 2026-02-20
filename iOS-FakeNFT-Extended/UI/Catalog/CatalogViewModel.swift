@@ -42,7 +42,7 @@ final class CatalogViewModel {
         let list: [CollectionItem]
         switch state {
         case .loading, .error:
-            list = []
+            list = cachedCollections
         case .loaded(let items):
             list = items
         }
@@ -69,6 +69,7 @@ final class CatalogViewModel {
     private static let sortOrderKey = "catalogSortOrder"
     private let collectionService: CollectionService?
     private let userDefaults: UserDefaults
+    private var cachedCollections: [CollectionItem] = []
 
     init(collectionService: CollectionService? = nil, userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
@@ -90,6 +91,7 @@ final class CatalogViewModel {
             } else {
                 items = try await Self.fetchCollectionsMock()
             }
+            cachedCollections = items
             state = .loaded(items)
         } catch {
             state = .error

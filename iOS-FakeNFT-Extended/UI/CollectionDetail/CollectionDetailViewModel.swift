@@ -31,8 +31,12 @@ final class CollectionDetailViewModel {
     private(set) var state: CollectionDetailState = .loading
 
     var nfts: [Nft] {
-        if case .loaded(let list) = state { return list }
-        return []
+        switch state {
+        case .loaded(let list):
+            return list
+        case .loading, .error:
+            return cachedNfts
+        }
     }
 
     var isLoading: Bool {
@@ -62,6 +66,7 @@ final class CollectionDetailViewModel {
 
     private var lastLikeToggleNftId: String?
     private var lastCartToggleNftId: String?
+    private var cachedNfts: [Nft] = []
 
     // MARK: - Private Dependencies
 
@@ -90,6 +95,7 @@ final class CollectionDetailViewModel {
 
         let uniqueIds = orderedUniqueIds(item.nftIds)
         guard let service = nftService, !uniqueIds.isEmpty else {
+            cachedNfts = []
             state = .loaded([])
             return
         }
@@ -97,6 +103,7 @@ final class CollectionDetailViewModel {
         do {
             let loaded = try await loadNftsParallel(ids: uniqueIds, service: service)
             let ordered = orderNfts(loaded, byIds: uniqueIds)
+            cachedNfts = ordered
             state = .loaded(ordered)
         } catch {
             state = .error
