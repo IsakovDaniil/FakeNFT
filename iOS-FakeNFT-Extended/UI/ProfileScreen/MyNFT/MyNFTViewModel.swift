@@ -156,7 +156,6 @@ final class MyNFTViewModel {
         
         do {
             _ = try await service.toggleFavorite(
-                profileID: profile.id,
                 currentLikes: previousFavoriteNfts,
                 nftID: nftID
             )
