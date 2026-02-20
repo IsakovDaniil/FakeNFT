@@ -17,11 +17,11 @@ struct UserProfile: Codable {
     let id: String
     
     var myNftCount: Int {
-        return myNfts.count
+        myNfts.count
     }
     
     var favoriteNftCount: Int {
-        return favoriteNfts.count
+        favoriteNfts.count
     }
     
     enum CodingKeys: String, CodingKey {

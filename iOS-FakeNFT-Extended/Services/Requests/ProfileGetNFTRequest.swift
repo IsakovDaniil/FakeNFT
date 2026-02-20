@@ -1,5 +1,5 @@
 //
-//  ProfileGetNFTReuqst.swift
+//  ProfileGetNFTRequest.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Даниил on 19.02.2026.
@@ -12,9 +12,5 @@ struct ProfileGetNFTRequest: NetworkRequest {
     
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/nft/\(nftID)")
-    }
-    
-    var httpMethod: HttpMethod {
-        .get
     }
 }

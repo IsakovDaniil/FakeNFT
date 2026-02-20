@@ -156,14 +156,13 @@ final class MyNFTViewModel {
         
         do {
             _ = try await service.toggleFavorite(
-                profileID: profile.id,
                 currentLikes: previousFavoriteNfts,
                 nftID: nftID
             )
         } catch {
             state = .loaded(previousItems)
             profile = profile.with(favoriteNfts: previousFavoriteNfts)
-            errorMessage = "Не удалось обновить избранное"
+            errorMessage = MyNFTConstants.favoriteUpdateErrorMessage
             showErrorAlert = true
         }
     }

@@ -8,7 +8,6 @@
 import Foundation
 
 struct ProfileUpdateLikesRequest: NetworkRequest {
-    let profileID: String
     let likes: [String]
     
     var endpoint: URL? {
@@ -21,7 +20,134 @@ struct ProfileUpdateLikesRequest: NetworkRequest {
     
     func createFormBody() -> Data? {
         let likesString = likes.joined(separator: ",")
-        let fromString = "likes=\(likesString)"
-        return fromString.data(using: .utf8)
+        return "likes=\(likesString)".data(using: .utf8)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
