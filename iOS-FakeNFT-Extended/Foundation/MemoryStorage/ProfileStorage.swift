@@ -19,47 +19,25 @@ protocol ProfileStorageProtocol: AnyObject {
 
 actor ProfileStorage: ProfileStorageProtocol {
     
-    // MARK: - Nested Types
-    
     private enum Keys {
         static let profile = "cached_user_profile"
     }
     
-    // MARK: - Properties
+    private let storage: UserDefaultsStorage
     
-    private let userDefaults: UserDefaults
-    private let encoder: JSONEncoder
-    private let decoder: JSONDecoder
-    
-    // MARK: - Initializer
-    
-    init(
-        userDefaults: UserDefaults = .standard,
-        encoder: JSONEncoder = JSONEncoder(),
-        decoder: JSONDecoder = JSONDecoder()
-    ) {
-        self.userDefaults = userDefaults
-        self.encoder = encoder
-        self.decoder = decoder
+    init(storage: UserDefaultsStorage = UserDefaultsStorage()) {
+        self.storage = storage
     }
     
-    // MARK: - Public Methods
-    
     func saveProfile(_ profile: UserProfile) async {
-        guard let data = try? encoder.encode(profile) else { return }
-        
-        userDefaults.set(data, forKey: Keys.profile)
+        storage.save(profile, forKey: Keys.profile)
     }
     
     func getProfile() async -> UserProfile? {
-        guard let data = userDefaults.data(forKey: Keys.profile),
-              let profile = try? decoder.decode(UserProfile.self, from: data) else { return nil }
-        
-        return profile
+        storage.load(forKey: Keys.profile)
     }
     
     func clearProfile() async {
-        userDefaults.removeObject(forKey: Keys.profile)
+        storage.remove(forKey: Keys.profile)
     }
-    
 }
