@@ -49,6 +49,7 @@ final class CollectionDetailViewModel {
 
     var likedIds: Set<String> = []
     var cartIds: Set<String> = []
+    var likeUpdateError: Bool = false
 
     func isLiked(id: String) -> Bool {
         likedIds.contains(id)
@@ -57,6 +58,8 @@ final class CollectionDetailViewModel {
     func isInCart(id: String) -> Bool {
         cartIds.contains(id)
     }
+
+    private var lastLikeToggleNftId: String?
 
     // MARK: - Private Dependencies
 
@@ -83,14 +86,15 @@ final class CollectionDetailViewModel {
     func loadNfts() async {
         await loadLikesAndCart()
 
-        guard let service = nftService, !item.nftIds.isEmpty else {
+        let uniqueIds = orderedUniqueIds(item.nftIds)
+        guard let service = nftService, !uniqueIds.isEmpty else {
             state = .loaded([])
             return
         }
         state = .loading
         do {
-            let loaded = try await loadNftsParallel(ids: item.nftIds, service: service)
-            let ordered = orderNfts(loaded, byIds: item.nftIds)
+            let loaded = try await loadNftsParallel(ids: uniqueIds, service: service)
+            let ordered = orderNfts(loaded, byIds: uniqueIds)
             state = .loaded(ordered)
         } catch {
             state = .error
@@ -100,6 +104,42 @@ final class CollectionDetailViewModel {
     func retry() {
         Task {
             await loadNfts()
+        }
+    }
+
+    func toggleLike(nftId: String) async {
+        guard let service = catalogProfileService else { return }
+        var newSet = likedIds
+        if newSet.contains(nftId) {
+            newSet.remove(nftId)
+        } else {
+            newSet.insert(nftId)
+        }
+        let ids = Array(newSet)
+        do {
+            try await service.updateLikes(ids: ids)
+            likedIds = newSet
+        } catch {
+            if ids.isEmpty {
+                likedIds = newSet
+                return
+            }
+            lastLikeToggleNftId = nftId
+            likeUpdateError = true
+        }
+    }
+
+    func clearLikeError() {
+        likeUpdateError = false
+        lastLikeToggleNftId = nil
+    }
+
+    func retryLikeToggle() async {
+        guard let nftId = lastLikeToggleNftId else { return }
+        lastLikeToggleNftId = nil
+        await toggleLike(nftId: nftId)
+        if !likeUpdateError {
+            clearLikeError()
         }
     }
 
@@ -141,5 +181,10 @@ final class CollectionDetailViewModel {
     private func orderNfts(_ nfts: [Nft], byIds ids: [String]) -> [Nft] {
         let byId = Dictionary(nfts.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         return ids.compactMap { byId[$0] }
+    }
+
+    private func orderedUniqueIds(_ ids: [String]) -> [String] {
+        var seen = Set<String>()
+        return ids.filter { seen.insert($0).inserted }
     }
 }

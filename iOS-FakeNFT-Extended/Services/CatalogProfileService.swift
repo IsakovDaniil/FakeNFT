@@ -9,6 +9,7 @@ import Foundation
 
 protocol CatalogProfileService: Sendable {
     func fetchProfile() async throws -> CatalogProfile
+    func updateLikes(ids: [String]) async throws
 }
 
 actor CatalogProfileServiceImpl: CatalogProfileService {
@@ -21,5 +22,10 @@ actor CatalogProfileServiceImpl: CatalogProfileService {
     func fetchProfile() async throws -> CatalogProfile {
         let request = CatalogProfileRequest()
         return try await networkClient.send(request: request)
+    }
+
+    func updateLikes(ids: [String]) async throws {
+        let request = CatalogProfileUpdateRequest(likes: ids)
+        _ = try await networkClient.send(request: request)
     }
 }

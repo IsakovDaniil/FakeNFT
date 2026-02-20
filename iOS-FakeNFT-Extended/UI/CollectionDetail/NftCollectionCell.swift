@@ -16,6 +16,7 @@ struct NftCollectionCell: View {
     var nft: Nft?
     var isLiked: Bool = false
     var isInCart: Bool = false
+    var onLikeTap: (() -> Void)?
 
     // MARK: - Body
 
@@ -100,7 +101,7 @@ struct NftCollectionCell: View {
 
     private var likeButton: some View {
         Button {
-            // Действие лайка — в следующей задаче
+            onLikeTap?()
         } label: {
             Image(isLiked ? "LikeActive" : "LikeNoActive")
                 .frame(width: 40, height: 40)

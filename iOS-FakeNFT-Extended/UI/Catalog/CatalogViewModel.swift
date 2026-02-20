@@ -111,11 +111,12 @@ final class CatalogViewModel {
 
     private static func mapToCollectionItem(_ collection: NFTCollection) -> CollectionItem {
         let coverURL = URL(string: collection.cover)
+        let uniqueNftCount = Set(collection.nfts).count
         return CollectionItem(
             id: collection.id,
             name: collection.name,
             imageURLs: coverURL.map { [$0] } ?? [],
-            nftCount: collection.nfts.count,
+            nftCount: uniqueNftCount,
             nftIds: collection.nfts,
             localCoverImageName: nil,
             author: collection.author,

@@ -55,8 +55,23 @@ actor DefaultNetworkClient: NetworkClient {
         var urlRequest = URLRequest(url: endpoint)
         urlRequest.httpMethod = request.httpMethod.rawValue
 
-        if let dto = request.dto,
-           let dtoEncoded = try? encoder.encode(dto) {
+        if let pairs = request.formBodyPairs, !pairs.isEmpty {
+            let encoded = pairs
+                .map { key, value in
+                    let enc = value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? value
+                    return "\(key)=\(enc)"
+                }
+                .joined(separator: "&")
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpBody = Data(encoded.utf8)
+        } else if let form = request.formBody, !form.isEmpty {
+            let encoded = form
+                .map { "\($0.key)=\($0.value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? $0.value)" }
+                .joined(separator: "&")
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            urlRequest.httpBody = Data(encoded.utf8)
+        } else if let dto = request.dto,
+                  let dtoEncoded = try? encoder.encode(dto) {
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             urlRequest.httpBody = dtoEncoded
         }
