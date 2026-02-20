@@ -17,12 +17,7 @@ struct ProfileAvatar: View {
     
     private var url: URL? {
         guard let urlString else { return nil }
-        
-        if urlString.hasPrefix("http") {
-            return URL(string: urlString)
-        } else {
-            return URL(string: "https://\(urlString)")
-        }
+        return URL(string: urlString.hasPrefix("http") ? urlString : "https://\(urlString)")
     }
     
     var body: some View {
