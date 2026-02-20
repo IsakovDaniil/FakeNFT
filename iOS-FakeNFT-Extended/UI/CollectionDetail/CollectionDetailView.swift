@@ -21,6 +21,7 @@ struct CollectionDetailView: View {
     @State private var viewModel: CollectionDetailViewModel
     @State private var showErrorAlert = false
     @State private var showLikeErrorAlert = false
+    @State private var showCartErrorAlert = false
 
     // MARK: - Properties
 
@@ -82,11 +83,24 @@ struct CollectionDetailView: View {
                 }
             }
         }
+        .alert(Constants.errorMessage, isPresented: $showCartErrorAlert) {
+            Button(Constants.cancelTitle, role: .cancel) {
+                viewModel.clearCartError()
+            }
+            Button(Constants.retryTitle) {
+                Task {
+                    await viewModel.retryCartToggle()
+                }
+            }
+        }
         .onChange(of: viewModel.isError) { _, new in
             showErrorAlert = new
         }
         .onChange(of: viewModel.likeUpdateError) { _, new in
             showLikeErrorAlert = new
+        }
+        .onChange(of: viewModel.cartUpdateError) { _, new in
+            showCartErrorAlert = new
         }
         .task {
             await viewModel.loadNfts()
@@ -180,6 +194,11 @@ struct CollectionDetailView: View {
                     onLikeTap: {
                         Task {
                             await viewModel.toggleLike(nftId: nft.id)
+                        }
+                    },
+                    onCartTap: {
+                        Task {
+                            await viewModel.toggleCart(nftId: nft.id)
                         }
                     }
                 )

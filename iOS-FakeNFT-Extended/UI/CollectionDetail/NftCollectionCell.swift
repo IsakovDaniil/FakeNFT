@@ -17,6 +17,7 @@ struct NftCollectionCell: View {
     var isLiked: Bool = false
     var isInCart: Bool = false
     var onLikeTap: (() -> Void)?
+    var onCartTap: (() -> Void)?
 
     // MARK: - Body
 
@@ -112,7 +113,7 @@ struct NftCollectionCell: View {
 
     private var cartButton: some View {
         Button {
-            // Действие корзины — в следующей задаче
+            onCartTap?()
         } label: {
             Image(isInCart ? "CartDelete" : "CartAdd")
                 .frame(width: 40, height: 40)

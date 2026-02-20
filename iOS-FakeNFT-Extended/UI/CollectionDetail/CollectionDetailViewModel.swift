@@ -50,6 +50,7 @@ final class CollectionDetailViewModel {
     var likedIds: Set<String> = []
     var cartIds: Set<String> = []
     var likeUpdateError: Bool = false
+    var cartUpdateError: Bool = false
 
     func isLiked(id: String) -> Bool {
         likedIds.contains(id)
@@ -60,6 +61,7 @@ final class CollectionDetailViewModel {
     }
 
     private var lastLikeToggleNftId: String?
+    private var lastCartToggleNftId: String?
 
     // MARK: - Private Dependencies
 
@@ -140,6 +142,42 @@ final class CollectionDetailViewModel {
         await toggleLike(nftId: nftId)
         if !likeUpdateError {
             clearLikeError()
+        }
+    }
+
+    func toggleCart(nftId: String) async {
+        guard let service = orderService else { return }
+        var newSet = cartIds
+        if newSet.contains(nftId) {
+            newSet.remove(nftId)
+        } else {
+            newSet.insert(nftId)
+        }
+        let ids = Array(newSet)
+        do {
+            try await service.updateOrder(nftIds: ids)
+            cartIds = newSet
+        } catch {
+            if ids.isEmpty {
+                cartIds = newSet
+                return
+            }
+            lastCartToggleNftId = nftId
+            cartUpdateError = true
+        }
+    }
+
+    func clearCartError() {
+        cartUpdateError = false
+        lastCartToggleNftId = nil
+    }
+
+    func retryCartToggle() async {
+        guard let nftId = lastCartToggleNftId else { return }
+        lastCartToggleNftId = nil
+        await toggleCart(nftId: nftId)
+        if !cartUpdateError {
+            clearCartError()
         }
     }
 
