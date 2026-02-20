@@ -30,3 +30,17 @@ struct UserProfile: Codable {
         case favoriteNfts = "likes"
     }
 }
+
+extension UserProfile {
+    func with(favoriteNfts: [String]) -> UserProfile {
+        UserProfile(
+            name: name,
+            avatar: avatar,
+            description: description,
+            website: website,
+            myNfts: myNfts,
+            favoriteNfts: favoriteNfts,
+            id: id
+        )
+    }
+}

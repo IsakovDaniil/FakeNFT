@@ -15,7 +15,7 @@ final class MyNFTViewModel {
     // MARK: - Dependencies
     
     private let service: ProfileMyNFTServiceProtocol
-    private let profile: UserProfile
+    private var profile: UserProfile
     
     // MARK: - State
     
@@ -92,7 +92,6 @@ final class MyNFTViewModel {
         do {
             var fetchedNFTs = try await service.fetchMyNFTs(nftIDs: nftIDs)
             
-            // Проставляем isFavorite из профиля
             for index in fetchedNFTs.indices {
                 fetchedNFTs[index].isFavorite = profile.favoriteNfts.contains(fetchedNFTs[index].id)
             }
@@ -118,7 +117,6 @@ final class MyNFTViewModel {
         do {
             var fetchedNFTs = try await service.fetchMyNFTs(nftIDs: nftIDs)
             
-            // Проставляем isFavorite из профиля
             for index in fetchedNFTs.indices {
                 fetchedNFTs[index].isFavorite = profile.favoriteNfts.contains(fetchedNFTs[index].id)
             }
@@ -139,28 +137,34 @@ final class MyNFTViewModel {
     }
     
     func toggleFavorite(nftID: String) async {
-        guard case .loaded(var items) = state else { return }
+        guard case .loaded(var items) = state,
+              let index = items.firstIndex(where: { $0.id == nftID }) else { return }
         
-        // Оптимистичное обновление UI
-        if let index = items.firstIndex(where: { $0.id == nftID }) {
-            items[index].isFavorite.toggle()
-            state = .loaded(items)
+        let previousItems = items
+        let previousFavoriteNfts = profile.favoriteNfts
+        
+        items[index].isFavorite.toggle()
+        state = .loaded(items)
+        
+        var updatedFavorites = previousFavoriteNfts
+        if items[index].isFavorite {
+            updatedFavorites.append(nftID)
+        } else {
+            updatedFavorites.removeAll { $0 == nftID }
         }
+        profile = profile.with(favoriteNfts: updatedFavorites)
         
-        // Отправка на сервер в фоне
-        Task.detached { [weak self, profile] in
-            guard let self = self else { return }
-            
-            do {
-                let currentLikes = profile.favoriteNfts
-                _ = try await self.service.toggleFavorite(
-                    profileID: profile.id,
-                    currentLikes: currentLikes,
-                    nftID: nftID
-                )
-            } catch {
-                print("⚠️ Failed to toggle favorite: \(error)")
-            }
+        do {
+            _ = try await service.toggleFavorite(
+                profileID: profile.id,
+                currentLikes: previousFavoriteNfts,
+                nftID: nftID
+            )
+        } catch {
+            state = .loaded(previousItems)
+            profile = profile.with(favoriteNfts: previousFavoriteNfts)
+            errorMessage = "Не удалось обновить избранное"
+            showErrorAlert = true
         }
     }
     

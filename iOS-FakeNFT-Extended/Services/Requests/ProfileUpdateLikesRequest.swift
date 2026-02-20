@@ -12,7 +12,7 @@ struct ProfileUpdateLikesRequest: NetworkRequest {
     let likes: [String]
     
     var endpoint: URL? {
-        URL(string: "\(RequestConstants.baseURL)/api/v1/profile/\(profileID)")
+        URL(string: "\(RequestConstants.baseURL)/api/v1/profile/1")
     }
     
     var httpMethod: HttpMethod {
