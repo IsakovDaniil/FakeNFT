@@ -11,7 +11,7 @@ import Foundation
 
 protocol ProfileMyNFTServiceProtocol {
     func fetchMyNFTs(nftIDs: [String]) async throws -> [ProfileNFT]
-    func toggleFavorite(profileID: String, currentLikes: [String], nftID: String) async throws -> [String]
+    func toggleFavorite(currentLikes: [String], nftID: String) async throws -> [String]
 }
 
 // MARK: - Implementation
@@ -21,6 +21,7 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
     // MARK: - Dependencies
     
     private let networkClient: NetworkClient
+    private let decoder = JSONDecoder()
     
     // MARK: - Init
     
@@ -31,7 +32,6 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
     // MARK: - Public Methods
     
     func fetchMyNFTs(nftIDs: [String]) async throws -> [ProfileNFT] {
-        // Загружаем все NFT параллельно
         try await withThrowingTaskGroup(of: ProfileNFT?.self) { group in
             for nftID in nftIDs {
                 group.addTask {
@@ -50,7 +50,7 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
         }
     }
     
-    func toggleFavorite(profileID: String, currentLikes: [String], nftID: String) async throws -> [String] {
+    func toggleFavorite(currentLikes: [String], nftID: String) async throws -> [String] {
         var updatedLikes = currentLikes
         
         if let index = updatedLikes.firstIndex(of: nftID) {
@@ -59,7 +59,7 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
             updatedLikes.append(nftID)
         }
         
-        let request = ProfileUpdateLikesRequest(profileID: profileID, likes: updatedLikes)
+        let request = ProfileUpdateLikesRequest(likes: updatedLikes)
         
         guard let endpoint = request.endpoint else {
             throw NetworkClientError.incorrectRequest("Empty endpoint")
@@ -81,7 +81,6 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
             throw NetworkClientError.httpStatusCode(httpResponse.statusCode)
         }
         
-        let decoder = JSONDecoder()
         let profile = try decoder.decode(UserProfile.self, from: data)
         
         return profile.favoriteNfts
@@ -101,4 +100,3 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
         }
     }
 }
-

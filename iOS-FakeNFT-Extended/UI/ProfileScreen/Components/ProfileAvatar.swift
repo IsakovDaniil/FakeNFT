@@ -21,22 +21,22 @@ struct ProfileAvatar: View {
     }
     
     var body: some View {
-            ZStack(alignment: .bottomTrailing) {
-                avatarView
-                
-                if editMode {
-                    Image(.camera)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 23, height: 23)
-                }
-            }
-            .onTapGesture {
-                if editMode {
-                    onTap?()
-                }
+        ZStack(alignment: .bottomTrailing) {
+            avatarView
+            
+            if editMode {
+                Image(.camera)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 23, height: 23)
             }
         }
+        .onTapGesture {
+            if editMode {
+                onTap?()
+            }
+        }
+    }
     
     @ViewBuilder
     private var avatarView: some View {
