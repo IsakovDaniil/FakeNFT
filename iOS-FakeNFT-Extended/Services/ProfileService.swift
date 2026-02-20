@@ -21,6 +21,7 @@ final class ProfileService: ProfileServiceProtocol {
     
     private let networkClient: NetworkClient
     private let storage: ProfileStorageProtocol
+    private let decoder = JSONDecoder()
     
     init(
         networkClient: NetworkClient,
@@ -78,7 +79,6 @@ final class ProfileService: ProfileServiceProtocol {
             throw NetworkClientError.httpStatusCode(httpResponse.statusCode)
         }
         
-        let decoder = JSONDecoder()
         let updatedProfile = try decoder.decode(UserProfile.self, from: data)
         
         await storage.saveProfile(updatedProfile)
