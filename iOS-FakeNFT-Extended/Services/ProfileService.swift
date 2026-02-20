@@ -61,7 +61,7 @@ final class ProfileService: ProfileServiceProtocol {
         }
         
         var urlRequest = URLRequest(url: endpoint)
-        urlRequest.httpMethod = "PUT"
+        urlRequest.httpMethod = HttpMethod.put.rawValue
         urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
         
