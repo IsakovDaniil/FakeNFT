@@ -134,7 +134,7 @@ struct EditProfileView: View {
         viewModel.onProfileSaved = { [onProfileUpdated, dismiss] in
             Task { @MainActor in
                 ProgressHUD.succeed(EditProfileConstants.savedMessage)
-                try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 sec
+                try? await Task.sleep(for: .seconds(0.5))
                 dismiss()
                 onProfileUpdated?()
             }
