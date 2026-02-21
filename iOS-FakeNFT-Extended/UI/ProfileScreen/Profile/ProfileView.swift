@@ -13,11 +13,13 @@ struct ProfileView: View {
     // MARK: - Properties
     
     @State private var viewModel: ProfileViewModel
+    private let servicesAssembly: ServicesAssembly
     
     // MARK: - Init
     
-    init(viewModel: ProfileViewModel) {
+    init(viewModel: ProfileViewModel, servicesAssembly: ServicesAssembly) {
         self._viewModel = State(initialValue: viewModel)
+        self.servicesAssembly = servicesAssembly
     }
     
     // MARK: - Body
@@ -82,19 +84,20 @@ struct ProfileView: View {
                     )
                 }
             }
-            .sheet(isPresented: $viewModel.showWebView) { // sheet показался для ux лучше.
+            .sheet(isPresented: $viewModel.showWebView) {
                 if let website = viewModel.profile?.website {
                     let url = website.hasPrefix("http") ? website : "https://\(website)"
                     WebViewScreen(urlString: url)
                 }
             }
             .navigationDestination(isPresented: $viewModel.showMyNFT) {
-                MyNFTView()
+                if let myNFTViewModel = viewModel.createMyNFTViewModel(servicesAssembly: servicesAssembly) {
+                    MyNFTView(viewModel: myNFTViewModel)
+                }
             }
             .navigationDestination(isPresented: $viewModel.showFavoriteNFT) {
                 FavoriteNFTView()
             }
-            
         }
     }
     
@@ -120,7 +123,6 @@ struct ProfileView: View {
                 .font(Font.bold22)
                 .foregroundStyle(.appBlack)
         }
-        
     }
     
     private func bioSection(_ profile: UserProfile) -> some View {
@@ -159,13 +161,21 @@ struct ProfileView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    ProfileView(
-        viewModel: ProfileViewModel(
-            profileService: ProfileService(
-                networkClient: DefaultNetworkClient(),
-                storage: ProfileStorage()
-            )
-        )
+    let networkClient = DefaultNetworkClient()
+    let profileStorage = ProfileStorage()
+    let nftStorage = NftStorageImpl()
+    
+    let servicesAssembly = ServicesAssembly(
+        networkClient: networkClient,
+        nftStorage: nftStorage,
+        profileStorage: profileStorage
+    )
+    
+    return ProfileView(
+        viewModel: ProfileViewModel(profileService: servicesAssembly.profileService),
+        servicesAssembly: servicesAssembly
     )
 }

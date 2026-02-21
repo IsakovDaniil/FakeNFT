@@ -17,16 +17,30 @@ struct UserProfile: Codable {
     let id: String
     
     var myNftCount: Int {
-        return myNfts.count
+        myNfts.count
     }
     
     var favoriteNftCount: Int {
-        return favoriteNfts.count
+        favoriteNfts.count
     }
     
     enum CodingKeys: String, CodingKey {
         case name, avatar, description, website, id
         case myNfts = "nfts"
         case favoriteNfts = "likes"
+    }
+}
+
+extension UserProfile {
+    func with(favoriteNfts: [String]) -> UserProfile {
+        UserProfile(
+            name: name,
+            avatar: avatar,
+            description: description,
+            website: website,
+            myNfts: myNfts,
+            favoriteNfts: favoriteNfts,
+            id: id
+        )
     }
 }

@@ -17,31 +17,26 @@ struct ProfileAvatar: View {
     
     private var url: URL? {
         guard let urlString else { return nil }
-        
-        if urlString.hasPrefix("http") {
-            return URL(string: urlString)
-        } else {
-            return URL(string: "https://\(urlString)")
-        }
+        return URL(string: urlString.hasPrefix("http") ? urlString : "https://\(urlString)")
     }
     
     var body: some View {
-            ZStack(alignment: .bottomTrailing) {
-                avatarView
-                
-                if editMode {
-                    Image(.camera)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 23, height: 23)
-                }
-            }
-            .onTapGesture {
-                if editMode {
-                    onTap?()
-                }
+        ZStack(alignment: .bottomTrailing) {
+            avatarView
+            
+            if editMode {
+                Image(.camera)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 23, height: 23)
             }
         }
+        .onTapGesture {
+            if editMode {
+                onTap?()
+            }
+        }
+    }
     
     @ViewBuilder
     private var avatarView: some View {
