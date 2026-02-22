@@ -96,8 +96,10 @@ struct ProfileView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showFavoriteNFT) {
-//                FavoriteNFTView(nfts: ProfileNFT.mockData)
-            }
+                  FavoriteNFTView(
+                      viewModel: viewModel.createFavoriteNFTViewModel(servicesAssembly: servicesAssembly)
+                  )
+              }
         }
     }
     

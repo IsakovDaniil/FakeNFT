@@ -103,8 +103,17 @@ final class ProfileViewModel {
         showFavoriteNFT = true
     }
     
+    // MARK: - Factory Methods
+    
     func createEditViewModel() -> EditProfileViewModel? {
         EditProfileViewModel(profileService: profileService)
+    }
+    
+    func createFavoriteNFTViewModel(servicesAssembly: ServicesAssembly) -> FavoriteNFTViewModel {
+        FavoriteNFTViewModel(
+            profileService: profileService,
+            nftService: servicesAssembly.profileMyNFTService
+        )
     }
     
     // MARK: - Private Methods
