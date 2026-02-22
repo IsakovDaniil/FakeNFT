@@ -10,7 +10,7 @@ import Observation
 
 @Observable
 @MainActor
-final class FavoriteFTViewModel {
+final class FavoriteNFTViewModel {
 
     // MARK: - Dependencies
 
@@ -24,7 +24,7 @@ final class FavoriteFTViewModel {
         case loading
         case loaded
         case empty
-        case error(Error)
+        case error(String)
     }
 
     var state: ViewState = .loading
@@ -72,8 +72,8 @@ final class FavoriteFTViewModel {
 
             var fetchedNFTs = try await nftService.fetchMyNFTs(nftIDs: profile.favoriteNfts)
             let favoriteSet = Set(profile.favoriteNfts)
-            for i in fetchedNFTs.indices {
-                fetchedNFTs[i].isFavorite = favoriteSet.contains(fetchedNFTs[i].id)
+            for index in fetchedNFTs.indices {
+                fetchedNFTs[index].isFavorite = favoriteSet.contains(fetchedNFTs[index].id)
             }
 
             nfts = fetchedNFTs
@@ -112,25 +112,28 @@ final class FavoriteFTViewModel {
     // MARK: - Private Methods
 
     private func handleError(_ error: Error) {
-        state = .error(error)
+            let message: String
 
-        if let networkError = error as? NetworkClientError {
-            switch networkError {
-            case .httpStatusCode(let code):
-                errorMessage = ProfileConstants.ErrorMessages.serverErrorPrefix + "\(code)"
-            case .urlSessionError:
-                errorMessage = ProfileConstants.ErrorMessages.connectionError
-            case .parsingError:
-                errorMessage = ProfileConstants.ErrorMessages.parsingError
-            case .incorrectRequest(let message):
-                errorMessage = ProfileConstants.ErrorMessages.invalidRequestPrefix + message
-            case .urlRequestError:
-                errorMessage = ProfileConstants.ErrorMessages.networkError
+            if let networkError = error as? NetworkClientError {
+                switch networkError {
+                case .httpStatusCode(let code):
+                    message = ProfileConstants.ErrorMessages.serverErrorPrefix + "\(code)"
+                case .urlSessionError:
+                    message = ProfileConstants.ErrorMessages.connectionError
+                case .parsingError:
+                    message = ProfileConstants.ErrorMessages.parsingError
+                case .incorrectRequest(let details):
+                    message = ProfileConstants.ErrorMessages.invalidRequestPrefix + details
+                case .urlRequestError:
+                    message = ProfileConstants.ErrorMessages.networkError
+                }
+            } else {
+                message = ProfileConstants.defaultErrorMessage
             }
-        } else {
-            errorMessage = ProfileConstants.defaultErrorMessage
-        }
 
-        showErrorAlert = true
+            errorMessage = message
+            state = .error(message)
+            showErrorAlert = true
+        }
     }
-}
+
