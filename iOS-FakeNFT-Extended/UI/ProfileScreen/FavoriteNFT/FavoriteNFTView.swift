@@ -25,6 +25,8 @@ struct FavoriteNFTView: View {
             Color.appWhite.ignoresSafeArea()
             grid
         }
+        .navigationTitle("Избранные NFT")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     // MARK: - Subviews
@@ -43,7 +45,9 @@ struct FavoriteNFTView: View {
             }
         }
         .padding(.init(top: 20, leading: 16, bottom: 20, trailing: 16))
-        
+        .refreshable {
+            
+        }
     }
     
     private var emptyView: some View {
@@ -56,7 +60,9 @@ struct FavoriteNFTView: View {
 }
 
 #Preview {
-    FavoriteNFTView(
-        nfts: ProfileNFT.mockData
-    )
+    NavigationStack {
+        FavoriteNFTView(
+            nfts: ProfileNFT.mockData
+        )
+    }
 }
