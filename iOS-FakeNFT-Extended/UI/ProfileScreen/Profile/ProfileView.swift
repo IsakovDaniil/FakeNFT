@@ -96,7 +96,7 @@ struct ProfileView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showFavoriteNFT) {
-                FavoriteNFTView()
+//                FavoriteNFTView(nfts: [ProfileNFT])
             }
         }
     }
