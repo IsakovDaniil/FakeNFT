@@ -46,6 +46,13 @@ struct FavoriteNFTView: View {
         
     }
     
+    private var emptyView: some View {
+        Text("У вас еще нет избранных NFT")
+            .font(Font.bold17)
+            .foregroundStyle(.appBlack)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
 }
 
 #Preview {
