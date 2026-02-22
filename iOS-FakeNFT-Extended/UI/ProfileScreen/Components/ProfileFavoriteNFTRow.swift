@@ -1,8 +1,8 @@
 //
-//  ProfileMyNFTRow.swift
+//  ProfileFavoriteNFTRow.swift
 //  iOS-FakeNFT-Extended
 //
-//  Created by Даниил on 17.02.2026.
+//  Created by Даниил on 22.02.2026.
 //
 
 import SwiftUI
