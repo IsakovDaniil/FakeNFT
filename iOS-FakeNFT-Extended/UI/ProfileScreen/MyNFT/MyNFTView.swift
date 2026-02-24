@@ -99,8 +99,11 @@ struct MyNFTView: View {
             )
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 39))
+            .listRowBackground(Color.appWhite)
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(.appWhite)
         .refreshable {
             await viewModel.refresh()
         }
