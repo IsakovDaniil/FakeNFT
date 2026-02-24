@@ -32,15 +32,15 @@ struct ProfileValidator {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         
         guard !trimmed.isEmpty else {
-            return .invalid("Имя не может быть пустым")
+            return .invalid(ProfileConstants.Validation.nameEmpty)
         }
         
         guard trimmed.count >= 2 else {
-            return .invalid("Имя должно содержать минимум 2 символа")
+            return .invalid(ProfileConstants.Validation.nameTooShort)
         }
         
         guard trimmed.count <= 30 else {
-            return .invalid("Имя не должно превышать 30 символов")
+            return .invalid(ProfileConstants.Validation.nameTooLong)
         }
         
         return .valid
@@ -52,30 +52,28 @@ struct ProfileValidator {
         let trimmed = description.trimmingCharacters(in: .whitespaces)
         
         guard !trimmed.isEmpty else {
-            return .invalid("Описание не может быть пустым")
+            return .invalid(ProfileConstants.Validation.descriptionEmpty)
         }
         
         guard trimmed.count <= 300 else {
-            return .invalid("Описание не может быть длиннее 300 символов")
+            return .invalid(ProfileConstants.Validation.descriptionTooLong)
         }
         
         return .valid
     }
     
-    // MARK: - Website URL Validation
+    // MARK: - Website Validation
     
     static func validateWebsite(_ website: String) -> ValidationResult {
         let trimmed = website.trimmingCharacters(in: .whitespaces)
         
-        guard !trimmed.isEmpty else {
-            return .valid
-        }
+        guard !trimmed.isEmpty else { return .valid }
         
         let urlPattern = #"^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-\.\/\?\=\&]*)?$"#
         let urlPredicate = NSPredicate(format: "SELF MATCHES %@", urlPattern)
         
         guard urlPredicate.evaluate(with: trimmed) else {
-            return .invalid("Неверный формат сайта. Пример: example.com")
+            return .invalid(ProfileConstants.Validation.websiteInvalidFormat)
         }
         
         return .valid
@@ -86,23 +84,21 @@ struct ProfileValidator {
     static func validateAvatarURL(_ avatar: String) -> ValidationResult {
         let trimmed = avatar.trimmingCharacters(in: .whitespaces)
         
-        guard !trimmed.isEmpty else {
-            return .valid
-        }
+        guard !trimmed.isEmpty else { return .valid }
         
         guard let url = URL(string: trimmed) else {
-            return .invalid("Неверный формат URL")
+            return .invalid(ProfileConstants.Validation.urlInvalidFormat)
         }
         
         guard url.scheme == "http" || url.scheme == "https" else {
-            return .invalid("URL должен начинаться с http:// или https://")
+            return .invalid(ProfileConstants.Validation.urlInvalidScheme)
         }
         
         let validExtensions = ["jpg", "png", "jpeg", "webp"]
         let pathExtension = url.pathExtension.lowercased()
         
         if !pathExtension.isEmpty && !validExtensions.contains(pathExtension) {
-            return .invalid("Поддерживаемые форматы: JPG, PNG, JPEG, WEBP")
+            return .invalid(ProfileConstants.Validation.urlInvalidExtension)
         }
         
         return .valid

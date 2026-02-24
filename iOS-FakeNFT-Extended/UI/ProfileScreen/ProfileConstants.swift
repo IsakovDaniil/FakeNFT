@@ -92,4 +92,18 @@ enum ProfileConstants {
         static let fieldDescription = "Описание"
         static let fieldWebsite = "Сайт"
     }
+    
+    // MARK: - Validation
+    
+    enum Validation {
+        static let nameEmpty = "Имя не может быть пустым"
+        static let nameTooShort = "Имя должно содержать минимум 2 символа"
+        static let nameTooLong = "Имя не должно превышать 30 символов"
+        static let descriptionEmpty = "Описание не может быть пустым"
+        static let descriptionTooLong = "Описание не может быть длиннее 300 символов"
+        static let websiteInvalidFormat = "Неверный формат сайта. Пример: example.com"
+        static let urlInvalidFormat = "Неверный формат URL"
+        static let urlInvalidScheme = "URL должен начинаться с http:// или https://"
+        static let urlInvalidExtension = "Поддерживаемые форматы: JPG, PNG, JPEG, WEBP"
+    }
 }
