@@ -34,7 +34,6 @@ final class FavoriteNFTViewModel {
         case .idle, .loading:
             return .loading
         case .refreshing, .loaded:
-            // При рефреше показываем список со старыми данными — не скрываем
             return nfts.isEmpty ? .empty : .loaded
         case .error(let message):
             return nfts.isEmpty ? .error(message) : .loaded

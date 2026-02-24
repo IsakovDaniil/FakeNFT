@@ -60,6 +60,7 @@ struct ProfileMyNFTRow: View {
             Text("\(nft.priceFormatted) ETH")
                 .font(Font.bold17)
                 .foregroundStyle(.appBlack)
+                .lineLimit(1)
         }
     }
 }

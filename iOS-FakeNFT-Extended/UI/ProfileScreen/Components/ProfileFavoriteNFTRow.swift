@@ -36,6 +36,7 @@ struct ProfileFavoriteNFTRow: View {
             Text(nft.name)
                 .font(Font.bold17)
                 .foregroundStyle(.appBlack)
+                .lineLimit(1)
             
             ProfileRating(rating: nft.ratingString)
             
