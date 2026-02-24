@@ -25,18 +25,19 @@ final class FavoriteNFTViewModel {
     
     var nfts: [ProfileNFT] { store.favoriteNFTs }
     
-    enum ViewState { case loading, loaded, empty, error(String) }
+    enum ViewState {
+        case loading, loaded, empty, error(String)
+    }
     
     var state: ViewState {
         switch store.loadingState {
         case .idle, .loading:
             return .loading
-        case .error(let msg):
-            return .error(msg)
-        case .loaded where nfts.isEmpty:
-            return .empty
-        case .loaded:
-            return .loaded
+        case .refreshing, .loaded:
+            // При рефреше показываем список со старыми данными — не скрываем
+            return nfts.isEmpty ? .empty : .loaded
+        case .error(let message):
+            return nfts.isEmpty ? .error(message) : .loaded
         }
     }
     
@@ -74,8 +75,8 @@ final class FavoriteNFTViewModel {
     // MARK: - Private
     
     private func syncError() {
-        if case .error(let msg) = store.loadingState {
-            errorMessage = msg
+        if case .error(let message) = store.loadingState {
+            errorMessage = message
             showErrorAlert = true
         }
     }

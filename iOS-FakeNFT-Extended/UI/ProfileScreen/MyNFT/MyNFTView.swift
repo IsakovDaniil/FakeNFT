@@ -5,11 +5,6 @@
 //  Created by Даниил on 07.02.2026.
 //
 
-//
-//  MyNFTView.swift
-//  iOS-FakeNFT-Extended
-//
-
 import SwiftUI
 import ProgressHUD
 
