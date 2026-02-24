@@ -51,7 +51,7 @@ struct FavoriteNFTView: View {
             grid
 
         case .empty:
-            emptyView
+            ProfileEmptyView(title: .favorite)
 
         case .error(let message):
             errorView(message: message)
@@ -76,13 +76,6 @@ struct FavoriteNFTView: View {
         .refreshable {
             await viewModel.loadFavorites()
         }
-    }
-
-    private var emptyView: some View {
-        Text("У вас еще нет избранных NFT")
-            .font(Font.bold17)
-            .foregroundStyle(.appBlack)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func errorView(message: String) -> some View {
