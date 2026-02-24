@@ -19,8 +19,8 @@ struct ProfileEmptyView: View {
         
         var text: String {
             switch self {
-            case .myNFt: return "У Вас еще нет NFT"
-            case .favorite: return "У вас еще нет избранных NFT"
+            case .myNFt: "У Вас еще нет NFT"
+            case .favorite: "У вас еще нет избранных NFT"
             }
         }
     }

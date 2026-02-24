@@ -18,15 +18,15 @@ struct ProfileNFTCard: View {
         
         var cardSize: CGFloat {
             switch self {
-            case .myNFT:     return 110
-            case .favorites: return 80
+            case .myNFT: 110
+            case .favorites: 80
             }
         }
         
         var likePadding: CGFloat {
             switch self {
-            case .myNFT:     return 10
-            case .favorites: return 5
+            case .myNFT: 10
+            case .favorites: 5
             }
         }
     }
