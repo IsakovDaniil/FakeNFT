@@ -9,26 +9,26 @@ import SwiftUI
 import ProgressHUD
 
 struct ProfileView: View {
-
+    
     // MARK: - Properties
-
+    
     @State private var viewModel: ProfileViewModel
     private let servicesAssembly: ServicesAssembly
-
+    
     // MARK: - Init
-
+    
     init(viewModel: ProfileViewModel, servicesAssembly: ServicesAssembly) {
         self._viewModel = State(initialValue: viewModel)
         self.servicesAssembly = servicesAssembly
     }
-
+    
     // MARK: - Body
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.appWhite.ignoresSafeArea()
-
+                
                 if viewModel.isLoading || viewModel.profile == nil {
                     ProgressView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -88,9 +88,9 @@ struct ProfileView: View {
             }
         }
     }
-
+    
     // MARK: - View Components
-
+    
     private func contentView(_ profile: UserProfile) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -101,7 +101,7 @@ struct ProfileView: View {
             .padding()
         }
     }
-
+    
     private func avatarNameSection(_ profile: UserProfile) -> some View {
         HStack(spacing: 16) {
             ProfileAvatar(urlString: profile.avatar, editMode: false)
@@ -112,13 +112,13 @@ struct ProfileView: View {
                 .foregroundStyle(.appBlack)
         }
     }
-
+    
     private func bioSection(_ profile: UserProfile) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(profile.description)
                 .font(Font.regular13)
                 .foregroundStyle(.appBlack)
-
+            
             Button {
                 viewModel.openWebsite()
             } label: {
@@ -132,7 +132,7 @@ struct ProfileView: View {
             }
         }
     }
-
+    
     private func menuSection(_ profile: UserProfile) -> some View {
         VStack(spacing: 0) {
             Button {
@@ -143,7 +143,7 @@ struct ProfileView: View {
                     count: profile.myNftCount
                 )
             }
-
+            
             Button {
                 viewModel.openFavoriteNFT()
             } label: {

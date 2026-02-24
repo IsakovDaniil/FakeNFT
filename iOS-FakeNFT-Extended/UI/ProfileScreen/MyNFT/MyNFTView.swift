@@ -9,19 +9,19 @@ import SwiftUI
 import ProgressHUD
 
 struct MyNFTView: View {
-
+    
     // MARK: - Properties
-
+    
     @State private var viewModel: MyNFTViewModel
-
+    
     // MARK: - Init
-
+    
     init(viewModel: MyNFTViewModel) {
         self._viewModel = State(initialValue: viewModel)
     }
-
+    
     // MARK: - Body
-
+    
     var body: some View {
         ZStack {
             Color.appWhite.ignoresSafeArea()
@@ -58,28 +58,28 @@ struct MyNFTView: View {
             }
         }
     }
-
+    
     // MARK: - Content View
-
+    
     @ViewBuilder
     private var contentView: some View {
         switch viewModel.state {
         case .loading:
             Color.clear
-
+            
         case .loaded:
             listView
-
+            
         case .empty:
             ProfileEmptyView(title: .myNFt)
-
+            
         case .error:
             Color.clear
         }
     }
-
+    
     // MARK: - Subviews
-
+    
     private var listView: some View {
         List(viewModel.sortedNFTs) { nft in
             ProfileMyNFTRow(
@@ -99,7 +99,7 @@ struct MyNFTView: View {
             await viewModel.refresh()
         }
     }
-
+    
     private var sortButton: some View {
         Button {
             viewModel.showSortSheet = true
@@ -108,7 +108,7 @@ struct MyNFTView: View {
         }
         .disabled(viewModel.isEmpty || viewModel.isLoading)
     }
-
+    
     @ViewBuilder
     private var sortDialogButtons: some View {
         ForEach(ProfileNFTSortType.allCases, id: \.self) { sortType in
