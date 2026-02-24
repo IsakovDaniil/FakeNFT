@@ -77,7 +77,7 @@ struct MyNFTView: View {
             listView
             
         case .empty:
-            emptyView
+            ProfileEmptyView(title: .myNFt)
             
         case .error:
             Color.clear
@@ -104,13 +104,6 @@ struct MyNFTView: View {
         .refreshable {
             await viewModel.refresh()
         }
-    }
-    
-    private var emptyView: some View {
-        Text(MyNFTConstants.emptyStateText)
-            .font(Font.bold17)
-            .foregroundStyle(.appBlack)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private var sortButton: some View {
