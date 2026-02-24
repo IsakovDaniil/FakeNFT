@@ -14,121 +14,68 @@ final class MyNFTViewModel {
     
     // MARK: - Dependencies
     
-    private let service: ProfileMyNFTServiceProtocol
-    private var profile: UserProfile
-    
-    // MARK: - State
-    
-    enum ViewState {
-        case idle
-        case loading
-        case loaded([ProfileNFT])
-        case empty
-        case error(Error)
-    }
-    
-    var state: ViewState = .idle
-    
-    // MARK: - Alert State
-    
-    var showErrorAlert = false
-    var errorMessage: String?
+    private let store: ProfileStateStore
     
     // MARK: - UI State
     
-    var showSortSheet = false
+    var showSortSheet  = false
+    var showErrorAlert = false
+    var errorMessage: String?
+    
     private(set) var sortType: ProfileNFTSortType
     
     // MARK: - Computed Properties
     
-    var nfts: [ProfileNFT] {
-        if case .loaded(let items) = state {
-            return items
-        }
-        return []
-    }
+    var nfts: [ProfileNFT] { store.myNFTs }
     
     var sortedNFTs: [ProfileNFT] {
         switch sortType {
-        case .price:
-            return nfts.sorted { $0.price < $1.price }
-        case .rating:
-            return nfts.sorted { $0.rating > $1.rating }
-        case .name:
-            return nfts.sorted { $0.name < $1.name }
+        case .price: return nfts.sorted { $0.price < $1.price  }
+        case .rating: return nfts.sorted { $0.rating > $1.rating }
+        case .name: return nfts.sorted { $0.name < $1.name }
         }
     }
     
     var isLoading: Bool {
-        if case .loading = state { return true }
+        if case .loading = store.loadingState { return true }
         return false
     }
     
-    var isEmpty: Bool {
-        if case .empty = state { return true }
-        return false
+    var isEmpty: Bool { nfts.isEmpty && !isLoading }
+    
+    enum ViewState { case loading, loaded, empty, error(String) }
+    
+    var state: ViewState {
+        switch store.loadingState {
+        case .idle, .loading: return .loading
+        case .error(let msg): return .error(msg)
+        case .loaded where nfts.isEmpty: return .empty
+        case .loaded: return .loaded
+        }
     }
     
     // MARK: - Init
     
-    init(service: ProfileMyNFTServiceProtocol, profile: UserProfile) {
-        self.service = service
-        self.profile = profile
+    init(store: ProfileStateStore) {
+        self.store = store
         self.sortType = ProfileNFTSortType.loadSaved()
     }
     
     // MARK: - Public Methods
     
     func loadNFTs() async {
-        state = .loading
-        
-        let nftIDs = profile.myNfts
-        
-        guard !nftIDs.isEmpty else {
-            state = .empty
-            return
-        }
-        
-        do {
-            var fetchedNFTs = try await service.fetchMyNFTs(nftIDs: nftIDs)
-            
-            for index in fetchedNFTs.indices {
-                fetchedNFTs[index].isFavorite = profile.favoriteNfts.contains(fetchedNFTs[index].id)
-            }
-            
-            if fetchedNFTs.isEmpty {
-                state = .empty
-            } else {
-                state = .loaded(fetchedNFTs)
-            }
-        } catch {
-            handleError(error)
-        }
+        await store.loadAll()
+        syncError()
     }
     
     func refresh() async {
-        let nftIDs = profile.myNfts
-        
-        guard !nftIDs.isEmpty else {
-            state = .empty
-            return
-        }
-        
-        do {
-            var fetchedNFTs = try await service.fetchMyNFTs(nftIDs: nftIDs)
-            
-            for index in fetchedNFTs.indices {
-                fetchedNFTs[index].isFavorite = profile.favoriteNfts.contains(fetchedNFTs[index].id)
-            }
-            
-            if fetchedNFTs.isEmpty {
-                state = .empty
-            } else {
-                state = .loaded(fetchedNFTs)
-            }
-        } catch {
-            handleError(error)
-        }
+        await store.refresh()
+        syncError()
+    }
+    
+    func retry() async {
+        await store.loadAll(forceRefresh: true)
+        syncError()
     }
     
     func changeSortType(_ newType: ProfileNFTSortType) {
@@ -137,45 +84,19 @@ final class MyNFTViewModel {
     }
     
     func toggleFavorite(nftID: String) async {
-        guard case .loaded(var items) = state,
-              let index = items.firstIndex(where: { $0.id == nftID }) else { return }
-        
-        let previousItems = items
-        let previousFavoriteNfts = profile.favoriteNfts
-        
-        items[index].isFavorite.toggle()
-        state = .loaded(items)
-        
-        var updatedFavorites = previousFavoriteNfts
-        if items[index].isFavorite {
-            updatedFavorites.append(nftID)
-        } else {
-            updatedFavorites.removeAll { $0 == nftID }
-        }
-        profile = profile.with(favoriteNfts: updatedFavorites)
-        
-        do {
-            _ = try await service.toggleFavorite(
-                currentLikes: previousFavoriteNfts,
-                nftID: nftID
-            )
-        } catch {
-            state = .loaded(previousItems)
-            profile = profile.with(favoriteNfts: previousFavoriteNfts)
+        let success = await store.toggleFavorite(nftID: nftID)
+        if !success {
             errorMessage = MyNFTConstants.favoriteUpdateErrorMessage
             showErrorAlert = true
         }
     }
     
-    func retry() async {
-        await loadNFTs()
-    }
+    // MARK: - Private
     
-    // MARK: - Private Methods
-    
-    private func handleError(_ error: Error) {
-        state = .error(error)
-        errorMessage = error.localizedDescription
-        showErrorAlert = true
+    private func syncError() {
+        if case .error(let msg) = store.loadingState {
+            errorMessage = msg
+            showErrorAlert = true
+        }
     }
 }

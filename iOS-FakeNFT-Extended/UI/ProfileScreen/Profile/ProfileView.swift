@@ -9,30 +9,31 @@ import SwiftUI
 import ProgressHUD
 
 struct ProfileView: View {
-    
+
     // MARK: - Properties
-    
+
     @State private var viewModel: ProfileViewModel
     private let servicesAssembly: ServicesAssembly
-    
+
     // MARK: - Init
-    
+
     init(viewModel: ProfileViewModel, servicesAssembly: ServicesAssembly) {
         self._viewModel = State(initialValue: viewModel)
         self.servicesAssembly = servicesAssembly
     }
-    
+
     // MARK: - Body
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.appWhite.ignoresSafeArea()
-                
-                if let profile = viewModel.profile {
+
+                if viewModel.isLoading || viewModel.profile == nil {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if let profile = viewModel.profile {
                     contentView(profile)
-                } else {
-                    Color.clear
                 }
             }
             .task {
@@ -40,18 +41,9 @@ struct ProfileView: View {
                     await viewModel.loadProfile()
                 }
             }
-            .onChange(of: viewModel.isLoading) { _, isLoading in
-                if isLoading {
-                    ProgressHUD.animate()
-                } else {
-                    ProgressHUD.dismiss()
-                }
-            }
             .alert(ProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
                 Button(ProfileConstants.retryButton) {
-                    Task {
-                        await viewModel.retry()
-                    }
+                    Task { await viewModel.retry() }
                 }
                 Button(ProfileConstants.cancelButton, role: .cancel) {}
             } message: {
@@ -64,22 +56,20 @@ struct ProfileView: View {
                     Button {
                         viewModel.openEditProfile()
                     } label: {
-                        Image(.edit)
-                            .foregroundStyle(.appBlack)
+                        Image(.edit).foregroundStyle(.appBlack)
                     }
                     .disabled(viewModel.profile == nil)
                 }
             }
             .navigationDestination(isPresented: $viewModel.showEditProfile) {
-                if let profile = viewModel.profile,
-                   let editViewModel = viewModel.createEditViewModel() {
+                if let profile = viewModel.profile {
                     EditProfileView(
                         profile: profile,
-                        viewModel: editViewModel,
+                        viewModel: viewModel.createEditViewModel(
+                            profileService: servicesAssembly.profileService
+                        ),
                         onProfileUpdated: {
-                            Task {
-                                await viewModel.refreshProfile()
-                            }
+                            Task { await viewModel.refreshProfile() }
                         }
                     )
                 }
@@ -91,20 +81,16 @@ struct ProfileView: View {
                 }
             }
             .navigationDestination(isPresented: $viewModel.showMyNFT) {
-                if let myNFTViewModel = viewModel.createMyNFTViewModel(servicesAssembly: servicesAssembly) {
-                    MyNFTView(viewModel: myNFTViewModel)
-                }
+                MyNFTView(viewModel: viewModel.createMyNFTViewModel())
             }
             .navigationDestination(isPresented: $viewModel.showFavoriteNFT) {
-                  FavoriteNFTView(
-                      viewModel: viewModel.createFavoriteNFTViewModel(servicesAssembly: servicesAssembly)
-                  )
-              }
+                FavoriteNFTView(viewModel: viewModel.createFavoriteNFTViewModel())
+            }
         }
     }
-    
+
     // MARK: - View Components
-    
+
     private func contentView(_ profile: UserProfile) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -115,7 +101,7 @@ struct ProfileView: View {
             .padding()
         }
     }
-    
+
     private func avatarNameSection(_ profile: UserProfile) -> some View {
         HStack(spacing: 16) {
             ProfileAvatar(urlString: profile.avatar, editMode: false)
@@ -126,43 +112,50 @@ struct ProfileView: View {
                 .foregroundStyle(.appBlack)
         }
     }
-    
+
     private func bioSection(_ profile: UserProfile) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(profile.description)
                 .font(Font.regular13)
                 .foregroundStyle(.appBlack)
-            
+
             Button {
                 viewModel.openWebsite()
             } label: {
-                Text(profile.website
-                    .replacingOccurrences(of: "https://", with: "")
-                    .replacingOccurrences(of: "http://", with: ""))
+                Text(
+                    profile.website
+                        .replacingOccurrences(of: "https://", with: "")
+                        .replacingOccurrences(of: "http://", with: "")
+                )
                 .font(Font.regular15)
                 .foregroundStyle(.appBlue)
             }
         }
     }
-    
+
     private func menuSection(_ profile: UserProfile) -> some View {
         VStack(spacing: 0) {
             Button {
                 viewModel.openMyNFT()
             } label: {
-                ProfileMenuLabel(title: ProfileConstants.Menu.myNFTTitle, count: profile.myNftCount)
+                ProfileMenuLabel(
+                    title: ProfileConstants.Menu.myNFTTitle,
+                    count: profile.myNftCount
+                )
             }
-            
+
             Button {
                 viewModel.openFavoriteNFT()
             } label: {
-                ProfileMenuLabel(title: ProfileConstants.Menu.favoriteNFTTitle, count: profile.favoriteNftCount)
+                ProfileMenuLabel(
+                    title: ProfileConstants.Menu.favoriteNFTTitle,
+                    count: profile.favoriteNftCount
+                )
             }
         }
         .padding(.top, 20)
     }
 }
-
 // MARK: - Preview
 
 #Preview {
@@ -170,14 +163,14 @@ struct ProfileView: View {
     let profileStorage = ProfileStorage()
     let nftStorage = NftStorageImpl()
     
-    let servicesAssembly = ServicesAssembly(
+    let assembly = ServicesAssembly(
         networkClient: networkClient,
         nftStorage: nftStorage,
         profileStorage: profileStorage
     )
     
     return ProfileView(
-        viewModel: ProfileViewModel(profileService: servicesAssembly.profileService),
-        servicesAssembly: servicesAssembly
+        viewModel: ProfileViewModel(store: assembly.profileStore),
+        servicesAssembly: assembly
     )
 }

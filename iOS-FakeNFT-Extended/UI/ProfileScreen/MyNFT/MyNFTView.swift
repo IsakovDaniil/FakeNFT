@@ -5,23 +5,28 @@
 //  Created by Даниил on 07.02.2026.
 //
 
+//
+//  MyNFTView.swift
+//  iOS-FakeNFT-Extended
+//
+
 import SwiftUI
 import ProgressHUD
 
 struct MyNFTView: View {
-    
+
     // MARK: - Properties
-    
+
     @State private var viewModel: MyNFTViewModel
-    
+
     // MARK: - Init
-    
+
     init(viewModel: MyNFTViewModel) {
         self._viewModel = State(initialValue: viewModel)
     }
-    
+
     // MARK: - Body
-    
+
     var body: some View {
         ZStack {
             Color.appWhite.ignoresSafeArea()
@@ -42,16 +47,10 @@ struct MyNFTView: View {
             sortDialogButtons
         }
         .task {
-            if case .idle = viewModel.state {
-                await viewModel.loadNFTs()
-            }
+            await viewModel.loadNFTs()
         }
         .onChange(of: viewModel.isLoading) { _, isLoading in
-            if isLoading {
-                ProgressHUD.animate()
-            } else {
-                ProgressHUD.dismiss()
-            }
+            isLoading ? ProgressHUD.animate() : ProgressHUD.dismiss()
         }
         .alert(MyNFTConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
             Button(MyNFTConstants.retryButtonTitle) {
@@ -64,37 +63,34 @@ struct MyNFTView: View {
             }
         }
     }
-    
+
     // MARK: - Content View
-    
+
     @ViewBuilder
     private var contentView: some View {
         switch viewModel.state {
-        case .idle, .loading:
+        case .loading:
             Color.clear
-            
+
         case .loaded:
             listView
-            
+
         case .empty:
             ProfileEmptyView(title: .myNFt)
-            
+
         case .error:
             Color.clear
         }
-        
     }
-    
+
     // MARK: - Subviews
-    
+
     private var listView: some View {
         List(viewModel.sortedNFTs) { nft in
             ProfileMyNFTRow(
                 nft: nft,
                 onLikeTap: {
-                    Task {
-                        await viewModel.toggleFavorite(nftID: nft.id)
-                    }
+                    Task { await viewModel.toggleFavorite(nftID: nft.id) }
                 }
             )
             .listRowSeparator(.hidden)
@@ -108,17 +104,16 @@ struct MyNFTView: View {
             await viewModel.refresh()
         }
     }
-    
+
     private var sortButton: some View {
         Button {
             viewModel.showSortSheet = true
         } label: {
-            Image(.sort)
-                .foregroundStyle(.appBlack)
+            Image(.sort).foregroundStyle(.appBlack)
         }
         .disabled(viewModel.isEmpty || viewModel.isLoading)
     }
-    
+
     @ViewBuilder
     private var sortDialogButtons: some View {
         ForEach(ProfileNFTSortType.allCases, id: \.self) { sortType in
@@ -126,28 +121,6 @@ struct MyNFTView: View {
                 viewModel.changeSortType(sortType)
             }
         }
-        
         Button(MyNFTConstants.closeButtonTitle, role: .cancel) {}
-    }
-}
-
-#Preview("Loaded") {
-    let profile = UserProfile(
-        name: "Test User",
-        avatar: "",
-        description: "",
-        website: "",
-        myNfts: ["e8c1f0b6-5caf-4f65-8e5b-12f4bcb29efb"],
-        favoriteNfts: [],
-        id: "1"
-    )
-    
-    NavigationStack {
-        MyNFTView(
-            viewModel: MyNFTViewModel(
-                service: ProfileMyNFTService(networkClient: DefaultNetworkClient()),
-                profile: profile
-            )
-        )
     }
 }
