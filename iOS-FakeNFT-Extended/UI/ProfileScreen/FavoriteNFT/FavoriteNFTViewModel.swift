@@ -1,5 +1,5 @@
 //
-//  FavouritesNFTViewModel.swift
+//  FavoriteNFTViewModel.swift
 //  iOS-FakeNFT-Extended
 //
 //  Created by Даниил on 22.02.2026.
@@ -66,7 +66,7 @@ final class FavoriteNFTViewModel {
     func removeFromFavorites(_ nft: ProfileNFT) async {
         let success = await store.removeFromFavorites(nftID: nft.id)
         if !success {
-            errorMessage = ProfileConstants.defaultErrorMessage
+            errorMessage = ProfileConstants.FavoriteNFT.favoriteUpdateErrorMessage
             showErrorAlert = true
         }
     }
