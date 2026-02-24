@@ -23,7 +23,4 @@ enum MyNFTConstants {
     static let cancelButtonTitle = "Отмена"
     static let favoriteUpdateErrorMessage = "Не удалось обновить избранное"
     
-    // MARK: - Empty State
-    
-    static let emptyStateText = "У Вас еще нет NFT"
 }

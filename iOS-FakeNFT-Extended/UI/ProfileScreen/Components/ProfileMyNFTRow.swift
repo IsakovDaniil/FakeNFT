@@ -17,17 +17,21 @@ struct ProfileMyNFTRow: View {
     // MARK: - Body
     
     var body: some View {
-        HStack(spacing: 20) {
-            ProfileNFTCard(
-                image: nft.imageURL,
-                size: .myNFT,
-                isLiked: nft.isFavorite,
-                onLikeTap: onLikeTap
-            )
+        ZStack {
+            Color.appWhite.ignoresSafeArea()
             
-            infoView
-            Spacer()
-            priceView
+            HStack(spacing: 20) {
+                ProfileNFTCard(
+                    image: nft.imageURL,
+                    size: .myNFT,
+                    isLiked: nft.isFavorite,
+                    onLikeTap: onLikeTap
+                )
+                
+                infoView
+                Spacer()
+                priceView
+            }
         }
     }
     

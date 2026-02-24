@@ -136,4 +136,3 @@ final class FavoriteNFTViewModel {
             showErrorAlert = true
         }
     }
-

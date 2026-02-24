@@ -31,7 +31,7 @@ struct FavoriteNFTView: View {
             Color.appWhite.ignoresSafeArea()
             content
         }
-        .navigationTitle("Избранные NFT")
+        .navigationTitle(FavoriteNFTConstants.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadFavorites()
