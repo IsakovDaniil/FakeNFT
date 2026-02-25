@@ -93,6 +93,17 @@ enum ProfileConstants {
         static let fieldWebsite = NSLocalizedString("Profile.EditProfile.fieldWebsite", comment: "")
     }
     
+    // MARK: - Network Error
+    
+    enum NetworkError {
+        static let serverError = NSLocalizedString("Profile.NetworkError.serverError", comment: "")
+        static let noConnection = NSLocalizedString("Profile.NetworkError.noConnection", comment: "")
+        static let parsingError = NSLocalizedString("Profile.NetworkError.parsingError", comment: "")
+        static let invalidRequest = NSLocalizedString("Profile.NetworkError.invalidRequest", comment: "")
+        static let networkError = NSLocalizedString("Profile.NetworkError.networkError", comment: "")
+        static let unknown = NSLocalizedString("Profile.NetworkError.unknown", comment: "")
+    }
+    
     // MARK: - Validation
     
     enum Validation {

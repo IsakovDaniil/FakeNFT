@@ -77,6 +77,15 @@
 "Profile.EditProfile.fieldDescription" = "Description";
 "Profile.EditProfile.fieldWebsite" = "Website";
 
+// MARK: - Profile Network Error
+
+"Profile.NetworkError.serverError" = "Server error: ";
+"Profile.NetworkError.noConnection" = "No connection";
+"Profile.NetworkError.parsingError" = "Data parsing error";
+"Profile.NetworkError.invalidRequest" = "Invalid request: ";
+"Profile.NetworkError.networkError" = "Network error";
+"Profile.NetworkError.unknown" = "Unknown error";
+
 // MARK: - Validation
 
 "Profile.Validation.nameEmpty" = "Name cannot be empty";

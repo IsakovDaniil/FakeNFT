@@ -1,3 +1,5 @@
+// MARK: - Existing
+
 "Tab.catalog" = "Каталог";
 "Catalog.openNft" = "Открыть Nft";
 "Error.network" = "Произошла ошибка сети";
@@ -74,6 +76,15 @@
 "Profile.EditProfile.fieldName" = "Имя";
 "Profile.EditProfile.fieldDescription" = "Описание";
 "Profile.EditProfile.fieldWebsite" = "Сайт";
+
+// MARK: - Profile Network Error
+
+"Profile.NetworkError.serverError" = "Ошибка сервера: ";
+"Profile.NetworkError.noConnection" = "Нет соединения";
+"Profile.NetworkError.parsingError" = "Ошибка разбора данных";
+"Profile.NetworkError.invalidRequest" = "Некорректный запрос: ";
+"Profile.NetworkError.networkError" = "Ошибка сети";
+"Profile.NetworkError.unknown" = "Неизвестная ошибка";
 
 // MARK: - Validation
 
