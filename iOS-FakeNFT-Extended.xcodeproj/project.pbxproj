@@ -80,6 +80,7 @@
 		861E6F5D2F460A500071B69B /* ProfileMyNFTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMyNFTService.swift; sourceTree = "<group>"; };
 		8666999E2F475461005C513D /* ProfileGetNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileGetNFTRequest.swift; sourceTree = "<group>"; };
 		866699A02F475507005C513D /* ProfileUpdateLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUpdateLikesRequest.swift; sourceTree = "<group>"; };
+		866929D72F4F6049001B8B95 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		86C410CB2F38AA13006E4BAA /* WebViewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewScreen.swift; sourceTree = "<group>"; };
 		86C410CE2F38AA32006E4BAA /* DecompositionProfile.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DecompositionProfile.md; sourceTree = "<group>"; };
 		86E18CF82F4DE1D40073DD26 /* ProfileStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStateStore.swift; sourceTree = "<group>"; };
@@ -461,11 +462,12 @@
 			};
 			buildConfigurationList = ABC5E1632C31F5AF002B4068 /* Build configuration list for PBXProject "iOS-FakeNFT-Extended" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = ABC5E15F2C31F5AF002B4068;
 			packageReferences = (
@@ -614,6 +616,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8614752F2F388E6B00463967 /* en */,
+				866929D72F4F6049001B8B95 /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -626,6 +629,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -690,6 +694,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
