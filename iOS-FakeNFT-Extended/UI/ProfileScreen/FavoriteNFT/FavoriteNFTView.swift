@@ -31,7 +31,7 @@ struct FavoriteNFTView: View {
             Color.appWhite.ignoresSafeArea()
             content
         }
-        .navigationTitle("Избранные NFT")
+        .navigationTitle(ProfileConstants.FavoriteNFT.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadFavorites()
@@ -51,7 +51,7 @@ struct FavoriteNFTView: View {
             grid
 
         case .empty:
-            emptyView
+            ProfileEmptyView(screen: .favorite)
 
         case .error(let message):
             errorView(message: message)
@@ -65,24 +65,15 @@ struct FavoriteNFTView: View {
             LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(viewModel.nfts) { nft in
                     ProfileFavoriteNFTRow(nft: nft) {
-                        Task {
-                            await viewModel.removeFromFavorites(nft)
-                        }
+                        Task { await viewModel.removeFromFavorites(nft) }
                     }
                 }
             }
             .padding(.init(top: 20, leading: 16, bottom: 20, trailing: 16))
         }
         .refreshable {
-            await viewModel.loadFavorites()
+            await viewModel.retry()
         }
-    }
-
-    private var emptyView: some View {
-        Text("У вас еще нет избранных NFT")
-            .font(Font.bold17)
-            .foregroundStyle(.appBlack)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private func errorView(message: String) -> some View {
@@ -98,7 +89,7 @@ struct FavoriteNFTView: View {
                 .padding(.horizontal)
 
             Button(ProfileConstants.retryButton) {
-                Task { await viewModel.loadFavorites() }
+                Task { await viewModel.retry() }
             }
             .buttonStyle(.borderedProminent)
         }

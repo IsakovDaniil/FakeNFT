@@ -17,6 +17,7 @@
 		866699A12F475507005C513D /* ProfileUpdateLikesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 866699A02F475507005C513D /* ProfileUpdateLikesRequest.swift */; };
 		86C410CD2F38AA13006E4BAA /* WebViewScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C410CB2F38AA13006E4BAA /* WebViewScreen.swift */; };
 		86C410D02F38AA32006E4BAA /* DecompositionProfile.md in Resources */ = {isa = PBXBuildFile; fileRef = 86C410CE2F38AA32006E4BAA /* DecompositionProfile.md */; };
+		86E18CF92F4DE1ED0073DD26 /* ProfileStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E18CF82F4DE1D40073DD26 /* ProfileStateStore.swift */; };
 		86F4716F2F48B1AA008E03C0 /* UserDefaultsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F4716E2F48B1A8008E03C0 /* UserDefaultsStorage.swift */; };
 		86F8CEFC2F3F60350051E4FD /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F8CEFB2F3F602D0051E4FD /* ProfileService.swift */; };
 		86F8CEFE2F3F61940051E4FD /* ProfileStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86F8CEFD2F3F618C0051E4FD /* ProfileStorage.swift */; };
@@ -79,8 +80,10 @@
 		861E6F5D2F460A500071B69B /* ProfileMyNFTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileMyNFTService.swift; sourceTree = "<group>"; };
 		8666999E2F475461005C513D /* ProfileGetNFTRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileGetNFTRequest.swift; sourceTree = "<group>"; };
 		866699A02F475507005C513D /* ProfileUpdateLikesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUpdateLikesRequest.swift; sourceTree = "<group>"; };
+		866929D72F4F6049001B8B95 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		86C410CB2F38AA13006E4BAA /* WebViewScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewScreen.swift; sourceTree = "<group>"; };
 		86C410CE2F38AA32006E4BAA /* DecompositionProfile.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DecompositionProfile.md; sourceTree = "<group>"; };
+		86E18CF82F4DE1D40073DD26 /* ProfileStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStateStore.swift; sourceTree = "<group>"; };
 		86F4716E2F48B1A8008E03C0 /* UserDefaultsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsStorage.swift; sourceTree = "<group>"; };
 		86F8CEFB2F3F602D0051E4FD /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		86F8CEFD2F3F618C0051E4FD /* ProfileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStorage.swift; sourceTree = "<group>"; };
@@ -264,6 +267,7 @@
 		ABC5E19B2C31F69C002B4068 /* MemoryStorage */ = {
 			isa = PBXGroup;
 			children = (
+				86E18CF82F4DE1D40073DD26 /* ProfileStateStore.swift */,
 				86F8CEFD2F3F618C0051E4FD /* ProfileStorage.swift */,
 				ABC5E19C2C31F6A6002B4068 /* NftStorage.swift */,
 				86F4716E2F48B1A8008E03C0 /* UserDefaultsStorage.swift */,
@@ -458,11 +462,12 @@
 			};
 			buildConfigurationList = ABC5E1632C31F5AF002B4068 /* Build configuration list for PBXProject "iOS-FakeNFT-Extended" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = ABC5E15F2C31F5AF002B4068;
 			packageReferences = (
@@ -563,6 +568,7 @@
 				ABC5E1A12C31F6D7002B4068 /* Nft.swift in Sources */,
 				ABC5E1AE2C31FB7F002B4068 /* NftByIdRequest.swift in Sources */,
 				ABC5E1DB2C3204CE002B4068 /* UIView+Constraints.swift in Sources */,
+				86E18CF92F4DE1ED0073DD26 /* ProfileStateStore.swift in Sources */,
 				ABC5E1CB2C3203FC002B4068 /* NftDetailCellModel.swift in Sources */,
 				ABC5E1AB2C31FACD002B4068 /* NftService.swift in Sources */,
 				ABC5E1B22C31FBD4002B4068 /* ExampleRequest.swift in Sources */,
@@ -610,6 +616,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8614752F2F388E6B00463967 /* en */,
+				866929D72F4F6049001B8B95 /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -622,6 +629,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -686,6 +694,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

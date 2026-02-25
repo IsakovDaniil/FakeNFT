@@ -9,25 +9,25 @@ import SwiftUI
 import ProgressHUD
 
 struct MyNFTView: View {
-    
+
     // MARK: - Properties
-    
+
     @State private var viewModel: MyNFTViewModel
-    
+
     // MARK: - Init
-    
+
     init(viewModel: MyNFTViewModel) {
         self._viewModel = State(initialValue: viewModel)
     }
-    
+
     // MARK: - Body
-    
+
     var body: some View {
         ZStack {
             Color.appWhite.ignoresSafeArea()
             contentView
         }
-        .navigationTitle(MyNFTConstants.navigationTitle)
+        .navigationTitle(ProfileConstants.MyNFT.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -35,94 +35,80 @@ struct MyNFTView: View {
             }
         }
         .confirmationDialog(
-            MyNFTConstants.sortDialogTitle,
+            ProfileConstants.MyNFT.sortDialogTitle,
             isPresented: $viewModel.showSortSheet,
             titleVisibility: .visible
         ) {
             sortDialogButtons
         }
         .task {
-            if case .idle = viewModel.state {
-                await viewModel.loadNFTs()
-            }
+            await viewModel.loadNFTs()
         }
         .onChange(of: viewModel.isLoading) { _, isLoading in
-            if isLoading {
-                ProgressHUD.animate()
-            } else {
-                ProgressHUD.dismiss()
-            }
+            isLoading ? ProgressHUD.animate() : ProgressHUD.dismiss()
         }
-        .alert(MyNFTConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
-            Button(MyNFTConstants.retryButtonTitle) {
+        .alert(ProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
+            Button(ProfileConstants.MyNFT.retryButtonTitle) {
                 Task { await viewModel.retry() }
             }
-            Button(MyNFTConstants.cancelButtonTitle, role: .cancel) {}
+            Button(ProfileConstants.MyNFT.cancelButtonTitle, role: .cancel) {}
         } message: {
             if let message = viewModel.errorMessage {
                 Text(message)
             }
         }
     }
-    
+
     // MARK: - Content View
-    
+
     @ViewBuilder
     private var contentView: some View {
         switch viewModel.state {
-        case .idle, .loading:
+        case .loading:
             Color.clear
-            
+
         case .loaded:
             listView
-            
+
         case .empty:
-            emptyView
-            
+            ProfileEmptyView(screen: .myNFT)
+
         case .error:
             Color.clear
         }
-        
     }
-    
+
     // MARK: - Subviews
-    
+
     private var listView: some View {
         List(viewModel.sortedNFTs) { nft in
             ProfileMyNFTRow(
                 nft: nft,
                 onLikeTap: {
-                    Task {
-                        await viewModel.toggleFavorite(nftID: nft.id)
-                    }
+                    Task { await viewModel.toggleFavorite(nftID: nft.id) }
                 }
             )
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 39))
+            .listRowBackground(Color.appWhite)
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(.appWhite)
         .refreshable {
             await viewModel.refresh()
         }
     }
-    
-    private var emptyView: some View {
-        Text(MyNFTConstants.emptyStateText)
-            .font(Font.bold17)
-            .foregroundStyle(.appBlack)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-    
+
     private var sortButton: some View {
         Button {
             viewModel.showSortSheet = true
         } label: {
-            Image(.sort)
-                .foregroundStyle(.appBlack)
+            Image(.sort).foregroundStyle(.appBlack)
         }
         .disabled(viewModel.isEmpty || viewModel.isLoading)
     }
-    
+
     @ViewBuilder
     private var sortDialogButtons: some View {
         ForEach(ProfileNFTSortType.allCases, id: \.self) { sortType in
@@ -130,28 +116,6 @@ struct MyNFTView: View {
                 viewModel.changeSortType(sortType)
             }
         }
-        
-        Button(MyNFTConstants.closeButtonTitle, role: .cancel) {}
-    }
-}
-
-#Preview("Loaded") {
-    let profile = UserProfile(
-        name: "Test User",
-        avatar: "",
-        description: "",
-        website: "",
-        myNfts: ["e8c1f0b6-5caf-4f65-8e5b-12f4bcb29efb"],
-        favoriteNfts: [],
-        id: "1"
-    )
-    
-    NavigationStack {
-        MyNFTView(
-            viewModel: MyNFTViewModel(
-                service: ProfileMyNFTService(networkClient: DefaultNetworkClient()),
-                profile: profile
-            )
-        )
+        Button(ProfileConstants.MyNFT.closeButtonTitle, role: .cancel) {}
     }
 }

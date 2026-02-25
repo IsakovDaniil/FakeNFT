@@ -44,9 +44,7 @@ struct EditProfileView: View {
             .background(Color.appWhite)
             .simultaneousGesture(
                 TapGesture()
-                    .onEnded { _ in
-                        hideKeyboard()
-                    }
+                    .onEnded { _ in hideKeyboard() }
             )
             
             if viewModel.hasChanges && !viewModel.isSaving {
@@ -63,14 +61,9 @@ struct EditProfileView: View {
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.hasChanges)
         .onChange(of: viewModel.isSaving) { _, isSaving in
-            if isSaving {
-                ProgressHUD.animate()
-            } else {
-                ProgressHUD.dismiss()
-            }
+            isSaving ? ProgressHUD.animate() : ProgressHUD.dismiss()
         }
         .navigationBarBackButtonHidden(true)
-        
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button {
@@ -85,42 +78,42 @@ struct EditProfileView: View {
                 }
             }
         }
-        .confirmationDialog(EditProfileConstants.avatarActionSheetTitle, isPresented: $viewModel.showActionSheet, titleVisibility: .visible) {
-            Button(EditProfileConstants.changePhoto) {
+        .confirmationDialog(
+            ProfileConstants.EditProfile.avatarActionSheetTitle,
+            isPresented: $viewModel.showActionSheet,
+            titleVisibility: .visible
+        ) {
+            Button(ProfileConstants.EditProfile.changePhoto) {
                 viewModel.changeAvatar()
             }
-            
-            Button(EditProfileConstants.deletePhoto, role: .destructive) {
+            Button(ProfileConstants.EditProfile.deletePhoto, role: .destructive) {
                 viewModel.deleteAvatar()
             }
-            
-            Button(EditProfileConstants.cancel, role: .cancel) {}
+            Button(ProfileConstants.EditProfile.cancel, role: .cancel) {}
         }
-        .alert(EditProfileConstants.urlAlertTitle, isPresented: $viewModel.showURLAlert) {
-            TextField(EditProfileConstants.urlPlaceholder, text: $viewModel.urlInput)
+        .alert(ProfileConstants.EditProfile.urlAlertTitle, isPresented: $viewModel.showURLAlert) {
+            TextField(ProfileConstants.EditProfile.urlPlaceholder, text: $viewModel.urlInput)
                 .textInputAutocapitalization(.never)
                 .keyboardType(.URL)
                 .onChange(of: viewModel.urlInput) { _, _ in
                     viewModel.hasUnsavedURLChanges = true
                 }
-            
-            Button(EditProfileConstants.cancel, role: .cancel) {
+            Button(ProfileConstants.EditProfile.cancel, role: .cancel) {
                 viewModel.cancelURLInput()
             }
-            
-            Button(EditProfileConstants.save) {
+            Button(ProfileConstants.EditProfile.save) {
                 viewModel.saveAvatarURL()
             }
             .disabled(viewModel.urlInput.isEmpty)
         }
-        .alert(EditProfileConstants.exitConfirmationTitle, isPresented: $viewModel.showExitAlert) {
-            Button(EditProfileConstants.stay, role: .cancel) {}
-            Button(EditProfileConstants.exit, role: .destructive) {
+        .alert(ProfileConstants.EditProfile.exitConfirmationTitle, isPresented: $viewModel.showExitAlert) {
+            Button(ProfileConstants.EditProfile.stay, role: .cancel) {}
+            Button(ProfileConstants.EditProfile.exit, role: .destructive) {
                 dismiss()
             }
         }
-        .alert(EditProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
-            Button(EditProfileConstants.okey, role: .cancel) {}
+        .alert(ProfileConstants.errorAlertTitle, isPresented: $viewModel.showErrorAlert) {
+            Button(ProfileConstants.EditProfile.okay, role: .cancel) {}
         } message: {
             if let message = viewModel.errorMessage {
                 Text(message)
@@ -133,7 +126,7 @@ struct EditProfileView: View {
     private func setupCallbacks() {
         viewModel.onProfileSaved = { [onProfileUpdated, dismiss] in
             Task { @MainActor in
-                ProgressHUD.succeed(EditProfileConstants.savedMessage)
+                ProgressHUD.succeed(ProfileConstants.EditProfile.savedMessage)
                 try? await Task.sleep(for: .seconds(0.5))
                 dismiss()
                 onProfileUpdated?()
@@ -154,19 +147,19 @@ private extension EditProfileView {
         ProfileAvatar(
             urlString: viewModel.avatarURL.isEmpty ? nil : viewModel.avatarURL,
             editMode: true,
-            onTap: {
-                viewModel.openAvatarActionSheet()
-            }
+            onTap: { viewModel.openAvatarActionSheet() }
         )
     }
     
     var fieldsSection: some View {
         VStack(spacing: 20) {
             VStack(alignment: .leading, spacing: 4) {
-                EditProfileField(title: EditProfileConstants.FieldTitles.name, text: $viewModel.name, isMultiline: false)
-                    .onChange(of: viewModel.name) { _, _ in
-                        viewModel.validateName()
-                    }
+                EditProfileField(
+                    title: ProfileConstants.EditProfile.fieldName,
+                    text: $viewModel.name,
+                    isMultiline: false
+                )
+                .onChange(of: viewModel.name) { _, _ in viewModel.validateName() }
                 
                 if let error = viewModel.nameError {
                     Text(error)
@@ -176,10 +169,12 @@ private extension EditProfileView {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                EditProfileField(title: EditProfileConstants.FieldTitles.description, text: $viewModel.description, isMultiline: true)
-                    .onChange(of: viewModel.description) { _, _ in
-                        viewModel.validateDescription()
-                    }
+                EditProfileField(
+                    title: ProfileConstants.EditProfile.fieldDescription,
+                    text: $viewModel.description,
+                    isMultiline: true
+                )
+                .onChange(of: viewModel.description) { _, _ in viewModel.validateDescription() }
                 
                 if let error = viewModel.descriptionError {
                     Text(error)
@@ -189,10 +184,12 @@ private extension EditProfileView {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                EditProfileField(title: EditProfileConstants.FieldTitles.website, text: $viewModel.website, isMultiline: false)
-                    .onChange(of: viewModel.website) { _, _ in
-                        viewModel.validateWebsite()
-                    }
+                EditProfileField(
+                    title: ProfileConstants.EditProfile.fieldWebsite,
+                    text: $viewModel.website,
+                    isMultiline: false
+                )
+                .onChange(of: viewModel.website) { _, _ in viewModel.validateWebsite() }
                 
                 if let error = viewModel.websiteError {
                     Text(error)
@@ -204,11 +201,9 @@ private extension EditProfileView {
     }
     
     var buttonSection: some View {
-        EditProfileButton(name: EditProfileConstants.save) {
+        EditProfileButton(name: ProfileConstants.EditProfile.save) {
             hideKeyboard()
-            Task {
-                await viewModel.saveProfile()
-            }
+            Task { await viewModel.saveProfile() }
         }
         .disabled(!viewModel.canSave || viewModel.isSaving)
     }

@@ -9,7 +9,7 @@ import Foundation
 
 enum ProfileNFTSortType: String, CaseIterable {
     case price = "По цене"
-    case rating = "По рейтенгу"
+    case rating = "По рейтингу"
     case name = "По названию"
     
     var title: String {

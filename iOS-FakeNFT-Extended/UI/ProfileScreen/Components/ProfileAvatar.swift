@@ -6,24 +6,28 @@
 //
 
 import SwiftUI
-import Kingfisher
 
 struct ProfileAvatar: View {
+
+    // MARK: - Properties
+
     let urlString: String?
     let editMode: Bool
     var onTap: (() -> Void)?
-    
+
     private let size: CGFloat = 70
-    
+
     private var url: URL? {
         guard let urlString else { return nil }
         return URL(string: urlString.hasPrefix("http") ? urlString : "https://\(urlString)")
     }
-    
+
+    // MARK: - Body
+
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             avatarView
-            
+
             if editMode {
                 Image(.camera)
                     .resizable()
@@ -37,22 +41,29 @@ struct ProfileAvatar: View {
             }
         }
     }
-    
+
+    // MARK: - Subviews
+
     @ViewBuilder
     private var avatarView: some View {
-        if let url {
-            KFImage(url)
-                .resizable()
-                .placeholder {
-                    placeholderView
-                }
-                .onFailure { _ in }
-                .scaledToFill()
-                .frame(width: size, height: size)
-                .clipShape(Circle())
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .empty:
+                placeholderView
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: size, height: size)
+                    .clipShape(Circle())
+            case .failure:
+                placeholderView
+            @unknown default:
+                placeholderView
+            }
         }
     }
-    
+
     private var placeholderView: some View {
         Image(.placeholderAvatar)
             .resizable()
@@ -62,6 +73,8 @@ struct ProfileAvatar: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     VStack(spacing: 20) {
         ProfileAvatar(
@@ -69,12 +82,12 @@ struct ProfileAvatar: View {
             editMode: true,
             onTap: { print("Tap") }
         )
-        
+
         ProfileAvatar(
             urlString: nil,
             editMode: false
         )
-        
+
         ProfileAvatar(
             urlString: "https://picsum.photos/200",
             editMode: true

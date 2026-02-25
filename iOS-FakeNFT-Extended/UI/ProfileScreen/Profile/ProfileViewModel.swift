@@ -13,17 +13,7 @@ final class ProfileViewModel {
     
     // MARK: - Dependencies
     
-    private let profileService: ProfileServiceProtocol
-    
-    // MARK: - State
-    
-    enum ViewState {
-        case idle, loading
-        case loaded(UserProfile)
-        case error(Error)
-    }
-    
-    var state: ViewState = .idle
+    private let store: ProfileStateStore
     
     // MARK: - Alert State
     
@@ -39,48 +29,33 @@ final class ProfileViewModel {
     
     // MARK: - Computed Properties
     
-    var profile: UserProfile? {
-        if case .loaded(let profile) = state {
-            return profile
-        }
-        return nil
-    }
+    var profile: UserProfile? { store.profile }
     
     var isLoading: Bool {
-        if case .loading = state { return true }
+        if case .loading = store.loadingState { return true }
         return false
     }
     
     // MARK: - Init
     
-    init(profileService: ProfileServiceProtocol) {
-        self.profileService = profileService
+    init(store: ProfileStateStore) {
+        self.store = store
     }
     
     // MARK: - Methods
     
     func loadProfile() async {
-        state = .loading
-        
-        do {
-            let profile = try await profileService.loadProfile(forceRefresh: true)
-            state = .loaded(profile)
-        } catch {
-            handleError(error)
-        }
+        await store.loadAll()
+        handleStoreError()
     }
     
     func retry() async {
-        await loadProfile()
+        await store.loadAll(forceRefresh: true)
+        handleStoreError()
     }
     
     func refreshProfile() async {
-        do {
-            let profile = try await profileService.loadProfile(forceRefresh: true)
-            state = .loaded(profile)
-        } catch {
-            print("⚠️ Silent refresh failed: \(error)")
-        }
+        await store.loadAll(forceRefresh: true)
     }
     
     // MARK: - Navigation Actions
@@ -105,39 +80,24 @@ final class ProfileViewModel {
     
     // MARK: - Factory Methods
     
-    func createEditViewModel() -> EditProfileViewModel? {
+    func createEditViewModel(profileService: ProfileServiceProtocol) -> EditProfileViewModel {
         EditProfileViewModel(profileService: profileService)
     }
     
-    func createFavoriteNFTViewModel(servicesAssembly: ServicesAssembly) -> FavoriteNFTViewModel {
-        FavoriteNFTViewModel(
-            profileService: profileService,
-            nftService: servicesAssembly.profileMyNFTService
-        )
+    func createMyNFTViewModel() -> MyNFTViewModel {
+        MyNFTViewModel(store: store)
     }
     
-    // MARK: - Private Methods
+    func createFavoriteNFTViewModel() -> FavoriteNFTViewModel {
+        FavoriteNFTViewModel(store: store)
+    }
     
-    private func handleError(_ error: Error) {
-        state = .error(error)
-        
-        if let networkError = error as? NetworkClientError {
-            switch networkError {
-            case .httpStatusCode(let code):
-                errorMessage = ProfileConstants.ErrorMessages.serverErrorPrefix + "\(code)"
-            case .urlSessionError:
-                errorMessage = ProfileConstants.ErrorMessages.connectionError
-            case .parsingError:
-                errorMessage = ProfileConstants.ErrorMessages.parsingError
-            case .incorrectRequest(let message):
-                errorMessage = ProfileConstants.ErrorMessages.invalidRequestPrefix + message
-            case .urlRequestError:
-                errorMessage = ProfileConstants.ErrorMessages.networkError
-            }
-        } else {
-            errorMessage = ProfileConstants.defaultErrorMessage
+    // MARK: - Private
+    
+    private func handleStoreError() {
+        if case .error(let message) = store.loadingState {
+            errorMessage = message
+            showErrorAlert = true
         }
-        
-        showErrorAlert = true
     }
 }
