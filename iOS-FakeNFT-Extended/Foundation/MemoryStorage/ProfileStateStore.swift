@@ -8,6 +8,7 @@
 
 import Foundation
 import Observation
+import OSLog
 
 @Observable
 @MainActor
@@ -15,6 +16,7 @@ final class ProfileStateStore {
 
     // MARK: - Dependencies
 
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "app", category: "ProfileStateStore")
     private let profileService: ProfileServiceProtocol
     private let nftService: ProfileMyNFTServiceProtocol
 
@@ -45,8 +47,6 @@ final class ProfileStateStore {
     func loadAll(forceRefresh: Bool = false) async {
         guard forceRefresh || profile == nil else { return }
 
-        // При первой загрузке показываем спиннер.
-        // При рефреше — держим старые данные, чтобы список не пропадал.
         if profile == nil {
             loadingState = .loading
         } else {
@@ -63,7 +63,6 @@ final class ProfileStateStore {
 
             let favoriteSet = Set(fetchedProfile.favoriteNfts)
 
-            // Обновляем всё атомарно — только после получения всех данных
             profile = fetchedProfile
             myNFTs = fetchedMy.map { nft in
                 var copy = nft
@@ -79,8 +78,8 @@ final class ProfileStateStore {
             loadingState = .loaded
 
         } catch {
-            // При ошибке рефреша не затираем старые данные
             loadingState = .error(errorMessage(from: error))
+            logger.error("Failed to load profile data: \(error.localizedDescription)")
         }
     }
 
@@ -94,6 +93,7 @@ final class ProfileStateStore {
 
         myNFTs = myNFTs.map { nft in
             guard nft.id == nftID else { return nft }
+            
             var copy = nft
             copy.isFavorite = !wasLiked
             return copy
@@ -125,8 +125,10 @@ final class ProfileStateStore {
             return true
 
         } catch {
+            logger.error("Failed to toggle favorite for NFT \(nftID): \(error.localizedDescription)")
             myNFTs = myNFTs.map { nft in
                 guard nft.id == nftID else { return nft }
+                
                 var copy = nft
                 copy.isFavorite = wasLiked
                 return copy
