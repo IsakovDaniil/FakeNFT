@@ -11,99 +11,99 @@ enum ProfileConstants {
     
     // MARK: - Navigation
     
-    static let navigationTitle = "Профиль"
+    static let navigationTitle = NSLocalizedString("Profile.navigationTitle", comment: "")
     
     // MARK: - Alerts
     
-    static let errorAlertTitle = "Ошибка"
-    static let retryButton = "Повторить"
-    static let cancelButton = "Отмена"
-    static let defaultErrorMessage = "Не удалось загрузить профиль"
+    static let errorAlertTitle = NSLocalizedString("Profile.errorAlertTitle", comment: "")
+    static let retryButton = NSLocalizedString("Profile.retryButton", comment: "")
+    static let cancelButton = NSLocalizedString("Profile.cancelButton", comment: "")
+    static let defaultErrorMessage = NSLocalizedString("Profile.defaultErrorMessage", comment: "")
     
     // MARK: - Error Messages
     
     enum ErrorMessages {
-        static let serverErrorPrefix = "Ошибка сервера: "
-        static let connectionError = "Ошибка подключения"
-        static let parsingError = "Ошибка обработки данных"
-        static let invalidRequestPrefix = "Некорректный запрос: "
-        static let networkError = "Ошибка сети"
+        static let serverErrorPrefix = NSLocalizedString("Profile.ErrorMessages.serverErrorPrefix", comment: "")
+        static let connectionError = NSLocalizedString("Profile.ErrorMessages.connectionError", comment: "")
+        static let parsingError = NSLocalizedString("Profile.ErrorMessages.parsingError", comment: "")
+        static let invalidRequestPrefix = NSLocalizedString("Profile.ErrorMessages.invalidRequestPrefix", comment: "")
+        static let networkError = NSLocalizedString("Profile.ErrorMessages.networkError", comment: "")
     }
     
     // MARK: - Menu
     
     enum Menu {
-        static let myNFTTitle = "Мои NFT"
-        static let favoriteNFTTitle = "Избранные NFT"
+        static let myNFTTitle = NSLocalizedString("Profile.Menu.myNFTTitle", comment: "")
+        static let favoriteNFTTitle = NSLocalizedString("Profile.Menu.favoriteNFTTitle", comment: "")
     }
     
     // MARK: - Empty State
     
     enum EmptyState {
-        static let myNFT = "У вас ещё нет NFT"
-        static let favorite = "У вас ещё нет избранных NFT"
+        static let myNFT = NSLocalizedString("Profile.EmptyState.myNFT", comment: "")
+        static let favorite = NSLocalizedString("Profile.EmptyState.favorite", comment: "")
     }
     
     // MARK: - Sort
     
     enum Sort {
-        static let byPrice = "По цене"
-        static let byRating = "По рейтингу"
-        static let byName = "По названию"
+        static let byPrice = NSLocalizedString("Profile.Sort.byPrice", comment: "")
+        static let byRating = NSLocalizedString("Profile.Sort.byRating", comment: "")
+        static let byName = NSLocalizedString("Profile.Sort.byName", comment: "")
     }
     
     // MARK: - My NFT
     
     enum MyNFT {
-        static let navigationTitle = "Мои NFT"
-        static let sortDialogTitle = "Сортировка"
-        static let closeButtonTitle = "Закрыть"
-        static let retryButtonTitle = "Повторить"
-        static let cancelButtonTitle = "Отмена"
-        static let favoriteUpdateErrorMessage = "Не удалось обновить избранное"
+        static let navigationTitle = NSLocalizedString("Profile.MyNFT.navigationTitle", comment: "")
+        static let sortDialogTitle = NSLocalizedString("Profile.MyNFT.sortDialogTitle", comment: "")
+        static let closeButtonTitle = NSLocalizedString("Profile.MyNFT.closeButtonTitle", comment: "")
+        static let retryButtonTitle = NSLocalizedString("Profile.MyNFT.retryButtonTitle", comment: "")
+        static let cancelButtonTitle = NSLocalizedString("Profile.MyNFT.cancelButtonTitle", comment: "")
+        static let favoriteUpdateErrorMessage = NSLocalizedString("Profile.MyNFT.favoriteUpdateErrorMessage", comment: "")
     }
     
     // MARK: - Favorite NFT
     
     enum FavoriteNFT {
-        static let navigationTitle = "Избранные NFT"
-        static let favoriteUpdateErrorMessage = "Не удалось обновить избранное"
+        static let navigationTitle = NSLocalizedString("Profile.FavoriteNFT.navigationTitle", comment: "")
+        static let favoriteUpdateErrorMessage = NSLocalizedString("Profile.FavoriteNFT.favoriteUpdateErrorMessage", comment: "")
     }
     
     // MARK: - Edit Profile
     
     enum EditProfile {
-        static let avatarActionSheetTitle = "Фото профиля"
-        static let urlAlertTitle = "Ссылка на фото"
-        static let exitConfirmationTitle = "Уверены, что хотите выйти?"
-        static let changePhoto = "Изменить фото"
-        static let deletePhoto = "Удалить фото"
-        static let cancel = "Отмена"
-        static let save = "Сохранить"
-        static let stay = "Остаться"
-        static let exit = "Выйти"
-        static let okay = "OK"
-        static let urlPlaceholder = "https://example.com/"
-        static let savedMessage = "Сохранено"
-        static let unsavedChangesMessage = "Несохранённые изменения будут потеряны"
-        static let defaultErrorMessage = "Не удалось сохранить профиль"
-        static let profileNotFoundError = "Не удалось найти исходный профиль"
-        static let fieldName = "Имя"
-        static let fieldDescription = "Описание"
-        static let fieldWebsite = "Сайт"
+        static let avatarActionSheetTitle = NSLocalizedString("Profile.EditProfile.avatarActionSheetTitle", comment: "")
+        static let urlAlertTitle = NSLocalizedString("Profile.EditProfile.urlAlertTitle", comment: "")
+        static let exitConfirmationTitle = NSLocalizedString("Profile.EditProfile.exitConfirmationTitle", comment: "")
+        static let changePhoto = NSLocalizedString("Profile.EditProfile.changePhoto", comment: "")
+        static let deletePhoto = NSLocalizedString("Profile.EditProfile.deletePhoto", comment: "")
+        static let cancel = NSLocalizedString("Profile.EditProfile.cancel", comment: "")
+        static let save = NSLocalizedString("Profile.EditProfile.save", comment: "")
+        static let stay = NSLocalizedString("Profile.EditProfile.stay", comment: "")
+        static let exit = NSLocalizedString("Profile.EditProfile.exit", comment: "")
+        static let okay = NSLocalizedString("Profile.EditProfile.okay", comment: "")
+        static let urlPlaceholder = NSLocalizedString("Profile.EditProfile.urlPlaceholder", comment: "")
+        static let savedMessage = NSLocalizedString("Profile.EditProfile.savedMessage", comment: "")
+        static let unsavedChangesMessage = NSLocalizedString("Profile.EditProfile.unsavedChangesMessage", comment: "")
+        static let defaultErrorMessage = NSLocalizedString("Profile.EditProfile.defaultErrorMessage", comment: "")
+        static let profileNotFoundError = NSLocalizedString("Profile.EditProfile.profileNotFoundError", comment: "")
+        static let fieldName = NSLocalizedString("Profile.EditProfile.fieldName", comment: "")
+        static let fieldDescription = NSLocalizedString("Profile.EditProfile.fieldDescription", comment: "")
+        static let fieldWebsite = NSLocalizedString("Profile.EditProfile.fieldWebsite", comment: "")
     }
     
     // MARK: - Validation
     
     enum Validation {
-        static let nameEmpty = "Имя не может быть пустым"
-        static let nameTooShort = "Имя должно содержать минимум 2 символа"
-        static let nameTooLong = "Имя не должно превышать 30 символов"
-        static let descriptionEmpty = "Описание не может быть пустым"
-        static let descriptionTooLong = "Описание не может быть длиннее 300 символов"
-        static let websiteInvalidFormat = "Неверный формат сайта. Пример: example.com"
-        static let urlInvalidFormat = "Неверный формат URL"
-        static let urlInvalidScheme = "URL должен начинаться с http:// или https://"
-        static let urlInvalidExtension = "Поддерживаемые форматы: JPG, PNG, JPEG, WEBP"
+        static let nameEmpty = NSLocalizedString("Profile.Validation.nameEmpty", comment: "")
+        static let nameTooShort = NSLocalizedString("Profile.Validation.nameTooShort", comment: "")
+        static let nameTooLong = NSLocalizedString("Profile.Validation.nameTooLong", comment: "")
+        static let descriptionEmpty = NSLocalizedString("Profile.Validation.descriptionEmpty", comment: "")
+        static let descriptionTooLong = NSLocalizedString("Profile.Validation.descriptionTooLong", comment: "")
+        static let websiteInvalidFormat = NSLocalizedString("Profile.Validation.websiteInvalidFormat", comment: "")
+        static let urlInvalidFormat = NSLocalizedString("Profile.Validation.urlInvalidFormat", comment: "")
+        static let urlInvalidScheme = NSLocalizedString("Profile.Validation.urlInvalidScheme", comment: "")
+        static let urlInvalidExtension = NSLocalizedString("Profile.Validation.urlInvalidExtension", comment: "")
     }
 }
