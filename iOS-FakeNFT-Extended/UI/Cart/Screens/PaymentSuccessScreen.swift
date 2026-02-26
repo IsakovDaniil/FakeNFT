@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-struct OrderSuccessScreen: View {
+struct PaymentSuccessScreen: View {
+    @Environment(CartRouter.self) private var router
+    
     var body: some View {
         VStack {
             Spacer()
@@ -22,7 +24,7 @@ struct OrderSuccessScreen: View {
             Spacer()
             
             CartButton(title: CartLn.paymentBackButton) {
-                
+                router.popToRoot()
             }
         }
         .padding(.horizontal, 16)
@@ -31,5 +33,5 @@ struct OrderSuccessScreen: View {
 }
 
 #Preview {
-    OrderSuccessScreen()
+    PaymentSuccessScreen()
 }

@@ -5,7 +5,9 @@
 //  Created by Sultan Akhmetbek on 12.02.2026.
 //
 
-struct Currency: Decodable {
+import Foundation
+
+struct Currency: Decodable, Identifiable, Equatable {
     let id: String
     let title: String
     let name: String

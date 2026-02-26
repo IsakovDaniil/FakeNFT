@@ -5,7 +5,7 @@ protocol OrderService {
     func save(_ nfts: [String]) async throws -> Order
     func orderAndClear() async throws -> Order
     func loadCurrencies() async throws -> [Currency]
-    func payment(withCurrencyId id: String) async throws -> PaymentResult
+    func payment() async throws -> PaymentResult
 }
 
 @MainActor
@@ -42,8 +42,8 @@ final class OrderServiceImpl: OrderService {
         return items
     }
     
-    func payment(withCurrencyId id: String) async throws -> PaymentResult {
-        let request = PaymentRequest(currencyId: id)
+    func payment() async throws -> PaymentResult {
+        let request = PaymentRequest()
         let result: PaymentResult = try await networkClient.send(request: request)
         return result
     }

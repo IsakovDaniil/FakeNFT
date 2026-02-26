@@ -12,6 +12,7 @@ enum CartViewState: Equatable {
     case idle
     case loading
     case data
+    case checkoutSuccess
     case error(String)
 }
 
@@ -24,6 +25,7 @@ final class CartViewModel {
     private(set) var currencies: [Currency] = []
     private(set) var nftToDelete: Nft?
     private(set) var currencyToPay: Currency?
+    var errorWrapper: ErrorWrapper?
     
     @ObservationIgnored
     @AppStorage(Constants.cartSortType)
@@ -201,15 +203,13 @@ final class CartViewModel {
         do {
             let items = try await orderService.loadCurrencies()
             currencies = items
-            
             state = .data
         } catch {
             state = .error(error.localizedDescription)
         }
     }
     
-    func setCurrency(_ currency: Currency) {
-        if self.currencyToPay?.id == currency.id { return }
+    func setCurrency(_ currency: Currency?) {
         self.currencyToPay = currency
     }
     
@@ -218,13 +218,23 @@ final class CartViewModel {
         state = .loading
         
         do {
-            let result = try await orderService.payment(withCurrencyId: currencyToPay.id)
+            let result = try await orderService.payment()
             if result.success {
-                await loadOrder()
+                await clearOrder()
+                state = .checkoutSuccess
             } else {
                 state = .error(CartLn.paymentErrorText)
             }
         } catch {
+            errorWrapper = ErrorWrapper(
+                "Не удалось произвести оплату",
+                retry: { [weak self] in
+                    Task {
+                        await self?.makePayment()
+                    }
+                }
+            )
+
             state = .error(error.localizedDescription)
         }
     }

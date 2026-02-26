@@ -9,6 +9,7 @@ import SwiftUI
 import ProgressHUD
 
 struct CartScreen: View {
+    @Environment(CartRouter.self) private var router
     @Environment(CartViewModel.self) private var viewModel
     @State private var isShowingSortSheet: Bool = false
     
@@ -43,34 +44,50 @@ struct CartScreen: View {
                     ProgressHUD.animate()
                 }
             }
-            .toolbar {
-                if !viewModel.nfts.isEmpty {
-                    ToolbarItem {
-                        Button {
-                            isShowingSortSheet = true
-                        } label: {
-                            Image(.sort)
-                                .foregroundStyle(.appBlack)
-                        }
+        }
+        .background(.appWhite)
+        .task {
+            await viewModel.loadOrder()
+        }
+        .onChange(of: viewModel.state) { _, newValue in
+            switch newValue {
+            case .loading:
+                ProgressHUD.animate()
+            case .data, .checkoutSuccess:
+                ProgressHUD.dismiss()
+            case .error(let message):
+                ProgressHUD.error(message)
+            case .idle:
+                ProgressHUD.animate()
+            }
+        }
+        .toolbar {
+            if !viewModel.nfts.isEmpty {
+                ToolbarItem {
+                    Button {
+                        isShowingSortSheet = true
+                    } label: {
+                        Image(.sort)
+                            .foregroundStyle(.appBlack)
                     }
                 }
             }
-            .confirmationDialog(
-                CartLn.cartSortTitle,
-                isPresented: $isShowingSortSheet,
-                titleVisibility: .visible
-            ) {
-                ForEach(CartSortType.allCases, id: \.self) { type in
-                    Button {
-                        viewModel.setSort(type)
-                        isShowingSortSheet = false
-                    } label: {
-                        Text(type.title)
-                    }
-                }
-                Button(CartLn.cartSortClose, role: .cancel) {
+        }
+        .confirmationDialog(
+            CartLn.cartSortTitle,
+            isPresented: $isShowingSortSheet,
+            titleVisibility: .visible
+        ) {
+            ForEach(CartSortType.allCases, id: \.self) { type in
+                Button {
+                    viewModel.setSort(type)
                     isShowingSortSheet = false
+                } label: {
+                    Text(type.title)
                 }
+            }
+            Button(CartLn.cartSortClose, role: .cancel) {
+                isShowingSortSheet = false
             }
         }
     }
