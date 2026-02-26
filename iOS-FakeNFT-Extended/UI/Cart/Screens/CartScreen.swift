@@ -20,12 +20,29 @@ struct CartScreen: View {
     }
 
     var body: some View {
-        Group {
-            if !viewModel.nfts.isEmpty {
-                CartListView(viewModel: viewModel, nfts: viewModel.nfts)
-                    .environment(router)
-            } else {
-                CartEmptyView()
+        NavigationStack {
+            Group {
+                if !viewModel.nfts.isEmpty {
+                    CartListView(viewModel: viewModel, nfts: viewModel.nfts)
+                } else {
+                    CartEmptyView()
+                }
+            }
+            .background(.appWhite)
+            .task {
+                await viewModel.loadOrder()
+            }
+            .onChange(of: viewModel.state) { _, newState in
+                switch newState {
+                case .loading:
+                    ProgressHUD.animate()
+                case .data:
+                    ProgressHUD.dismiss()
+                case .error(let message):
+                    ProgressHUD.error(message)
+                case .idle:
+                    ProgressHUD.animate()
+                }
             }
         }
         .background(.appWhite)

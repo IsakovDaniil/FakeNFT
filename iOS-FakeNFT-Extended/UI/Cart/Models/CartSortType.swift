@@ -7,9 +7,9 @@ enum CartSortType: String, CaseIterable {
 
     var title: String {
         switch self {
-        case .price: return CartLn.cartSortTypePrice
-        case .rating: return CartLn.cartSortTypeRating
-        case .name: return CartLn.cartSortTypeName
+        case .price: CartLn.cartSortTypePrice
+        case .rating: CartLn.cartSortTypeRating
+        case .name: CartLn.cartSortTypeName
         }
     }
 }
