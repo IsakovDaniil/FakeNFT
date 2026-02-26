@@ -1,6 +1,5 @@
 import Foundation
 
-// Centralized storage for mock NFT data
 enum NftMock {
     static var mockNFT: Nft {
         Nft(

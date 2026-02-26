@@ -24,4 +24,10 @@ enum CartLn {
     static let cartSortTypeName = NSLocalizedString("cart.sort.type.name", comment: "")
     static let cartSortTypePrice = NSLocalizedString("cart.sort.type.price", comment: "")
     static let cartSortTypeRating = NSLocalizedString("cart.sort.type.rating", comment: "")
+    static let cartPaymentAgreementTitle = NSLocalizedString("cart.payment.agreement.title", comment: "")
+    static let cartPaymentAgreement = NSLocalizedString("cart.payment.agreement", comment: "")
+    static let cartPayment = NSLocalizedString("cart.payment", comment: "")
+    static let cartPaymentTitle = NSLocalizedString("cart.payment.title", comment: "")
+    static let cancel = NSLocalizedString("cancel", comment: "")
+    static let errorRepeat = NSLocalizedString("Error.repeat", comment: "")
 }
