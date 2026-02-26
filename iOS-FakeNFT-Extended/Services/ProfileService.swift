@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 // MARK: - Profile Service Protocol
 
@@ -22,6 +23,7 @@ final class ProfileService: ProfileServiceProtocol {
     private let networkClient: NetworkClient
     private let storage: ProfileStorageProtocol
     private let decoder = JSONDecoder()
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "app", category: "ProfileService")
     
     init(
         networkClient: NetworkClient,
@@ -40,7 +42,7 @@ final class ProfileService: ProfileServiceProtocol {
                     let freshProfile = try await fetchProfileFromNetwork()
                     await storage.saveProfile(freshProfile)
                 } catch {
-                    print("⚠️ Background refresh failed: \(error)")
+                    logger.warning("Background refresh failed: \(error.localizedDescription)")
                 }
             }
             

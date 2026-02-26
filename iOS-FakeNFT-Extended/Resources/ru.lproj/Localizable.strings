@@ -1,0 +1,99 @@
+// MARK: - Existing
+
+"Tab.catalog" = "Каталог";
+"Catalog.openNft" = "Открыть Nft";
+"Error.network" = "Произошла ошибка сети";
+"Error.unknown" = "Произошла неизвестная ошибка";
+"Error.repeat" = "Повторить";
+"Error.title" = "Ошибка";
+
+// MARK: - Profile Navigation
+
+"Profile.navigationTitle" = "Профиль";
+
+// MARK: - Profile Alerts
+
+"Profile.errorAlertTitle" = "Ошибка";
+"Profile.retryButton" = "Повторить";
+"Profile.cancelButton" = "Отмена";
+"Profile.defaultErrorMessage" = "Не удалось загрузить профиль";
+
+// MARK: - Profile Error Messages
+
+"Profile.ErrorMessages.serverErrorPrefix" = "Ошибка сервера: ";
+"Profile.ErrorMessages.connectionError" = "Ошибка подключения";
+"Profile.ErrorMessages.parsingError" = "Ошибка обработки данных";
+"Profile.ErrorMessages.invalidRequestPrefix" = "Некорректный запрос: ";
+"Profile.ErrorMessages.networkError" = "Ошибка сети";
+
+// MARK: - Profile Menu
+
+"Profile.Menu.myNFTTitle" = "Мои NFT";
+"Profile.Menu.favoriteNFTTitle" = "Избранные NFT";
+
+// MARK: - Profile Empty State
+
+"Profile.EmptyState.myNFT" = "У вас ещё нет NFT";
+"Profile.EmptyState.favorite" = "У вас ещё нет избранных NFT";
+
+// MARK: - Profile Sort
+
+"Profile.Sort.byPrice" = "По цене";
+"Profile.Sort.byRating" = "По рейтингу";
+"Profile.Sort.byName" = "По названию";
+
+// MARK: - My NFT
+
+"Profile.MyNFT.navigationTitle" = "Мои NFT";
+"Profile.MyNFT.sortDialogTitle" = "Сортировка";
+"Profile.MyNFT.closeButtonTitle" = "Закрыть";
+"Profile.MyNFT.retryButtonTitle" = "Повторить";
+"Profile.MyNFT.cancelButtonTitle" = "Отмена";
+"Profile.MyNFT.favoriteUpdateErrorMessage" = "Не удалось обновить избранное";
+
+// MARK: - Favorite NFT
+
+"Profile.FavoriteNFT.navigationTitle" = "Избранные NFT";
+"Profile.FavoriteNFT.favoriteUpdateErrorMessage" = "Не удалось обновить избранное";
+
+// MARK: - Edit Profile
+
+"Profile.EditProfile.avatarActionSheetTitle" = "Фото профиля";
+"Profile.EditProfile.urlAlertTitle" = "Ссылка на фото";
+"Profile.EditProfile.exitConfirmationTitle" = "Уверены, что хотите выйти?";
+"Profile.EditProfile.changePhoto" = "Изменить фото";
+"Profile.EditProfile.deletePhoto" = "Удалить фото";
+"Profile.EditProfile.cancel" = "Отмена";
+"Profile.EditProfile.save" = "Сохранить";
+"Profile.EditProfile.stay" = "Остаться";
+"Profile.EditProfile.exit" = "Выйти";
+"Profile.EditProfile.okay" = "OK";
+"Profile.EditProfile.urlPlaceholder" = "https://example.com/";
+"Profile.EditProfile.savedMessage" = "Сохранено";
+"Profile.EditProfile.unsavedChangesMessage" = "Несохранённые изменения будут потеряны";
+"Profile.EditProfile.defaultErrorMessage" = "Не удалось сохранить профиль";
+"Profile.EditProfile.profileNotFoundError" = "Не удалось найти исходный профиль";
+"Profile.EditProfile.fieldName" = "Имя";
+"Profile.EditProfile.fieldDescription" = "Описание";
+"Profile.EditProfile.fieldWebsite" = "Сайт";
+
+// MARK: - Profile Network Error
+
+"Profile.NetworkError.serverError" = "Ошибка сервера: ";
+"Profile.NetworkError.noConnection" = "Нет соединения";
+"Profile.NetworkError.parsingError" = "Ошибка разбора данных";
+"Profile.NetworkError.invalidRequest" = "Некорректный запрос: ";
+"Profile.NetworkError.networkError" = "Ошибка сети";
+"Profile.NetworkError.unknown" = "Неизвестная ошибка";
+
+// MARK: - Validation
+
+"Profile.Validation.nameEmpty" = "Имя не может быть пустым";
+"Profile.Validation.nameTooShort" = "Имя должно содержать минимум 2 символа";
+"Profile.Validation.nameTooLong" = "Имя не должно превышать 30 символов";
+"Profile.Validation.descriptionEmpty" = "Описание не может быть пустым";
+"Profile.Validation.descriptionTooLong" = "Описание не может быть длиннее 300 символов";
+"Profile.Validation.websiteInvalidFormat" = "Неверный формат сайта. Пример: example.com";
+"Profile.Validation.urlInvalidFormat" = "Неверный формат URL";
+"Profile.Validation.urlInvalidScheme" = "URL должен начинаться с http:// или https://";
+"Profile.Validation.urlInvalidExtension" = "Поддерживаемые форматы: JPG, PNG, JPEG, WEBP";

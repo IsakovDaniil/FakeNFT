@@ -63,6 +63,33 @@ extension ProfileNFT {
             price: 0.99,
             rating: 4,
             isFavorite: true
+        ),
+        ProfileNFT(
+            id: "4",
+            images: ["April"],
+            name: "April",
+            author: "John Doe",
+            price: 0.99,
+            rating: 4,
+            isFavorite: true
+        ),
+        ProfileNFT(
+            id: "5",
+            images: ["April"],
+            name: "April",
+            author: "John Doe",
+            price: 0.99,
+            rating: 4,
+            isFavorite: true
+        ),
+        ProfileNFT(
+            id: "6",
+            images: ["April"],
+            name: "April",
+            author: "John Doe",
+            price: 0.99,
+            rating: 4,
+            isFavorite: true
         )
     ]
 }

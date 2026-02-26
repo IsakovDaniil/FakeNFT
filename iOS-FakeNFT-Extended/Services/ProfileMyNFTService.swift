@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 // MARK: - Protocol
 
@@ -20,6 +21,7 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
     
     // MARK: - Dependencies
     
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "app", category: "ProfileMyNFTService")
     private let networkClient: NetworkClient
     private let decoder = JSONDecoder()
     
@@ -95,7 +97,7 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
             let nft: ProfileNFT = try await networkClient.send(request: request)
             return nft
         } catch {
-            print("⚠️ Failed to load NFT \(id): \(error)")
+            logger.warning("Failed to load NFT \(id): \(error.localizedDescription)")
             return nil
         }
     }

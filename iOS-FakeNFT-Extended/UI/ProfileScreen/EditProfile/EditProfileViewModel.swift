@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Observation
+import OSLog
 
 @Observable
 @MainActor
@@ -14,17 +15,14 @@ final class EditProfileViewModel {
     
     // MARK: - Dependencies
     
+    private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "app", category: "EditProfileViewModel")
     private let profileService: ProfileServiceProtocol
     private var originalProfile: UserProfile?
     
     // MARK: - State
     
     enum ViewState {
-        case idle
-        case loading
-        case saving
-        case saved
-        case error(Error)
+        case idle, loading, saving, saved, error(Error)
     }
     
     var state: ViewState = .idle
@@ -57,7 +55,6 @@ final class EditProfileViewModel {
     var showExitAlert = false
     var showErrorAlert = false
     var errorMessage: String?
-    
     var urlInput = ""
     var hasUnsavedURLChanges = false
     
@@ -65,19 +62,13 @@ final class EditProfileViewModel {
     
     var onProfileSaved: (() -> Void)?
     
-    // MARK: - Computer Properties
+    // MARK: - Computed Properties
     
     var hasChanges: Bool {
         name != originalName ||
         description != originalDescription ||
         website != originalWebsite ||
         avatarURL != originalAvatarURL
-    }
-    
-    var isLoading: Bool {
-        if case .loading = state { return true }
-        if case .saving = state { return true }
-        return false
     }
     
     var isSaving: Bool {
@@ -87,14 +78,12 @@ final class EditProfileViewModel {
     
     var canSave: Bool {
         guard hasChanges else { return false }
-        
-        let validationResult = ProfileValidator.validateAllFields(
+        return ProfileValidator.validateAllFields(
             name: name,
             description: description,
             website: website,
-            avatarURL: avatarURL)
-        
-        return validationResult.isValid
+            avatarURL: avatarURL
+        ).isValid
     }
     
     // MARK: - Init
@@ -107,12 +96,10 @@ final class EditProfileViewModel {
     
     func loadProfile(from profile: UserProfile) {
         originalProfile = profile
-        
         name = profile.name
         description = profile.description
         website = profile.website
         avatarURL = profile.avatar
-        
         originalName = profile.name
         originalDescription = profile.description
         originalWebsite = profile.website
@@ -135,8 +122,8 @@ final class EditProfileViewModel {
             return
         }
         
-        guard let originalProfile = originalProfile else {
-            errorMessage = EditProfileConstants.profileNotFoundError
+        guard let originalProfile else {
+            errorMessage = ProfileConstants.EditProfile.profileNotFoundError
             showErrorAlert = true
             return
         }
@@ -162,41 +149,30 @@ final class EditProfileViewModel {
             originalAvatarURL = savedProfile.avatar
             
             state = .saved
-            
             onProfileSaved?()
             
         } catch {
+            logger.error("Failed to save profile: \(error.localizedDescription)")
             handleError(error)
         }
     }
     
-    // MARK: - Validation Methods
+    // MARK: - Validation
     
     func validateName() {
-        let result = ProfileValidator.validateName(name)
-        nameError = result.errorMessage
+        nameError = ProfileValidator.validateName(name).errorMessage
     }
     
     func validateDescription() {
-        let result = ProfileValidator.validateDescription(description)
-        descriptionError = result.errorMessage
+        descriptionError = ProfileValidator.validateDescription(description).errorMessage
     }
     
     func validateWebsite() {
-        let result = ProfileValidator.validateWebsite(website)
-        websiteError = result.errorMessage
+        websiteError = ProfileValidator.validateWebsite(website).errorMessage
     }
     
     func validateAvatarURL() {
-        let result = ProfileValidator.validateAvatarURL(avatarURL)
-        avatarURLError = result.errorMessage
-    }
-    
-    private func clearErrors() {
-        nameError = nil
-        descriptionError = nil
-        websiteError = nil
-        avatarURLError = nil
+        avatarURLError = ProfileValidator.validateAvatarURL(avatarURL).errorMessage
     }
     
     // MARK: - Avatar Actions
@@ -240,7 +216,14 @@ final class EditProfileViewModel {
         }
     }
     
-    // MARK: - Error Handling
+    // MARK: - Private
+    
+    private func clearErrors() {
+        nameError = nil
+        descriptionError = nil
+        websiteError = nil
+        avatarURLError = nil
+    }
     
     private func handleError(_ error: Error) {
         state = .error(error)
@@ -248,28 +231,20 @@ final class EditProfileViewModel {
         if let networkError = error as? NetworkClientError {
             switch networkError {
             case .httpStatusCode(let code):
-                errorMessage = "\(EditProfileConstants.ErrorMessages.serverErrorPrefix)\(code)"
+                errorMessage = ProfileConstants.ErrorMessages.serverErrorPrefix + "\(code)"
             case .urlSessionError:
-                errorMessage = EditProfileConstants.ErrorMessages.connectionError
+                errorMessage = ProfileConstants.ErrorMessages.connectionError
             case .parsingError:
-                errorMessage = EditProfileConstants.ErrorMessages.parsingError
+                errorMessage = ProfileConstants.ErrorMessages.parsingError
             case .incorrectRequest(let message):
-                errorMessage = "\(EditProfileConstants.ErrorMessages.invalidRequestPrefix)\(message)"
+                errorMessage = ProfileConstants.ErrorMessages.invalidRequestPrefix + message
             case .urlRequestError:
-                errorMessage = EditProfileConstants.ErrorMessages.networkError
+                errorMessage = ProfileConstants.ErrorMessages.networkError
             }
         } else {
-            errorMessage = EditProfileConstants.defaultErrorMessage
+            errorMessage = ProfileConstants.EditProfile.defaultErrorMessage
         }
         
         showErrorAlert = true
     }
-}
-
-// MARK: - Private Methods
-
-private func isValidURL(_ string: String) -> Bool {
-    guard let url = URL(string: string) else { return false }
-    
-    return url.scheme == "http" || url.scheme == "https"
 }
