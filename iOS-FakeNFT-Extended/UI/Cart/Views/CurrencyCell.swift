@@ -30,7 +30,7 @@ struct CurrencyCell: View {
         .padding(.horizontal, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.appLightGray)
-        .cornerRadius(12)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .overlay {
             if viewModel.currencyToPay == item {
                 RoundedRectangle(cornerRadius: 12)

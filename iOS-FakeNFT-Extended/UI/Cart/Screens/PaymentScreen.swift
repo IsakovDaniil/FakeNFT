@@ -12,7 +12,7 @@ struct PaymentScreen: View {
     @Environment(CartRouter.self) private var router
     @Environment(CartViewModel.self) private var viewModel
     @Environment(\.dismiss) private var dismiss
-    let urlString = "https://yandex.ru/legal/practicum_termsofuse/ru/"
+    private let urlString = "https://yandex.ru/legal/practicum_termsofuse/ru/"
     
     private let columns = [
         GridItem(.flexible(), spacing: 7),

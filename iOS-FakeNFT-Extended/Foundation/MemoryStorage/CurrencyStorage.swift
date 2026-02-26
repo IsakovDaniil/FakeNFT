@@ -13,7 +13,7 @@ protocol CurrencyStorage: AnyObject {
 }
 
 actor CurrencyStorageImpl: CurrencyStorage {
-    private var storage: [Currency]? = nil
+    private var storage: [Currency]?
     
     func saveCurrencies(_ currencies: [Currency]) async {
         storage = currencies
