@@ -9,6 +9,7 @@ import Foundation
 
 protocol OrderService: Sendable {
     func fetchOrder() async throws -> Order
+    func updateOrder(nftIds: [String]) async throws
 }
 
 actor OrderServiceImpl: OrderService {
@@ -21,5 +22,10 @@ actor OrderServiceImpl: OrderService {
     func fetchOrder() async throws -> Order {
         let request = OrderRequest()
         return try await networkClient.send(request: request)
+    }
+
+    func updateOrder(nftIds: [String]) async throws {
+        let request = OrderUpdateRequest(nftIds: nftIds)
+        _ = try await networkClient.send(request: request)
     }
 }

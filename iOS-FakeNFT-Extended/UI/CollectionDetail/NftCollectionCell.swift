@@ -16,33 +16,40 @@ struct NftCollectionCell: View {
     var nft: Nft?
     var isLiked: Bool = false
     var isInCart: Bool = false
+    var onLikeTap: (() -> Void)?
+    var onCartTap: (() -> Void)?
 
     // MARK: - Body
 
     var body: some View {
         NavigationLink(destination: NftDetailBridgeView(nftId: nftId)) {
-            cellContent
+            cellContentWithIconPlaceholders
         }
         .buttonStyle(.plain)
+        .overlay(alignment: .topTrailing) {
+            likeButton
+        }
+        .overlay(alignment: .bottomTrailing) {
+            cartButton
+        }
     }
 
     // MARK: - Subviews
 
-    private var cellContent: some View {
+    private var cellContentWithIconPlaceholders: some View {
         VStack(alignment: .leading, spacing: 0) {
-            imageBlock
-            textBlock
+            imageBlockWithLikePlaceholder
+            textBlockWithCartPlaceholder
         }
         .aspectRatio(108 / 192, contentMode: .fit)
     }
 
-    private var imageBlock: some View {
+    private var imageBlockWithLikePlaceholder: some View {
         ZStack(alignment: .topTrailing) {
             nftImage
                 .aspectRatio(1, contentMode: .fill)
                 .clipped()
-
-            Image(isLiked ? "LikeActive" : "LikeNoActive")
+            Color.clear
                 .frame(width: 40, height: 40)
         }
         .aspectRatio(1, contentMode: .fit)
@@ -65,32 +72,54 @@ struct NftCollectionCell: View {
         }
     }
 
-    private var textBlock: some View {
+    private var textBlockWithCartPlaceholder: some View {
         VStack(alignment: .leading, spacing: 0) {
             ratingView
                 .padding(.top, 8)
-
-            nameAndCartRow
+            nameAndCartRowWithPlaceholder
         }
     }
 
-    private var nameAndCartRow: some View {
+    private var nameAndCartRowWithPlaceholder: some View {
         HStack(alignment: .bottom, spacing: 0) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(nft?.name ?? "NFT")
                     .font(.bold17)
                     .foregroundStyle(.primary)
                     .lineLimit(1)
-
                 Text(priceText)
                     .font(.medium10)
                     .tracking(-0.24)
                     .foregroundStyle(.primary)
             }
             Spacer(minLength: 0)
-            Image(isInCart ? "CartDelete" : "CartAdd")
+            Color.clear
                 .frame(width: 40, height: 40)
         }
+    }
+
+    // MARK: - Кнопки поверх ячейки (overlay), чтобы тап не уходил в NavigationLink
+
+    private var likeButton: some View {
+        Button {
+            onLikeTap?()
+        } label: {
+            Image(isLiked ? "LikeActive" : "LikeNoActive")
+                .frame(width: 40, height: 40)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(ScalePressButtonStyle())
+    }
+
+    private var cartButton: some View {
+        Button {
+            onCartTap?()
+        } label: {
+            Image(isInCart ? "CartDelete" : "CartAdd")
+                .frame(width: 40, height: 40)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(ScalePressButtonStyle())
     }
 
     private var ratingView: some View {
@@ -113,6 +142,16 @@ struct NftCollectionCell: View {
     private var priceText: String {
         guard let price = nft?.price else { return "0 ETH" }
         return String(format: "%.2f ETH", price)
+    }
+}
+
+// MARK: - ScalePressButtonStyle
+
+private struct ScalePressButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.84 : 1.0)
+            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
 

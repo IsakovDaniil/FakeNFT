@@ -20,6 +20,8 @@ struct CollectionDetailView: View {
 
     @State private var viewModel: CollectionDetailViewModel
     @State private var showErrorAlert = false
+    @State private var showLikeErrorAlert = false
+    @State private var showCartErrorAlert = false
 
     // MARK: - Properties
 
@@ -71,8 +73,34 @@ struct CollectionDetailView: View {
                 viewModel.retry()
             }
         }
+        .alert(Constants.errorMessage, isPresented: $showLikeErrorAlert) {
+            Button(Constants.cancelTitle, role: .cancel) {
+                viewModel.clearLikeError()
+            }
+            Button(Constants.retryTitle) {
+                Task {
+                    await viewModel.retryLikeToggle()
+                }
+            }
+        }
+        .alert(Constants.errorMessage, isPresented: $showCartErrorAlert) {
+            Button(Constants.cancelTitle, role: .cancel) {
+                viewModel.clearCartError()
+            }
+            Button(Constants.retryTitle) {
+                Task {
+                    await viewModel.retryCartToggle()
+                }
+            }
+        }
         .onChange(of: viewModel.isError) { _, new in
             showErrorAlert = new
+        }
+        .onChange(of: viewModel.likeUpdateError) { _, new in
+            showLikeErrorAlert = new
+        }
+        .onChange(of: viewModel.cartUpdateError) { _, new in
+            showCartErrorAlert = new
         }
         .task {
             await viewModel.loadNfts()
@@ -157,12 +185,22 @@ struct CollectionDetailView: View {
 
     private var nftGridSection: some View {
         LazyVGrid(columns: nftGridColumns, spacing: 8) {
-            ForEach(Array(viewModel.nfts.enumerated()), id: \.offset) { _, nft in
+            ForEach(viewModel.nfts, id: \.id) { nft in
                 NftCollectionCell(
                     nftId: nft.id,
                     nft: nft,
                     isLiked: viewModel.isLiked(id: nft.id),
-                    isInCart: viewModel.isInCart(id: nft.id)
+                    isInCart: viewModel.isInCart(id: nft.id),
+                    onLikeTap: {
+                        Task {
+                            await viewModel.toggleLike(nftId: nft.id)
+                        }
+                    },
+                    onCartTap: {
+                        Task {
+                            await viewModel.toggleCart(nftId: nft.id)
+                        }
+                    }
                 )
             }
         }
