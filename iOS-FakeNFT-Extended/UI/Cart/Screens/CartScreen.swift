@@ -32,11 +32,11 @@ struct CartScreen: View {
             .task {
                 await viewModel.loadOrder()
             }
-            .onChange(of: viewModel.state) { _, newState in
-                switch newState {
+            .onChange(of: viewModel.state) { _, newValue in
+                switch newValue {
                 case .loading:
                     ProgressHUD.animate()
-                case .data:
+                case .data, .checkoutSuccess:
                     ProgressHUD.dismiss()
                 case .error(let message):
                     ProgressHUD.error(message)

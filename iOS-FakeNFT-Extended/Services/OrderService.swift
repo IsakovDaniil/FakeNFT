@@ -31,7 +31,7 @@ final class OrderServiceImpl: OrderService {
     }
     
     func orderAndClear() async throws -> Order {
-        let request = OrderSaveRequest(nfts: [], method: .post)
+        let request = OrderSaveRequest(nfts: [])
         let order: Order = try await networkClient.send(request: request)
         return order
     }

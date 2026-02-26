@@ -78,6 +78,7 @@ final class CartViewModel {
     // MARK: - Order
     
     func loadOrder() async {
+        if state == .loading { return }
         state = .loading
         do {
             let loadedOrder = try await orderService.load()

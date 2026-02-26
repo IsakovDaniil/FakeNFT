@@ -47,7 +47,7 @@ struct CurrencyCell: View {
     }
     
     private var currencyImage: some View {
-        KFImage(item.imageUrl)
+        KFImage(URL(string: item.imageUrlString))
             .frame(width: 36, height: 36)
             .clipShape(RoundedRectangle(cornerRadius: 6))
     }

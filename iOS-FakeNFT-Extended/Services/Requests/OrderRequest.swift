@@ -10,24 +10,26 @@ struct OrderRequest: NetworkRequest {
 
 struct OrderSaveRequest: NetworkRequest {
     let nfts: [String]
-    let method: HttpMethod
     
-    init(nfts: [String], method: HttpMethod = .put) {
+    init(nfts: [String]) {
         self.nfts = nfts
-        self.method = method
     }
 
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
 
-    var httpMethod: HttpMethod { method }
+    var httpMethod: HttpMethod { .put }
 
     var headers: [String: String]? {
-        ["Content-Type": "application/x-www-form-urlencoded; charset=utf-8"]
+        [
+            "Content-Type": "application/x-www-form-urlencoded"
+        ]
     }
 
     var bodyData: Data? {
+        guard !nfts.isEmpty else { return nil }
+
         let pairs: [String] = nfts.map { id in
             let key = "nfts"
             let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? key
