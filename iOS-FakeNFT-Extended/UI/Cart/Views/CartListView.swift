@@ -9,6 +9,7 @@ import SwiftUI
 import ProgressHUD
 
 struct CartListView: View {
+    @Environment(CartRouter.self) private var router
     let viewModel: CartViewModel
     let nfts: [Nft]
     
@@ -43,7 +44,9 @@ struct CartListView: View {
                     .foregroundStyle(.appGreen)
             }
             
-            CartButton(title: CartLn.cartPrice, height: 44) {}
+            CartButton(title: CartLn.cartPrice, height: 44) {
+                router.push(.payment)
+            }
         }
         .padding(16)
         .background(Color(.appLightGray).opacity(0.3))
@@ -64,3 +67,4 @@ struct CartListView: View {
     
     CartListView(viewModel: viewModel, nfts: NftMock.mockNFTs)
 }
+

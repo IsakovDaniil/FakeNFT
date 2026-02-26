@@ -12,7 +12,6 @@ protocol OrderStorage: AnyObject {
     func getOrder() async -> Order?
 }
 
-// Пример простого актора, который сохраняет данные из сети
 actor OrderStorageImpl: OrderStorage {
     private var storage: [String: Order] = [:]
 

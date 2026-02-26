@@ -9,6 +9,7 @@ import SwiftUI
 import ProgressHUD
 
 struct CartScreen: View {
+    @Environment(CartRouter.self) private var router
     @Environment(CartViewModel.self) private var viewModel
     @State private var isShowingSortSheet: Bool = false
     
@@ -19,58 +20,57 @@ struct CartScreen: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if !viewModel.nfts.isEmpty {
-                    CartListView(viewModel: viewModel, nfts: viewModel.nfts)
-                } else {
-                    CartEmptyView()
-                }
+        Group {
+            if !viewModel.nfts.isEmpty {
+                CartListView(viewModel: viewModel, nfts: viewModel.nfts)
+                    .environment(router)
+            } else {
+                CartEmptyView()
             }
-            .background(.appWhite)
-            .task {
-                await viewModel.loadOrder()
+        }
+        .background(.appWhite)
+        .task {
+            await viewModel.loadOrder()
+        }
+        .onChange(of: viewModel.state) { _, newValue in
+            switch newValue {
+            case .loading:
+                ProgressHUD.animate()
+            case .data, .checkoutSuccess:
+                ProgressHUD.dismiss()
+            case .error(let message):
+                ProgressHUD.error(message)
+            case .idle:
+                ProgressHUD.animate()
             }
-            .onChange(of: viewModel.state) { _, newValue in
-                switch newValue {
-                case .loading:
-                    ProgressHUD.animate()
-                case .data:
-                    ProgressHUD.dismiss()
-                case .error(let message):
-                    ProgressHUD.error(message)
-                case .idle:
-                    ProgressHUD.animate()
-                }
-            }
-            .toolbar {
-                if !viewModel.nfts.isEmpty {
-                    ToolbarItem {
-                        Button {
-                            isShowingSortSheet = true
-                        } label: {
-                            Image(.sort)
-                                .foregroundStyle(.appBlack)
-                        }
-                    }
-                }
-            }
-            .confirmationDialog(
-                CartLn.cartSortTitle,
-                isPresented: $isShowingSortSheet,
-                titleVisibility: .visible
-            ) {
-                ForEach(CartSortType.allCases, id: \.self) { type in
+        }
+        .toolbar {
+            if !viewModel.nfts.isEmpty {
+                ToolbarItem {
                     Button {
-                        viewModel.setSort(type)
-                        isShowingSortSheet = false
+                        isShowingSortSheet = true
                     } label: {
-                        Text(type.title)
+                        Image(.sort)
+                            .foregroundStyle(.appBlack)
                     }
                 }
-                Button(CartLn.cartSortClose, role: .cancel) {
+            }
+        }
+        .confirmationDialog(
+            CartLn.cartSortTitle,
+            isPresented: $isShowingSortSheet,
+            titleVisibility: .visible
+        ) {
+            ForEach(CartSortType.allCases, id: \.self) { type in
+                Button {
+                    viewModel.setSort(type)
                     isShowingSortSheet = false
+                } label: {
+                    Text(type.title)
                 }
+            }
+            Button(CartLn.cartSortClose, role: .cancel) {
+                isShowingSortSheet = false
             }
         }
     }
