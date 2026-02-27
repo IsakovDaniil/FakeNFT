@@ -2,21 +2,20 @@ import SwiftUI
 
 @main
 struct FakeNFT: App {
-
-    private let servicesAssembly = ServicesAssembly(
-        networkClient: DefaultNetworkClient(),
-        nftStorage: NftStorageImpl(),
-        profileStorage: ProfileStorage()
-    )
-
     var body: some Scene {
+        let servicesAssembly = ServicesAssembly(
+            networkClient: DefaultNetworkClient(),
+            nftStorage: NftStorageImpl(),
+            orderStorage: OrderStorageImpl()
+        )
+        let viewModel = CartViewModel(
+            nftService: servicesAssembly.nftService,
+            orderService: servicesAssembly.orderService
+        )
+        
         WindowGroup {
-            ProfileView(
-                viewModel: ProfileViewModel(
-                    store: servicesAssembly.profileStore
-                ),
-                servicesAssembly: servicesAssembly
-            )
+            ContentView()
+                .environment(viewModel)
         }
     }
 }

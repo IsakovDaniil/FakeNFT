@@ -6,7 +6,6 @@ protocol NftService {
 
 @MainActor
 final class NftServiceImpl: NftService {
-
     private let networkClient: NetworkClient
     private let storage: NftStorage
 
