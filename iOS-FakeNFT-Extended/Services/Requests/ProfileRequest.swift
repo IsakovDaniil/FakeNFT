@@ -40,8 +40,12 @@ struct UpdateProfileRequest: NetworkRequest {
             URLQueryItem(name: "avatar", value: profile.avatar)
         ]
         
-        profile.favoriteNfts.forEach { nftId in
-            components.queryItems?.append(URLQueryItem(name: "likes", value: nftId))
+        if profile.favoriteNfts.isEmpty {
+            components.queryItems?.append(URLQueryItem(name: "likes", value: "null"))
+        } else {
+            profile.favoriteNfts.forEach { nftId in
+                components.queryItems?.append(URLQueryItem(name: "likes", value: nftId))
+            }
         }
         
         return components.percentEncodedQuery?.data(using: .utf8)

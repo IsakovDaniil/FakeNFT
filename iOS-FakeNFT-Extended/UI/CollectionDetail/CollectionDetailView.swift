@@ -33,13 +33,15 @@ struct CollectionDetailView: View {
         item: CollectionItem,
         nftService: NftService? = nil,
         catalogProfileService: CatalogProfileService? = nil,
-        orderService: OrderService? = nil
+        orderService: OrderService? = nil,
+        profileStore: ProfileStateStore? = nil
     ) {
         _viewModel = State(initialValue: CollectionDetailViewModel(
             item: item,
             nftService: nftService,
             catalogProfileService: catalogProfileService,
-            orderService: orderService
+            orderService: orderService,
+            profileStore: profileStore
         ))
     }
 
@@ -67,27 +69,27 @@ struct CollectionDetailView: View {
                 }
             }
         }
-        .alert(Constants.errorMessage, isPresented: $showErrorAlert) {
-            Button(Constants.cancelTitle, role: .cancel) { }
-            Button(Constants.retryTitle) {
+        .alert(CollectionDetailConstants.errorMessage, isPresented: $showErrorAlert) {
+            Button(CollectionDetailConstants.cancelTitle, role: .cancel) { }
+            Button(CollectionDetailConstants.retryTitle) {
                 viewModel.retry()
             }
         }
-        .alert(Constants.errorMessage, isPresented: $showLikeErrorAlert) {
-            Button(Constants.cancelTitle, role: .cancel) {
+        .alert(CollectionDetailConstants.errorMessage, isPresented: $showLikeErrorAlert) {
+            Button(CollectionDetailConstants.cancelTitle, role: .cancel) {
                 viewModel.clearLikeError()
             }
-            Button(Constants.retryTitle) {
+            Button(CollectionDetailConstants.retryTitle) {
                 Task {
                     await viewModel.retryLikeToggle()
                 }
             }
         }
-        .alert(Constants.errorMessage, isPresented: $showCartErrorAlert) {
-            Button(Constants.cancelTitle, role: .cancel) {
+        .alert(CollectionDetailConstants.errorMessage, isPresented: $showCartErrorAlert) {
+            Button(CollectionDetailConstants.cancelTitle, role: .cancel) {
                 viewModel.clearCartError()
             }
-            Button(Constants.retryTitle) {
+            Button(CollectionDetailConstants.retryTitle) {
                 Task {
                     await viewModel.retryCartToggle()
                 }
@@ -223,7 +225,7 @@ struct CollectionDetailView: View {
             NavigationLink(
                 destination: AuthorWebsiteScreen(
                     urlString: item.website,
-                    fallbackUrlString: Constants.fallbackAuthorWebsiteURL
+                    fallbackUrlString: CollectionDetailConstants.fallbackAuthorWebsiteURL
                 )
             ) {
                 Text(item.author)
@@ -250,7 +252,7 @@ struct CollectionDetailView: View {
 
 // MARK: - Constants
 
-private enum Constants {
+private enum CollectionDetailConstants {
     /// Fallback при ошибке загрузки сайта автора (mock-API возвращает несуществующие домены)
     static let fallbackAuthorWebsiteURL = "https://practicum.yandex.ru/ios-developer/"
     static let errorMessage = NSLocalizedString("Catalog.error.message", comment: "")

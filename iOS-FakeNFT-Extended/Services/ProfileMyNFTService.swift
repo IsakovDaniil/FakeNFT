@@ -62,29 +62,11 @@ final class ProfileMyNFTService: ProfileMyNFTServiceProtocol {
         }
         
         let request = ProfileUpdateLikesRequest(likes: updatedLikes)
-        
-        guard let endpoint = request.endpoint else {
-            throw NetworkClientError.incorrectRequest("Empty endpoint")
+        let data = try await networkClient.send(request: request)
+        if data.isEmpty {
+            return updatedLikes
         }
-        
-        var urlRequest = URLRequest(url: endpoint)
-        urlRequest.httpMethod = request.httpMethod.rawValue
-        urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
-        urlRequest.httpBody = request.createFormBody()
-        
-        let (data, response) = try await URLSession.shared.data(for: urlRequest)
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw NetworkClientError.urlSessionError
-        }
-        
-        guard 200 ..< 300 ~= httpResponse.statusCode else {
-            throw NetworkClientError.httpStatusCode(httpResponse.statusCode)
-        }
-        
         let profile = try decoder.decode(UserProfile.self, from: data)
-        
         return profile.favoriteNfts
     }
     

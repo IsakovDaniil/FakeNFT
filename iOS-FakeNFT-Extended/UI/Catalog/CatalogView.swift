@@ -47,29 +47,30 @@ struct CatalogView: View {
                     item: collection,
                     nftService: assembly.nftService,
                     catalogProfileService: assembly.catalogProfileService,
-                    orderService: assembly.orderService
+                    orderService: assembly.orderService,
+                    profileStore: assembly.profileStore
                 )
             }
             .alert(
-                Constants.errorMessage,
+                CatalogConstants.errorMessage,
                 isPresented: $showErrorAlert
             ) {
-                Button(Constants.cancelTitle, role: .cancel) { }
-                Button(Constants.retryTitle) {
+                Button(CatalogConstants.cancelTitle, role: .cancel) { }
+                Button(CatalogConstants.retryTitle) {
                     viewModel.retry()
                 }
             }
             .onChange(of: viewModel.showError) { _, new in
                 showErrorAlert = new
             }
-            .confirmationDialog(Constants.sortTitle, isPresented: $showSortOptions, titleVisibility: .visible) {
-                Button(Constants.sortByName) {
+            .confirmationDialog(CatalogConstants.sortTitle, isPresented: $showSortOptions, titleVisibility: .visible) {
+                Button(CatalogConstants.sortByName) {
                     viewModel.setSortOrder(.byName)
                 }
-                Button(Constants.sortByNftCount) {
+                Button(CatalogConstants.sortByNftCount) {
                     viewModel.setSortOrder(.byNftCount)
                 }
-                Button(Constants.sortClose, role: .cancel) { }
+                Button(CatalogConstants.sortClose, role: .cancel) { }
             }
             .task {
                 await viewModel.loadCollections()
@@ -112,11 +113,18 @@ struct CatalogView: View {
 // MARK: - Preview
 
 #Preview {
-    TabView {
-        CatalogView(assembly: ServicesAssembly(
-            networkClient: DefaultNetworkClient(),
-            nftStorage: NftStorageImpl()
-        ))
+    let networkClient = DefaultNetworkClient()
+    let nftStorage = NftStorageImpl()
+    let orderStorage = OrderStorageImpl()
+    let profileStorage = ProfileStorage()
+    let assembly = ServicesAssembly(
+        networkClient: networkClient,
+        nftStorage: nftStorage,
+        orderStorage: orderStorage,
+        profileStorage: profileStorage
+    )
+    return TabView {
+        CatalogView(assembly: assembly)
         .tabItem {
             Label(
                 NSLocalizedString("Tab.catalog", comment: ""),
@@ -128,7 +136,7 @@ struct CatalogView: View {
 
 // MARK: - Constants
 
-private enum Constants {
+private enum CatalogConstants {
     static let errorMessage = NSLocalizedString(
         "Catalog.error.message", comment: ""
     )

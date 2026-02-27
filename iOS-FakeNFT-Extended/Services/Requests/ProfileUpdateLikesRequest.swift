@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// PUT profile/likes: при наличии лайков отправляем likes=id1&likes=id2, а при пустом списке — likes=null для очистки избранного на сервере.
 struct ProfileUpdateLikesRequest: NetworkRequest {
     let likes: [String]
     
@@ -18,8 +19,7 @@ struct ProfileUpdateLikesRequest: NetworkRequest {
         .put
     }
     
-    func createFormBody() -> Data {
-        let likesString = likes.joined(separator: ",")
-        return Data("likes=\(likesString)".utf8)
+    var formBodyPairs: [(String, String)]? {
+        likes.isEmpty ? [("likes", "null")] : likes.map { ("likes", $0) }
     }
 }

@@ -133,9 +133,9 @@ struct AuthorWebsiteScreen: View {
                 }
             }
         }
-        .alert(Constants.errorMessage, isPresented: $hasError) {
-            Button(Constants.cancelTitle, role: .cancel) { }
-            Button(Constants.retryTitle) {
+        .alert(AuthorWebsiteConstants.errorMessage, isPresented: $hasError) {
+            Button(AuthorWebsiteConstants.cancelTitle, role: .cancel) { }
+            Button(AuthorWebsiteConstants.retryTitle) {
                 hasError = false
                 isLoading = true
                 webViewId = UUID()
@@ -146,7 +146,7 @@ struct AuthorWebsiteScreen: View {
 
 // MARK: - Constants
 
-private enum Constants {
+private enum AuthorWebsiteConstants {
     static let errorMessage = NSLocalizedString("Catalog.error.message", comment: "")
     static let cancelTitle = NSLocalizedString("Catalog.alert.cancel", comment: "")
     static let retryTitle = NSLocalizedString("Error.repeat", comment: "")

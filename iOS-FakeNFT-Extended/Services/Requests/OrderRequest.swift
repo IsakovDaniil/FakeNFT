@@ -33,7 +33,9 @@ struct OrderSaveRequest: NetworkRequest {
     }
 
     var bodyData: Data? {
-        guard !nfts.isEmpty else { return nil }
+        if nfts.isEmpty {
+            return Data("nfts=null".utf8)
+        }
         let pairs: [String] = nfts.map { id in
             let key = "nfts"
             let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? key
@@ -41,7 +43,7 @@ struct OrderSaveRequest: NetworkRequest {
             return "\(encodedKey)=\(encodedValue)"
         }
         let formString = pairs.joined(separator: "&")
-        return formString.data(using: .utf8)
+        return Data(formString.utf8)
     }
 }
 
@@ -61,6 +63,6 @@ struct OrderUpdateRequest: NetworkRequest {
     var httpMethod: HttpMethod { .put }
 
     var formBodyPairs: [(String, String)]? {
-        nftIds.isEmpty ? nil : nftIds.map { ("nfts", $0) }
+        nftIds.isEmpty ? [("nfts", "null")] : nftIds.map { ("nfts", $0) }
     }
 }

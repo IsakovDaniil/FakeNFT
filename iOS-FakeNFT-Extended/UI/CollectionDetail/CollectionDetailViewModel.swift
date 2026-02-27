@@ -73,6 +73,7 @@ final class CollectionDetailViewModel {
     private let nftService: NftService?
     private let catalogProfileService: CatalogProfileService?
     private let orderService: OrderService?
+    private let profileStore: ProfileStateStore?
 
     // MARK: - Init
 
@@ -80,12 +81,14 @@ final class CollectionDetailViewModel {
         item: CollectionItem,
         nftService: NftService? = nil,
         catalogProfileService: CatalogProfileService? = nil,
-        orderService: OrderService? = nil
+        orderService: OrderService? = nil,
+        profileStore: ProfileStateStore? = nil
     ) {
         self.item = item
         self.nftService = nftService
         self.catalogProfileService = catalogProfileService
         self.orderService = orderService
+        self.profileStore = profileStore
     }
 
     // MARK: - Public
@@ -128,6 +131,7 @@ final class CollectionDetailViewModel {
         do {
             try await service.updateLikes(ids: ids)
             likedIds = newSet
+            await profileStore?.updateLikesFromCatalog(ids: ids)
         } catch {
             if ids.isEmpty {
                 likedIds = newSet

@@ -28,8 +28,8 @@ struct CatalogProfileUpdateRequest: NetworkRequest {
 
     var httpMethod: HttpMethod { .put }
 
-    /// Формат как в Postman: несколько полей с ключом "likes" — likes=id1&likes=id2. При пустом массиве — тело пустое (очистка избранного).
+    /// Формат как в Postman: несколько полей с ключом "likes" — likes=id1&likes=id2. При пустом массиве — передаем "null" (очистка избранного).
     var formBodyPairs: [(String, String)]? {
-        likes.isEmpty ? nil : likes.map { ("likes", $0) }
+        likes.isEmpty ? [("likes", "null")] : likes.map { ("likes", $0) }
     }
 }

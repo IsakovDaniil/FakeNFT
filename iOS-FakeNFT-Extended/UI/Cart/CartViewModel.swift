@@ -215,7 +215,7 @@ final class CartViewModel {
     }
     
     func makePayment() async {
-        guard let currencyToPay else { return }
+        guard currencyToPay != nil else { return }
         
         state = .loading
         
