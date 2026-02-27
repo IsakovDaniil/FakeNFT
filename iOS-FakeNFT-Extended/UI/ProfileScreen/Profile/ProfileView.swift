@@ -166,10 +166,11 @@ struct ProfileView: View {
     let assembly = ServicesAssembly(
         networkClient: networkClient,
         nftStorage: nftStorage,
+        orderStorage: OrderStorageImpl(),
         profileStorage: profileStorage
     )
     
-    return ProfileView(
+    ProfileView(
         viewModel: ProfileViewModel(store: assembly.profileStore),
         servicesAssembly: assembly
     )

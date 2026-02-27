@@ -43,7 +43,8 @@ struct TabBarView: View {
     let servicesAssembly = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        orderStorage: OrderStorageImpl()
+        orderStorage: OrderStorageImpl(),
+        profileStorage: ProfileStorage()
     )
     let viewModel = CartViewModel(
         nftService: servicesAssembly.nftService,
