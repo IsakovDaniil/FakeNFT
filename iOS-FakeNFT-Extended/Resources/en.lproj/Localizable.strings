@@ -1,7 +1,17 @@
-// MARK: - Existing
+// MARK: - Catalog (эпик Каталог)
 
 "Tab.catalog" = "Catalog";
 "Catalog.openNft" = "Open Nft";
+"Catalog.error.message" = "Failed to load data";
+"Catalog.alert.cancel" = "Cancel";
+"Catalog.sort.title" = "Sort";
+"Catalog.sort.byName" = "By name";
+"Catalog.sort.byNftCount" = "By NFT count";
+"Catalog.sort.close" = "Close";
+"Collection.author" = "Collection author: ";
+
+// MARK: - Existing
+
 "Error.network" = "A network error occurred";
 "Error.unknown" = "An unknown error occurred";
 "Error.repeat" = "Retry";
@@ -105,10 +115,6 @@
 // MARK: - Cart
 
 "Tab.cart" = "Cart";
-"Error.network" = "A network error occurred";
-"Error.unknown" = "An unknown error occurred";
-"Error.repeat" = "Retry";
-"Error.title" = "Error";
 "cart.nft.price" = "Price";
 "cart.confirm.delete" = "Are you sure you want\nto remove this item from the cart?";
 "cart.delete.button" = "Delete";

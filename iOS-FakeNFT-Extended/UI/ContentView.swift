@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    let servicesAssembly: ServicesAssembly
+    @Environment(ServicesAssembly.self) private var servicesAssembly
 
     var body: some View {
         TabBarView(servicesAssembly: servicesAssembly)

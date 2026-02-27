@@ -41,4 +41,12 @@ final class ServicesAssembly {
             nftService: nftSvc
         )
     }
+
+    var collectionService: CollectionService {
+        CollectionServiceImpl(networkClient: networkClient)
+    }
+
+    var catalogProfileService: CatalogProfileService {
+        CatalogProfileServiceImpl(networkClient: networkClient)
+    }
 }

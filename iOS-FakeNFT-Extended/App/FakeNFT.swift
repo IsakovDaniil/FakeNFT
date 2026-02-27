@@ -15,7 +15,8 @@ struct FakeNFT: App {
         )
         
         WindowGroup {
-            ContentView(servicesAssembly: servicesAssembly)
+            ContentView()
+                .environment(servicesAssembly)
                 .environment(viewModel)
         }
     }

@@ -152,6 +152,42 @@ final class ProfileStateStore {
         await toggleFavorite(nftID: nftID)
     }
     
+    // MARK: - Sync From Catalog
+    
+    /// Обновляет избранное из экрана каталога после успешного PUT лайков на сервер.
+    /// Чтобы экран «Избранное» в профиле сразу отражал изменения без лишнего запроса.
+    func updateLikesFromCatalog(ids: [String]) async {
+        guard let currentProfile = profile else { return }
+        
+        profile = currentProfile.with(favoriteNfts: ids)
+        let favoriteSet = Set(ids)
+        
+        myNFTs = myNFTs.map { nft in
+            var copy = nft
+            copy.isFavorite = favoriteSet.contains(nft.id)
+            return copy
+        }
+        
+        let existingIds = Set(favoriteNFTs.map(\.id))
+        let newIds = favoriteSet.subtracting(existingIds)
+        
+        favoriteNFTs = favoriteNFTs.filter { favoriteSet.contains($0.id) }
+        
+        if !newIds.isEmpty {
+            do {
+                let fetched = try await nftService.fetchMyNFTs(nftIDs: Array(newIds))
+                let withFavorite = fetched.map { nft -> ProfileNFT in
+                    var copy = nft
+                    copy.isFavorite = true
+                    return copy
+                }
+                favoriteNFTs.append(contentsOf: withFavorite)
+            } catch {
+                logger.error("Failed to fetch new favorites for store sync: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     // MARK: - Refresh
     
     func refresh() async {

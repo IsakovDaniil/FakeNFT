@@ -11,6 +11,16 @@ struct TabBarView: View {
 
     var body: some View {
         TabView {
+            // Catalog tab (эпик Каталог)
+            CatalogView(assembly: servicesAssembly)
+                .tabItem {
+                    Label(
+                        NSLocalizedString("Tab.catalog", comment: ""),
+                        systemImage: "square.stack.3d.up.fill"
+                    )
+                }
+                .backgroundStyle(.background)
+
             // Profile tab — имеет свой NavigationStack внутри ProfileView
             ProfileView(
                 viewModel: ProfileViewModel(store: servicesAssembly.profileStore),
