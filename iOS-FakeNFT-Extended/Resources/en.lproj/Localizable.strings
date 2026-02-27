@@ -1,25 +1,131 @@
-"Tab.cart" = "Корзина";
-"Error.network" = "Произошла ошибка сети";
-"Error.unknown" = "Произошла неизвестная ошибка";
-"Error.repeat" = "Повторить";
-"Error.title" = "Ошибка";
-"cart.nft.price" = "Цена";
-"cart.confirm.delete" = "Вы уверены, что хотите\nудалить объект из корзины?";
-"cart.delete.button" = "Удалить";
-"cart.back.button" = "Вернуться";
-"cart.empty" = "Корзина пуста";
-"cart.add" = "Добавьте NFT в корзину";
-"cart.price" = "К оплате";
-"cart.sort.title" = "Сортировка";
-"cart.sort.close" = "Закрыть";
-"payment.success.title" = "Успех! Оплата прошла, поздравляем с покупкой!";
-"payment.back.button" = "Вернуться в корзину";
-"payment.error.text" = "Не удалось произвести оплату";
-"cart.sort.type.name" = "По названию";
-"cart.sort.type.price" = "По цене";
-"cart.sort.type.rating" = "По рейтингу";
-"cart.payment.agreement.title" = "Совершая покупку, вы соглашаетесь с условиями";
-"cart.payment.agreement" = "Пользовательского соглашения";
-"cart.payment" = "Оплатить";
-"cart.payment.title" = "Выберите способ оплаты";
-"cancel" = "Отмена";
+// MARK: - Existing
+
+"Tab.catalog" = "Catalog";
+"Catalog.openNft" = "Open Nft";
+"Error.network" = "A network error occurred";
+"Error.unknown" = "An unknown error occurred";
+"Error.repeat" = "Retry";
+"Error.title" = "Error";
+
+// MARK: - Profile Navigation
+
+"Profile.navigationTitle" = "Profile";
+
+// MARK: - Profile Alerts
+
+"Profile.errorAlertTitle" = "Error";
+"Profile.retryButton" = "Retry";
+"Profile.cancelButton" = "Cancel";
+"Profile.defaultErrorMessage" = "Failed to load profile";
+
+// MARK: - Profile Error Messages
+
+"Profile.ErrorMessages.serverErrorPrefix" = "Server error: ";
+"Profile.ErrorMessages.connectionError" = "Connection error";
+"Profile.ErrorMessages.parsingError" = "Data processing error";
+"Profile.ErrorMessages.invalidRequestPrefix" = "Invalid request: ";
+"Profile.ErrorMessages.networkError" = "Network error";
+
+// MARK: - Profile Menu
+
+"Profile.Menu.myNFTTitle" = "My NFTs";
+"Profile.Menu.favoriteNFTTitle" = "Favorite NFTs";
+
+// MARK: - Profile Empty State
+
+"Profile.EmptyState.myNFT" = "You don't have any NFTs yet";
+"Profile.EmptyState.favorite" = "You don't have any favorite NFTs yet";
+
+// MARK: - Profile Sort
+
+"Profile.Sort.byPrice" = "By price";
+"Profile.Sort.byRating" = "By rating";
+"Profile.Sort.byName" = "By name";
+
+// MARK: - My NFT
+
+"Profile.MyNFT.navigationTitle" = "My NFTs";
+"Profile.MyNFT.sortDialogTitle" = "Sort";
+"Profile.MyNFT.closeButtonTitle" = "Close";
+"Profile.MyNFT.retryButtonTitle" = "Retry";
+"Profile.MyNFT.cancelButtonTitle" = "Cancel";
+"Profile.MyNFT.favoriteUpdateErrorMessage" = "Failed to update favorites";
+
+// MARK: - Favorite NFT
+
+"Profile.FavoriteNFT.navigationTitle" = "Favorite NFTs";
+"Profile.FavoriteNFT.favoriteUpdateErrorMessage" = "Failed to update favorites";
+
+// MARK: - Edit Profile
+
+"Profile.EditProfile.avatarActionSheetTitle" = "Profile photo";
+"Profile.EditProfile.urlAlertTitle" = "Photo URL";
+"Profile.EditProfile.exitConfirmationTitle" = "Are you sure you want to exit?";
+"Profile.EditProfile.changePhoto" = "Change photo";
+"Profile.EditProfile.deletePhoto" = "Delete photo";
+"Profile.EditProfile.cancel" = "Cancel";
+"Profile.EditProfile.save" = "Save";
+"Profile.EditProfile.stay" = "Stay";
+"Profile.EditProfile.exit" = "Exit";
+"Profile.EditProfile.okay" = "OK";
+"Profile.EditProfile.urlPlaceholder" = "https://example.com/";
+"Profile.EditProfile.savedMessage" = "Saved";
+"Profile.EditProfile.unsavedChangesMessage" = "Unsaved changes will be lost";
+"Profile.EditProfile.defaultErrorMessage" = "Failed to save profile";
+"Profile.EditProfile.profileNotFoundError" = "Could not find the original profile";
+"Profile.EditProfile.fieldName" = "Name";
+"Profile.EditProfile.fieldDescription" = "Description";
+"Profile.EditProfile.fieldWebsite" = "Website";
+
+// MARK: - Profile Network Error
+
+"Profile.NetworkError.serverError" = "Server error: ";
+"Profile.NetworkError.noConnection" = "No connection";
+"Profile.NetworkError.parsingError" = "Data parsing error";
+"Profile.NetworkError.invalidRequest" = "Invalid request: ";
+"Profile.NetworkError.networkError" = "Network error";
+"Profile.NetworkError.unknown" = "Unknown error";
+
+// MARK: - Validation
+
+"Profile.Validation.nameEmpty" = "Name cannot be empty";
+"Profile.Validation.nameTooShort" = "Name must be at least 2 characters";
+"Profile.Validation.nameTooLong" = "Name must not exceed 30 characters";
+"Profile.Validation.descriptionEmpty" = "Description cannot be empty";
+"Profile.Validation.descriptionTooLong" = "Description cannot exceed 300 characters";
+"Profile.Validation.websiteInvalidFormat" = "Invalid website format. Example: example.com";
+"Profile.Validation.urlInvalidFormat" = "Invalid URL format";
+"Profile.Validation.urlInvalidScheme" = "URL must start with http:// or https://";
+"Profile.Validation.urlInvalidExtension" = "Supported formats: JPG, PNG, JPEG, WEBP";
+
+// MARK: - TabBar
+
+"Tab.profile" = "Profile";
+
+// MARK: - Cart
+
+"Tab.cart" = "Cart";
+"Error.network" = "A network error occurred";
+"Error.unknown" = "An unknown error occurred";
+"Error.repeat" = "Retry";
+"Error.title" = "Error";
+"cart.nft.price" = "Price";
+"cart.confirm.delete" = "Are you sure you want\nto remove this item from the cart?";
+"cart.delete.button" = "Delete";
+"cart.back.button" = "Back";
+"cart.empty" = "Your cart is empty";
+"cart.add" = "Add NFTs to your cart";
+"cart.price" = "Total";
+"cart.sort.title" = "Sort";
+"cart.sort.close" = "Close";
+"payment.success.title" = "Success! Payment completed, congratulations on your purchase!";
+"payment.back.button" = "Back to cart";
+"payment.error.text" = "Payment could not be processed";
+"cart.sort.type.name" = "By name";
+"cart.sort.type.price" = "By price";
+"cart.sort.type.rating" = "By rating";
+"cart.payment.agreement.title" = "By making a purchase, you agree to the terms of the";
+"cart.payment.agreement" = "User Agreement";
+"cart.payment" = "Pay";
+"cart.payment.title" = "Select a payment method";
+"cancel" = "Cancel";

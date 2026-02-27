@@ -71,7 +71,8 @@ struct CartCell: View {
     let services = ServicesAssembly(
         networkClient: DefaultNetworkClient(),
         nftStorage: NftStorageImpl(),
-        orderStorage: OrderStorageImpl()
+        orderStorage: OrderStorageImpl(),
+        profileStorage: ProfileStorage()
     )
     let viewModel = CartViewModel(
         nftService: services.nftService,
