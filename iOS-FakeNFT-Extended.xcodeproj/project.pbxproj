@@ -57,6 +57,9 @@
 		868BE19E2F518B2A0054E52A /* DecompositionCart.md in Resources */ = {isa = PBXBuildFile; fileRef = 868BE19D2F518B2A0054E52A /* DecompositionCart.md */; };
 		868BE19F2F518B2A0054E52A /* DecompositionCart.md in Resources */ = {isa = PBXBuildFile; fileRef = 868BE19D2F518B2A0054E52A /* DecompositionCart.md */; };
 		868BE1A02F518B2A0054E52A /* DecompositionCart.md in Resources */ = {isa = PBXBuildFile; fileRef = 868BE19D2F518B2A0054E52A /* DecompositionCart.md */; };
+		F79DB4082F43760000C16D83 /* DecompositionCatalog.md in Resources */ = {isa = PBXBuildFile; fileRef = F79DB4072F43760000C16D83 /* DecompositionCatalog.md */; };
+		F79DB4092F43760000C16D83 /* DecompositionCatalog.md in Resources */ = {isa = PBXBuildFile; fileRef = F79DB4072F43760000C16D83 /* DecompositionCatalog.md */; };
+		F79DB40A2F43760000C16D83 /* DecompositionCatalog.md in Resources */ = {isa = PBXBuildFile; fileRef = F79DB4072F43760000C16D83 /* DecompositionCatalog.md */; };
 		868BE1A32F518BA20054E52A /* FakeNFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868BE1A12F518BA20054E52A /* FakeNFT.swift */; };
 		868BE1A42F518BA20054E52A /* FakeNFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868BE1A12F518BA20054E52A /* FakeNFT.swift */; };
 		868BE1A52F518BA20054E52A /* FakeNFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868BE1A12F518BA20054E52A /* FakeNFT.swift */; };
@@ -173,6 +176,7 @@
 		868BE18D2F518AEF0054E52A /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		868BE18E2F518AEF0054E52A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		868BE19D2F518B2A0054E52A /* DecompositionCart.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DecompositionCart.md; sourceTree = "<group>"; };
+		F79DB4072F43760000C16D83 /* DecompositionCatalog.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = DecompositionCatalog.md; sourceTree = "<group>"; };
 		868BE1A12F518BA20054E52A /* FakeNFT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeNFT.swift; sourceTree = "<group>"; };
 		868BE1A62F518BC40054E52A /* CurrencyStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyStorage.swift; sourceTree = "<group>"; };
 		868BE1A72F518BC40054E52A /* OrderStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderStorage.swift; sourceTree = "<group>"; };
@@ -366,6 +370,7 @@
 		86C410CF2F38AA32006E4BAA /* Docs */ = {
 			isa = PBXGroup;
 			children = (
+				F79DB4072F43760000C16D83 /* DecompositionCatalog.md */,
 				868BE19D2F518B2A0054E52A /* DecompositionCart.md */,
 				86C410CE2F38AA32006E4BAA /* DecompositionProfile.md */,
 			);
@@ -717,6 +722,7 @@
 				868BE1942F518AEF0054E52A /* LaunchScreen.storyboard in Resources */,
 				868BE1A02F518B2A0054E52A /* DecompositionCart.md in Resources */,
 				86C410D02F38AA32006E4BAA /* DecompositionProfile.md in Resources */,
+				F79DB4082F43760000C16D83 /* DecompositionCatalog.md in Resources */,
 				861475352F388E6B00463967 /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -730,6 +736,7 @@
 				868BE19B2F518AEF0054E52A /* Localizable.strings in Resources */,
 				868BE19C2F518AEF0054E52A /* LaunchScreen.storyboard in Resources */,
 				868BE19E2F518B2A0054E52A /* DecompositionCart.md in Resources */,
+				F79DB4092F43760000C16D83 /* DecompositionCatalog.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -742,6 +749,7 @@
 				868BE1972F518AEF0054E52A /* Localizable.strings in Resources */,
 				868BE1982F518AEF0054E52A /* LaunchScreen.storyboard in Resources */,
 				868BE19F2F518B2A0054E52A /* DecompositionCart.md in Resources */,
+				F79DB40A2F43760000C16D83 /* DecompositionCatalog.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
