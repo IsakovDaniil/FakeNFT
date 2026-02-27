@@ -3,36 +3,45 @@ import SwiftUI
 struct TabBarView: View {
     @State private var router = CartRouter()
     @Environment(CartViewModel.self) private var viewModel
-    
+    private let servicesAssembly: ServicesAssembly
+
+    init(servicesAssembly: ServicesAssembly) {
+        self.servicesAssembly = servicesAssembly
+    }
+
     var body: some View {
-        NavigationStack(path: $router.path) {
-            TabView {
+        TabView {
+            // Profile tab — имеет свой NavigationStack внутри ProfileView
+            ProfileView(
+                viewModel: ProfileViewModel(store: servicesAssembly.profileStore),
+                servicesAssembly: servicesAssembly
+            )
+            .tabItem {
+                Label("Tab.profile", systemImage: "person.crop.circle")
+            }
+
+            // Cart tab — своя навигация через router
+            NavigationStack(path: $router.path) {
                 CartScreen()
-                    .tabItem {
-                        Label {
-                            Text("Tab.cart")
-                        } icon: {
-                            Image(.handbag)
+                    .navigationDestination(for: CartRoute.self) { route in
+                        switch route {
+                        case .payment:
+                            PaymentScreen()
+                                .environment(viewModel)
+                        case .paymentSuccess:
+                            PaymentSuccessScreen()
                         }
                     }
-                    .backgroundStyle(.background)
             }
-            .navigationDestination(for: CartRoute.self) { route in
-                switch route {
-                case .payment:
-                    PaymentScreen()
-                        .environment(viewModel)
-                case .paymentSuccess:
-                    PaymentSuccessScreen()
-                }
+            .environment(router)
+            .tabItem {
+                Label("Tab.cart", systemImage: "bag.fill")
             }
         }
-        .environment(router)
         .overlay {
             if viewModel.nftToDelete != nil {
                 BlurView(style: .systemUltraThinMaterial)
                     .ignoresSafeArea()
-                
                 CartDeleteView(viewModel: viewModel)
             }
         }
@@ -50,7 +59,7 @@ struct TabBarView: View {
         nftService: servicesAssembly.nftService,
         orderService: servicesAssembly.orderService
     )
-    
-    TabBarView()
+
+    TabBarView(servicesAssembly: servicesAssembly)
         .environment(viewModel)
 }

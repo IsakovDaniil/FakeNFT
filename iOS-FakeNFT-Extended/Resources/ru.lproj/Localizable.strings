@@ -98,6 +98,9 @@
 "Profile.Validation.urlInvalidScheme" = "URL должен начинаться с http:// или https://";
 "Profile.Validation.urlInvalidExtension" = "Поддерживаемые форматы: JPG, PNG, JPEG, WEBP";
 
+// MARK: - TabBar
+
+"Tab.profile" = "Профиль";
 
 // MARK: - Cart
 
