@@ -2,8 +2,6 @@
 //  OrderRequest.swift
 //  iOS-FakeNFT-Extended
 //
-//  Created by Владимир Брюковкин on 16.02.2026.
-//
 
 import Foundation
 
@@ -11,9 +9,43 @@ struct OrderRequest: NetworkRequest {
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
     }
+
+    var httpMethod: HttpMethod { .get }
 }
 
-// MARK: - PUT order (update cart). Form-urlencoded: nfts=id1&nfts=id2. Пустой массив — тело не отправляется.
+// MARK: - PUT order (эпик Корзина — bodyData)
+
+struct OrderSaveRequest: NetworkRequest {
+    let nfts: [String]
+
+    init(nfts: [String]) {
+        self.nfts = nfts
+    }
+
+    var endpoint: URL? {
+        URL(string: "\(RequestConstants.baseURL)/api/v1/orders/1")
+    }
+
+    var httpMethod: HttpMethod { .put }
+
+    var headers: [String: String]? {
+        ["Content-Type": "application/x-www-form-urlencoded"]
+    }
+
+    var bodyData: Data? {
+        guard !nfts.isEmpty else { return nil }
+        let pairs: [String] = nfts.map { id in
+            let key = "nfts"
+            let encodedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? key
+            let encodedValue = id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? id
+            return "\(encodedKey)=\(encodedValue)"
+        }
+        let formString = pairs.joined(separator: "&")
+        return formString.data(using: .utf8)
+    }
+}
+
+// MARK: - PUT order (эпик Каталог — formBodyPairs)
 
 struct OrderUpdateRequest: NetworkRequest {
     private let nftIds: [String]

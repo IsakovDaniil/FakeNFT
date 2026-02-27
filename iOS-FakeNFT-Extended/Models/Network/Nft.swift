@@ -1,11 +1,23 @@
 import Foundation
 
-struct Nft: Decodable {
+struct Nft: Decodable, Equatable {
     let id: String
-    let images: [URL]
-    let name: String?
-    let rating: Int?
-    let price: Double?
-    let author: String?
-    let description: String?
+    let name: String
+    let imagesUrls: [URL]
+    let rating: Int
+    let description: String
+    let price: Float
+    let author: String
+    let website: String
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case imagesUrls = "images"
+        case rating
+        case description
+        case price
+        case author
+        case website
+    }
 }

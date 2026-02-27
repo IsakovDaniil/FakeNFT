@@ -58,7 +58,7 @@ struct NftCollectionCell: View {
 
     @ViewBuilder
     private var nftImage: some View {
-        if let url = nft?.images.first {
+        if let url = nft?.imagesUrls.first {
             KFImage(url)
                 .placeholder {
                     Rectangle()
@@ -135,13 +135,13 @@ struct NftCollectionCell: View {
     // MARK: - Helpers
 
     private var ratingValue: Int {
-        guard let rating = nft?.rating else { return 0 }
+        let rating = nft?.rating ?? 0
         return min(5, max(0, rating))
     }
 
     private var priceText: String {
-        guard let price = nft?.price else { return "0 ETH" }
-        return String(format: "%.2f ETH", price)
+        guard let nft = nft else { return "0 ETH" }
+        return String(format: "%.2f ETH", Double(nft.price))
     }
 }
 
