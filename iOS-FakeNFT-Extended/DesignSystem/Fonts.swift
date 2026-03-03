@@ -1,19 +1,54 @@
-import UIKit
+import SwiftUI
 
-extension UIFont {
-    // Ниже приведены примеры шрифтов, настоящие шрифты надо взять из фигмы
-
-    // Headline Fonts
-    static var headline1 = UIFont.systemFont(ofSize: 34, weight: .bold)
-    static var headline2 = UIFont.systemFont(ofSize: 28, weight: .bold)
-    static var headline3 = UIFont.systemFont(ofSize: 22, weight: .bold)
-    static var headline4 = UIFont.systemFont(ofSize: 20, weight: .bold)
-
-    // Body Fonts
-    static var bodyRegular = UIFont.systemFont(ofSize: 17, weight: .regular)
-    static var bodyBold = UIFont.systemFont(ofSize: 17, weight: .bold)
-
-    // Caption Fonts
-    static var caption1 = UIFont.systemFont(ofSize: 15, weight: .regular)
-    static var caption2 = UIFont.systemFont(ofSize: 13, weight: .regular)
+extension Font {
+    
+    static func appSystem(
+        size: CGFloat,
+        weight: Font.Weight = .regular,
+        design: Font.Design = .default
+    ) -> Font {
+        .system(size: size, weight: weight, design: design)
+    }
+    
+    // MARK: - Custom App Fonts
+    
+    static let medium10 = Font.appSystem(
+        size: 10,
+        weight: .medium
+    )
+    
+    static let bold22 = Font.appSystem(
+        size: 22,
+        weight: .bold
+    )
+    
+    static let bold17 = Font.appSystem(
+        size: 17,
+        weight: .bold
+    )
+    
+    static let regular13 = Font.appSystem(
+        size: 13,
+        weight: .regular
+    )
+    
+    static let regular15 = Font.appSystem(
+        size: 15,
+        weight: .regular
+    )
+    
+    static let regular17 = Font.appSystem(
+        size: 17,
+        weight: .regular
+    )
+    
+    static let bold34 = Font.appSystem(
+        size: 34,
+        weight: .bold
+    )
+    
+    static let bold32 = Font.appSystem(
+        size: 32,
+        weight: .bold
+    )
 }
